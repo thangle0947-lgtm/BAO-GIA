@@ -6,18 +6,31 @@ from openpyxl.cell.cell import MergedCell
 from io import BytesIO
 import datetime
 import re
+import os
 
 # Cấu hình trang
 st.set_page_config(page_title="Phần mềm Báo Giá Tự Động QN Tech", layout="wide")
 st.title("Hệ thống Báo giá Tự động - QN Tech")
 
-# 1. KHU VỰC UPLOAD FILE (GIAO DIỆN)
-st.sidebar.header("1. Tải tài liệu lên")
-file_data = st.sidebar.file_uploader("File Bảng Giá (Excel chứa nhiều hãng)", type=["xlsx"])
-file_boq = st.sidebar.file_uploader("File BOQ từ Khách hàng (Excel)", type=["xlsx"])
-file_template = st.sidebar.file_uploader("File Mẫu Báo Giá Chuẩn (Excel)", type=["xlsx"])
+# --- ĐỊNH NGHĨA FILE LƯU SẴN (CẦN ĐẶT CÙNG THƯ MỤC VỚI APP.PY) ---
+DATA_FILE_PATH = "BangGia.xlsx"
+TEMPLATE_FILE_PATH = "MauBaoGia.xlsx"
 
-# Tự động đọc danh sách các hãng từ các sheet trong file Bảng Giá
+# Kiểm tra xem file lưu sẵn có tồn tại không
+file_data = DATA_FILE_PATH if os.path.exists(DATA_FILE_PATH) else None
+file_template = TEMPLATE_FILE_PATH if os.path.exists(TEMPLATE_FILE_PATH) else None
+
+# 1. KHU VỰC UPLOAD FILE TỪ KHÁCH HÀNG (GIAO DIỆN)
+st.sidebar.header("1. Tải tài liệu lên")
+file_boq = st.sidebar.file_uploader("File BOQ từ Khách hàng (Excel)", type=["xlsx"])
+
+# Thông báo trạng thái file hệ thống
+if file_data and file_template:
+    st.sidebar.success("✅ Đã tải sẵn Bảng giá và Mẫu báo giá hệ thống.")
+else:
+    st.sidebar.error("❌ Không tìm thấy file 'BangGia.xlsx' hoặc 'MauBaoGia.xlsx' trên hệ thống. Vui lòng kiểm tra lại!")
+
+# Tự động đọc danh sách các hãng từ các sheet trong file Bảng Giá lưu sẵn
 selected_brand_sheet = None
 if file_data is not None:
     try:
@@ -72,7 +85,7 @@ output_filename = st.sidebar.text_input("Nhập tên file Excel xuất ra:", val
 # Nút bấm chạy chương trình
 if st.sidebar.button("Xử lý và Xuất Báo Giá"):
     if not (file_data and file_boq and file_template and selected_brand_sheet):
-        st.error("Vui lòng tải lên đầy đủ các file và chọn hãng báo giá ở thanh bên trái!")
+        st.error("Vui lòng tải lên file BOQ và đảm bảo hệ thống đã nhận diện được Bảng Giá & Mẫu Báo Giá!")
     else:
         try:
             with st.spinner(f"Đang đọc bảng giá hãng [{selected_brand_sheet}] và quy chuẩn mã thiết bị..."):
@@ -309,7 +322,7 @@ if st.sidebar.button("Xử lý và Xuất Báo Giá"):
 
                 safe_write(row=6,  column=2, val=to_company)       
                 safe_write(row=7,  column=2, val=add_company)      
-                safe_write(row=8,  column=2, val=att_contact)      # Đã sửa att_company thành att_contact ở đây
+                safe_write(row=8,  column=2, val=att_contact)      
                 safe_write(row=9,  column=2, val=mobile_contact)   
                 safe_write(row=10, column=2, val=email_contact)    
                 safe_write(row=11, column=2, val=ref_content)      
@@ -329,7 +342,7 @@ if st.sidebar.button("Xử lý và Xuất Báo Giá"):
                     safe_write(current_row, 4, row_data.get('XUẤT XỨ', ''))      
                     safe_write(current_row, 5, row_data.get('ĐVT', ''))          
                     safe_write(current_row, 6, row_data.get('Số lượng', 0))      
-                    safe_write(current_row, 7, row_data.get('Đơn giá', 0))      
+                    safe_write(current_row, 7, row_data.get('Đơn giá', 0))       
                     safe_write(current_row, 8, row_data.get('Thành tiền', 0))    
                     safe_write(current_row, 9, '')                             
 
