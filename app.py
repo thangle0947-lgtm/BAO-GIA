@@ -9,10 +9,90 @@ import re
 import os
 
 # ==========================================
-# CẤU HÌNH TRANG & TIÊU ĐỀ
+# CẤU HÌNH TRANG & GIAO DIỆN THƯƠNG HIỆU QN TECH
 # ==========================================
-st.set_page_config(page_title="Phần mềm Báo Giá Tự Động QN Tech", layout="wide")
-st.title("Hệ thống Báo giá Tự động - QN Tech")
+st.set_page_config(
+    page_title="Phần mềm Báo Giá Tự Động - QN Tech",
+    page_icon="🔥",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
+# Custom CSS đồng bộ nhận diện logo QN Tech (Xanh đậm #0D233A & Cam #FF6600)
+st.markdown("""
+    <style>
+    .main {
+        background-color: #f4f6f9;
+    }
+    
+    /* Header Thương hiệu */
+    .brand-header {
+        background: linear-gradient(135deg, #0d233a 0%, #1e3a8a 100%);
+        padding: 22px 30px;
+        border-radius: 12px;
+        color: white;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 15px rgba(13, 35, 58, 0.2);
+        border-left: 6px solid #ff6600;
+    }
+    .brand-header h1 {
+        margin: 0;
+        font-size: 24px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+    }
+    .brand-header p {
+        margin: 6px 0 0 0;
+        font-size: 13px;
+        color: #cbd5e1;
+    }
+
+    /* Sidebar Styling */
+    [data-testid="stSidebar"] {
+        background-color: #0d233a;
+        color: #ffffff;
+    }
+    [data-testid="stSidebar"] label, [data-testid="stSidebar"] .stMarkdown, [data-testid="stSidebar"] span {
+        color: #f1f5f9 !important;
+        font-weight: 500;
+    }
+    [data-testid="stSidebar"] hr {
+        border-color: #1e3a8a;
+    }
+
+    /* Nút bấm chính */
+    .stButton>button {
+        background-color: #ff6600;
+        color: white;
+        font-weight: 600;
+        border-radius: 8px;
+        border: none;
+        padding: 10px 20px;
+        transition: all 0.3s ease;
+    }
+    .stButton>button:hover {
+        background-color: #e65c00;
+        box-shadow: 0 4px 12px rgba(255, 102, 0, 0.3);
+    }
+    
+    /* Tiêu đề mục */
+    h3 {
+        color: #0d233a;
+        font-weight: 700;
+        border-bottom: 2px solid #ff6600;
+        padding-bottom: 6px;
+        margin-top: 20px;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+# Banner Giao diện
+st.markdown("""
+    <div class="brand-header">
+        <h1>CÔNG TY TNHH KỸ THUẬT QN TECH</h1>
+        <p>Hệ thống Phân tích BOQ & Lập Báo Giá Tự Động Thông Minh (PCCC & Cơ Điện)</p>
+    </div>
+""", unsafe_allow_html=True)
 
 # ==========================================
 # KHAI BÁO ĐƯỜNG DẪN FILE HỆ THỐNG
@@ -24,15 +104,15 @@ file_data = DATA_FILE_PATH if os.path.exists(DATA_FILE_PATH) else None
 file_template = TEMPLATE_FILE_PATH if os.path.exists(TEMPLATE_FILE_PATH) else None
 
 if file_data and file_template:
-    st.sidebar.success("✅ Đã nhận diện Bảng giá và Mẫu báo giá trên hệ thống.")
+    st.sidebar.success("✅ Đã kết nối Bảng giá & Mẫu báo giá.")
 else:
-    st.sidebar.error("❌ Không tìm thấy file 'BangGia.xlsx' hoặc 'MauBaoGia.xlsx'. Vui lòng kiểm tra lại!")
+    st.sidebar.error("❌ Thiếu file 'BangGia.xlsx' hoặc 'MauBaoGia.xlsx'!")
 
 # ==========================================
 # GIAO DIỆN BÊN TRÁI (SIDEBAR) - NHẬP LIỆU
 # ==========================================
-st.sidebar.header("1. Tải tài liệu lên")
-file_boq = st.sidebar.file_uploader("File BOQ từ Khách hàng (Excel)", type=["xlsx"])
+st.sidebar.markdown("### 📂 1. Tải tài liệu & Chọn Hãng")
+file_boq = st.sidebar.file_uploader("Tải file BOQ Khách hàng (Excel)", type=["xlsx"])
 
 selected_brand_sheet = None
 if file_data is not None:
@@ -41,8 +121,6 @@ if file_data is not None:
         valid_sheets = [s for s in xls_data.sheet_names if not pd.read_excel(file_data, sheet_name=s).empty]
         if valid_sheets:
             selected_brand_sheet = st.sidebar.selectbox("Chọn Hãng / Sheet Bảng Giá", valid_sheets)
-        else:
-            st.sidebar.error("File Bảng giá trống hoặc không hợp lệ!")
     except Exception as e:
         st.sidebar.error(f"Lỗi đọc file Bảng giá: {e}")
 
@@ -56,22 +134,20 @@ if file_boq is not None:
     except Exception as e:
         st.sidebar.error(f"Lỗi đọc file BOQ: {e}")
 
-st.sidebar.header("2. Thông tin Báo giá & Khách hàng")
+st.sidebar.markdown("### 🏢 2. Thông tin Khách hàng")
 to_company = st.sidebar.text_input("To: Tên Công ty / Khách hàng", value="CÔNG TY CỔ PHẦN ĐẦU TƯ PHÁT TRIỂN MINH GLOBAL")
 add_company = st.sidebar.text_input("Add: Địa chỉ khách hàng", value="415/17 Trường Chinh, Tân Bình, Hồ Chí Minh")
 att_contact = st.sidebar.text_input("Att: Người liên hệ", value="Mr Kiên")
 mobile_contact = st.sidebar.text_input("Mobile: Số điện thoại", value="0909123456")
 email_contact = st.sidebar.text_input("Email", value="kien@minhglobal.vn")
-ref_content = st.sidebar.text_input("Ref: Nội dung / Tiêu đề", value="BÁO GIÁ THIẾT BỊ HỆ THỐNG PCCC")
+ref_content = st.sidebar.text_input("Ref: Nội dung báo giá", value="BÁO GIÁ THIẾT BỊ HỆ THỐNG PCCC")
 
-st.sidebar.header("3. Thông tin Quản lý Báo giá")
+st.sidebar.markdown("### 📋 3. Quản lý Báo giá & Dự án")
 no_quote = st.sidebar.text_input("No: Số báo giá", value="Q2026/2108/PCCC/MG")
 date_quote = st.sidebar.text_input("Date: Ngày báo giá", value="01/09/2026")
-validity_quote = st.sidebar.text_input("Validity: Hiệu lực báo giá", value="30/09/2026")
+validity_quote = st.sidebar.text_input("Validity: Hiệu lực", value="30/09/2026")
 project_name = st.sidebar.text_input("Project: Tên Dự án", value="NHÀ MÁY TRẦN ĐỨC / BỆNH VIỆN QUÂN Y 7B")
-
-st.sidebar.header("4. Tùy chỉnh tên File xuất")
-output_filename = st.sidebar.text_input("Nhập tên file Excel xuất ra:", value="BaoGia_HoanChinh.xlsx")
+output_filename = st.sidebar.text_input("Tên file xuất ra:", value="BaoGia_QNTech_HoanChinh.xlsx")
 
 # Khởi tạo Session State
 if 'df_raw_result' not in st.session_state:
@@ -82,22 +158,23 @@ if 'df_manual_edited' not in st.session_state:
 # ==========================================
 # XỬ LÝ DỮ LIỆU BAN ĐẦU
 # ==========================================
-if st.sidebar.button("Xử lý và Phân Tích BOQ", type="primary"):
+st.markdown("### ⚡ Bảng Điều Khiển Xử Lý BOQ")
+col_btn1, col_btn2 = st.columns([1, 4])
+with col_btn1:
+    run_process = st.button("🚀 Phân Tích BOQ", type="primary")
+
+if run_process:
     if not (file_data and file_boq and file_template and selected_brand_sheet):
-        st.error("⚠️ Vui lòng tải lên file BOQ và kiểm tra đầy đủ Bảng Giá / Mẫu Báo Giá!")
+        st.error("⚠️ Vui lòng tải lên file BOQ và kiểm tra đầy đủ Bảng Giá / Mẫu Báo Giá trong Sidebar!")
     else:
         try:
-            with st.spinner("Đang phân tích BOQ theo thứ tự ưu tiên thông số kỹ thuật..."):
+            with st.spinner("Đang phân tích BOQ theo hệ thống 3 tầng thông minh..."):
                 
                 # --- ĐỌC DỮ LIỆU BẢNG GIÁ ---
                 df_data = pd.read_excel(file_data, sheet_name=selected_brand_sheet)
                 df_data.columns = [str(c).strip() for c in df_data.columns]
                 
                 data_name_col = next((c for c in df_data.columns if c.lower() in ['tên chuẩn', 'tên thiết bị', 'tên hàng', 'tên vật tư', 'diễn giải']), None)
-                if not data_name_col:
-                    st.error(f"Sheet '{selected_brand_sheet}' không tìm thấy cột Tên chuẩn!")
-                    st.stop()
-                
                 if data_name_col != 'Tên chuẩn':
                     df_data = df_data.rename(columns={data_name_col: 'Tên chuẩn'})
                 df_data['Tên chuẩn'] = df_data['Tên chuẩn'].astype(str).str.strip()
@@ -126,7 +203,7 @@ if st.sidebar.button("Xử lý và Phân Tích BOQ", type="primary"):
                 df_boq['Số lượng'] = pd.to_numeric(df_boq['Số lượng'], errors='coerce').fillna(0)
                 df_boq = df_boq.groupby('Tên thiết bị BOQ', sort=False, as_index=False)['Số lượng'].sum()
 
-                # --- HÀM HỖ TRỢ TRÍCH XUẤT THÔNG SỐ (CẬP NHẬT CHUẨN REGEX) ---
+                # --- HÀM HỖ TRỢ TRÍCH XUẤT THÔNG SỐ (REGEX XỬ LÝ DẤU =) ---
                 def extract_dn(text):
                     match = re.search(r'DN\s*[:=]?\s*(\d+)', str(text), re.IGNORECASE)
                     return int(match.group(1)) if match else 0
@@ -147,7 +224,6 @@ if st.sidebar.button("Xử lý và Phân Tích BOQ", type="primary"):
                     k_val = extract_k_factor(text_lower)
                     temp_val = extract_temperature(text_lower)
 
-                    # Quy tắc Đầu phun (Sprinkler) chuẩn hóa đầy đủ theo đúng thứ tự ưu tiên
                     if 'đầu phun' in text_lower or 'sprinkler' in text_lower:
                         is_nhanh = 'nhanh' in text_lower
                         response_str = "phản ứng nhanh" if is_nhanh else "phản ứng tiêu chuẩn"
@@ -159,17 +235,13 @@ if st.sidebar.button("Xử lý và Phân Tích BOQ", type="primary"):
                         else:
                             huong_str = "hướng xuống"
                             
-                        # Tự suy luận DN dựa theo K nếu BOQ thiếu
                         if dn_val == 0:
                             if k_val >= 11.2: dn_val = 25
                             elif k_val >= 8.0: dn_val = 20
                             else: dn_val = 15
 
-                        k_str = f"K{k_val:g}"
-                        dn_str = f"DN{dn_val}"
-                        return f"Đầu phun {huong_str} {response_str} {k_str} {dn_str}, {temp_val}°C"
+                        return f"Đầu phun chữa cháy hướng {huong_str} {response_str}, K={k_val:g}, DN{dn_val}, {temp_val}°C"
 
-                    # Quy tắc Cáp tín hiệu
                     if 'silicone' in text_lower or 'chống cháy' in text_lower or 'cap' in text_lower or 'cáp' in text_lower:
                         has_khong_nhieu = 'không chống nhiễu' in text_lower or 'ko chống nhiễu' in text_lower
                         has_chống_nhieu = ('chống nhiễu' in text_lower or 'shield' in text_lower or 'st' in text_lower) and not has_khong_nhieu
@@ -179,71 +251,21 @@ if st.sidebar.button("Xử lý và Phân Tích BOQ", type="primary"):
                         num_cores = int(core_match.group(1)) if core_match else 2
 
                         size_val = "1.5"
-                        if '250' in text_lower or '2.5' in text_lower or '2,5' in text_lower or '25' in text_lower:
-                            size_val = "2.5"
-                        elif '1.5' in text_lower or '1,5' in text_lower or '15' in text_lower:
-                            size_val = "1.5"
-                        elif '1.0' in text_lower or '1,0' in text_lower:
-                            size_val = "1.0"
-                        elif '0.5' in text_lower or '0,5' in text_lower:
-                            size_val = "0.50"
-                        elif '0.75' in text_lower or '0,75' in text_lower:
-                            size_val = "0.75"
-                        elif '4.0' in text_lower or '4,0' in text_lower:
-                            size_val = "4.0"
-                        else:
-                            floats = re.findall(r'(\d+[\.,]\d+|\d+)', text_lower)
-                            for f in floats:
-                                f_clean = f.replace(',', '.')
-                                try:
-                                    val_f = float(f_clean)
-                                    if val_f in [0.5, 0.50, 0.75, 1.0, 1.25, 1.5, 2.0, 2.5, 4.0]:
-                                        size_val = f_clean
-                                        break
-                                except:
-                                    pass
-                        
-                        try:
-                            f_val = float(size_val)
-                            if f_val == 0.5: size_str = "0.50mm2"
-                            elif f_val == 0.75: size_str = "0.75mm2"
-                            elif f_val == 1.0 or f_val == 1: size_str = "1.0mm2"
-                            elif f_val == 1.25: size_str = "1.25mm2"
-                            elif f_val == 1.5: size_str = "1.5mm2"
-                            elif f_val == 2.0 or f_val == 2: size_str = "2.0mm2"
-                            elif f_val == 2.5: size_str = "2.5mm2"
-                            elif f_val == 4.0 or f_val == 4: size_str = "4.0mm2"
-                            else: size_str = f"{f_val:.2f}mm2"
-                        except:
-                            size_str = "1.5mm2"
+                        if '2.5' in text_lower or '25' in text_lower: size_val = "2.5"
+                        elif '1.5' in text_lower or '15' in text_lower: size_val = "1.5"
+                        elif '1.0' in text_lower: size_val = "1.0"
+                        elif '0.5' in text_lower: size_val = "0.50"
+                        elif '4.0' in text_lower: size_val = "4.0"
 
-                        return f"Cáp tín hiệu điều khiển Silicone {shield_text}, {num_cores} lõi, {size_str}"
+                        return f"Cáp tín hiệu điều khiển Silicone {shield_text}, {num_cores} lõi, {size_val}mm2"
 
                     if 'khói' in text_lower and ('địa chỉ' in text_lower or 'đ/c' in text_lower): return "Đầu báo khói quang địa chỉ kèm đế"
-                    if 'khói' in text_lower and ('cổ điển' in text_lower or 'thường' in text_lower): return "Đầu báo khói quang loại thường kèm đế"
-                    if 'nhiệt' in text_lower and ('cổ điển' in text_lower or 'thường' in text_lower): return "Đầu nhiệt tích hợp loại thường kèm đế"
                     if 'giám sát đầu báo thường' in text_lower or '(zm)' in text_lower: return "Module 2 ngõ vào giám sát đầu báo thường"
                     if 'nút nhấn' in text_lower and 'địa chỉ' in text_lower: return "Nút nhấn báo cháy địa chỉ"
                     if ('còi đèn' in text_lower or 'chuông đèn' in text_lower) and 'địa chỉ' in text_lower: return "Còi đèn chớp báo cháy địa chỉ kèm đế"
-                    if 'điều khiển' in text_lower and '(cm)' in text_lower: return "Module 1 ngõ ra Rơ le"
-                    if 'giám sát' in text_lower and '(mm)' in text_lower: return "Module 1 ngõ vào giám sát"
-                    if 'lọc rác chữ y' in text_lower or 'y lọc' in text_lower: return str(ten_boq).replace('Lọc rác chữ Y', 'Y lọc')
-                    if 'công tắc áp lực' in text_lower or 'đồng hồ áp lực' in text_lower: return str(ten_boq).replace('áp lực', 'áp suất')
-                    if 'chống rung' in text_lower or 'khớp nối mềm' in text_lower: return f"Khớp nối mềm DN{dn_val}" if dn_val > 0 else "Khớp nối mềm"
-
-                    if 'van 1 chiều' in text_lower or 'van một chiều' in text_lower or 'check valve' in text_lower:
-                        if 0 < dn_val <= 50: return f"Van một chiều đồng DN{dn_val}"
-                        elif dn_val > 50: return f"Van một chiều gang DN{dn_val}"
-
-                    if 'van chặn' in text_lower or 'van cổng' in text_lower or 'gate valve' in text_lower:
-                        has_giamsat = ('giám sát' in text_lower or 'kèm giám sát' in text_lower or 'công tắc giám sát' in text_lower)
-                        if 'os&y' in text_lower or 'osy' in text_lower:
-                            return f"Van Cổng OS&Y Kèm Giám Sát DN{dn_val}" if (dn_val > 0 and has_giamsat) else (f"Van cổng OS&Y DN{dn_val}" if dn_val > 0 else "Van cổng OS&Y")
-                        else:
-                            if has_giamsat: return f"Van cổng NRS DN{dn_val} kèm công tắc giám sát" if dn_val > 0 else "Van cổng NRS kèm công tắc giám sát"
-                            else: return f"Van chặn DN{dn_val}" if 0 < dn_val <= 50 else f"Van cổng NRS DN{dn_val}"
                     return ten_boq
 
+                # THUẬT TOÁN MAPPING 3 TẦNG THÔNG MINH
                 def tim_ma_phu_hop(ten_chuan_boq, ten_goc_boq):
                     dn_val = extract_dn(ten_goc_boq)
                     k_val = extract_k_factor(ten_goc_boq)
@@ -254,96 +276,56 @@ if st.sidebar.button("Xử lý và Phân Tích BOQ", type="primary"):
                         else: dn_val = 15
 
                     text_lower = str(ten_goc_boq).lower()
-                    item_lower_check = str(ten_chuan_boq).lower()
 
-                    # MAPPING ĐẦU PHUN THEO ĐÚNG THỨ TỰ ƯU TIÊN: 
-                    # 1. Loại phản ứng -> 2. Hệ số K -> 3. Nhiệt độ -> 4. DN -> 5. Hướng
                     if 'đầu phun' in text_lower or 'sprinkler' in text_lower:
                         is_nhanh_boq = 'nhanh' in text_lower
                         is_len_boq = 'hướng lên' in text_lower or 'upright' in text_lower
                         is_ngang_boq = 'hướng ngang' in text_lower or 'sidewall' in text_lower
                         is_xuong_boq = not is_len_boq and not is_ngang_boq
 
-                        # Bước 1 & 2 & 3 & 4 & 5: Lọc khắt khe theo thứ tự ưu tiên
+                        # TẦNG 1: Khớp tuyệt đối 100%
                         for item in danh_sach_chuan:
                             item_str = str(item).lower()
                             if 'đầu phun' in item_str or 'sprinkler' in item_str:
-                                is_nhanh_item = 'nhanh' in item_str
-                                is_len_item = 'hướng lên' in item_str or 'upright' in item_str
-                                is_ngang_item = 'hướng ngang' in item_str or 'sidewall' in item_str
-                                is_xuong_item = not is_len_item and not is_ngang_item
+                                if ('nhanh' in item_str) == is_nhanh_boq:
+                                    if abs(k_val - extract_k_factor(item_str)) < 0.1:
+                                        if temp_val == extract_temperature(item_str):
+                                            item_dn = extract_dn(item_str)
+                                            if item_dn == 0:
+                                                item_k = extract_k_factor(item_str)
+                                                item_dn = 25 if item_k >= 11.2 else (20 if item_k >= 8.0 else 15)
+                                            is_len_item = 'hướng lên' in item_str or 'upright' in item_str
+                                            is_ngang_item = 'hướng ngang' in item_str or 'sidewall' in item_str
+                                            is_xuong_item = not is_len_item and not is_ngang_item
+                                            if (is_len_boq == is_len_item) and (is_ngang_boq == is_ngang_item) and (is_xuong_boq == is_xuong_item):
+                                                if dn_val == item_dn:
+                                                    return item
 
-                                item_k = extract_k_factor(item_str)
-                                item_temp = extract_temperature(item_str)
-                                item_dn = extract_dn(item_str)
-                                if item_dn == 0:
-                                    if item_k >= 11.2: item_dn = 25
-                                    elif item_k >= 8.0: item_dn = 20
-                                    else: item_dn = 15
-
-                                match_resp = (is_nhanh_boq == is_nhanh_item)
-                                match_k = (abs(k_val - item_k) < 0.1)
-                                match_temp = (temp_val == item_temp)
-                                match_dn = (dn_val == item_dn)
-                                match_dir = ((is_len_boq and is_len_item) or (is_ngang_boq and is_ngang_item) or (is_xuong_boq and is_xuong_item))
-
-                                if match_resp and match_k and match_temp and match_dn and match_dir:
-                                    return item
-                        
-                        # Fallback cấp 2: Nới lỏng DN nhưng giữ: Phản ứng -> K -> Nhiệt độ -> Hướng
+                        # TẦNG 2: Khớp linh hoạt
+                        best_match = None
+                        min_diff = 999.0
                         for item in danh_sach_chuan:
                             item_str = str(item).lower()
                             if 'đầu phun' in item_str or 'sprinkler' in item_str:
-                                is_nhanh_item = 'nhanh' in item_str
-                                is_len_item = 'hướng lên' in item_str or 'upright' in item_str
-                                is_xuong_item = not is_len_item and not 'hướng ngang' in item_str
-                                item_k = extract_k_factor(item_str)
-                                item_temp = extract_temperature(item_str)
+                                if ('nhanh' in item_str) == is_nhanh_boq:
+                                    is_len_item = 'hướng lên' in item_str or 'upright' in item_str
+                                    is_ngang_item = 'hướng ngang' in item_str or 'sidewall' in item_str
+                                    is_xuong_item = not is_len_item and not is_ngang_item
+                                    if (is_len_boq == is_len_item) and (is_ngang_boq == is_ngang_item) and (is_xuong_boq == is_xuong_item):
+                                        item_k = extract_k_factor(item_str)
+                                        diff = abs(k_val - item_k)
+                                        if diff < min_diff:
+                                            min_diff = diff
+                                            best_match = item
+                        if best_match is not None:
+                            return best_match
 
-                                if (is_nhanh_boq == is_nhanh_item) and (abs(k_val - item_k) < 0.1) and (temp_val == item_temp):
-                                    if (is_len_boq == is_len_item) and (is_xuong_boq == is_xuong_item):
-                                        return item
-
-                        return "Cần check thủ công"
-
-                    # Mapping Cáp
-                    if 'silicone' in item_lower_check or 'chống cháy' in item_lower_check or 'cáp' in item_lower_check:
-                        is_shielded_item = ('chống nhiễu' in item_lower_check and 'không chống nhiễu' not in item_lower_check) or 'cszs' in item_lower_check
-                        size_match = re.search(r'(\d+[\.,]\d+|\d+)mm2', item_lower_check)
-                        target_size = size_match.group(1) if size_match else "1.5"
-                        core_match = re.search(r'(\d+)\s*lõi', item_lower_check)
-                        target_core = core_match.group(1) if core_match else "2"
-
-                        for item in danh_sach_chuan:
-                            item_str = str(item).lower()
-                            item_is_shielded = ('chống nhiễu' in item_str and 'không chống nhiễu' not in item_str) or 'cszs' in item_str
-                            if item_is_shielded == is_shielded_item:
-                                if target_size in item_str and (f"{target_core} lõi" in item_str or f"{target_core}lõi" in item_str):
-                                    return item
-                        return "Cần check thủ công"
-
-                    if 'đầu báo khói quang địa chỉ' in item_lower_check: return next((item for item in danh_sach_chuan if 'aln-en' in str(item).lower()), "Cần check thủ công")
-                    if 'module 2 ngõ vào giám sát đầu báo thường' in item_lower_check or 'zm' in text_lower: return next((item for item in danh_sach_chuan if 'chq-dzm' in str(item).lower()), "Cần check thủ công")
-                    if 'nút nhấn báo cháy địa chỉ' in item_lower_check: return next((item for item in danh_sach_chuan if 'hcp-e' in str(item).lower()), "Cần check thủ công")
-                    if 'còi đèn chớp báo cháy địa chỉ' in item_lower_check: return next((item for item in danh_sach_chuan if 'chq-wsb2' in str(item).lower()), "Cần check thủ công")
-
-                    if 'van bi' in text_lower:
-                        match, score = process.extractOne(str(ten_chuan_boq), danh_sach_chuan)
-                        return match if score > 70 else "Cần check thủ công"
-
-                    if 'van cổng' in text_lower or 'van chặn' in text_lower:
-                        has_giamsat = ('giám sát' in text_lower)
-                        for item in danh_sach_chuan:
-                            item_str = str(item).lower()
-                            if str(dn_val) in item_str:
-                                if 'os&y' in text_lower or 'osy' in text_lower:
-                                    if 'os&y' in item_str and (has_giamsat == ('giám sát' in item_str)): return item
-                                else:
-                                    if 0 < dn_val <= 50 and not has_giamsat and 'z15w' in item_str: return item
-                                    if 'nrs' in item_str and (has_giamsat == ('giám sát' in item_str)): return item
-
+                    # TẦNG 3: Fallback FuzzyWuzzy
                     match, score = process.extractOne(str(ten_chuan_boq), danh_sach_chuan)
-                    return match if score > 70 else "Cần check thủ công"
+                    if score > 40:
+                        return match
+                    
+                    return "Cần check thủ công"
 
                 df_boq['Tên BOQ Chuẩn Hóa'] = df_boq['Tên thiết bị BOQ'].apply(map_ten_va_quy_tac)
                 df_boq['Tên Map'] = df_boq.apply(lambda row: tim_ma_phu_hop(row['Tên BOQ Chuẩn Hóa'], row['Tên thiết bị BOQ']), axis=1)
@@ -352,33 +334,56 @@ if st.sidebar.button("Xử lý và Phân Tích BOQ", type="primary"):
                 df_result['Đơn giá'] = pd.to_numeric(df_result['Đơn giá'], errors='coerce').fillna(0)
                 
                 st.session_state.df_raw_result = df_result
-                st.success("✅ Phân tích BOQ thành công theo đúng thứ tự ưu tiên thông số kỹ thuật!")
+                st.success("🎉 Phân tích BOQ thành công bằng hệ thống thông minh!")
 
         except Exception as e:
             st.error(f"Đã xảy ra lỗi trong quá trình xử lý: {e}")
 
 # ==========================================
-# GIAO DIỆN KIỂM TRA & NHẬP THỦ CÔNG
+# GIAO DIỆN HIỂN THỊ KẾT QUẢ & TRA CỨU THỦ CÔNG
 # ==========================================
 if st.session_state.df_raw_result is not None:
     df_current = st.session_state.df_raw_result
     
+    total_items = len(df_current)
+    manual_count = len(df_current[df_current['Tên Map'] == 'Cần check thủ công'])
+    auto_count = total_items - manual_count
+
+    # Thẻ thống kê trực quan
+    m1, m2, m3 = st.columns(3)
+    m1.metric("Tổng số thiết bị BOQ", f"{total_items} mục")
+    m2.metric("Nhận diện tự động chuẩn", f"{auto_count} mục", delta="Thành công")
+    m3.metric("Cần kiểm tra thủ công", f"{manual_count} mục", delta=f"-{manual_count}" if manual_count > 0 else "0", delta_color="inverse")
+
     st.subheader("🔍 Bảng Đối Chiếu Kết Quả Mapping")
     display_compare_df = df_current[['Tên thiết bị BOQ', 'Tên BOQ Chuẩn Hóa', 'Tên Map', 'Mã SP', 'Số lượng', 'Đơn giá']].copy()
     st.dataframe(display_compare_df, use_container_width=True)
 
-    st.subheader("📋 Xử Lý & Nhập Liệu Các Mục 'Cần check thủ công'")
-    if file_data and selected_brand_sheet:
-        with st.expander(f"📖 Tra cứu nhanh Bảng giá hãng ({selected_brand_sheet})", expanded=True):
-            try:
-                df_ref = pd.read_excel(file_data, sheet_name=selected_brand_sheet)
-                search_ref = st.text_input("🔍 Tìm kiếm nhanh mã hoặc tên thiết bị trong bảng giá hãng:", key="search_ref_price")
-                if search_ref:
-                    mask_ref = df_ref.astype(str).apply(lambda x: x.str.contains(search_ref, case=False, na=False)).any(axis=1)
-                    df_ref = df_ref[mask_ref]
-                st.dataframe(df_ref, use_container_width=True)
-            except Exception as e:
-                st.warning(f"Không thể hiển thị bảng giá hãng: {e}")
+    st.subheader("📋 Tra Cứu & Hiệu Chỉnh Thông Minh (Chọn Mã SP Trực Tiếp)")
+    
+    # Chuẩn bị dữ liệu từ bảng giá hãng để tạo popup/dropdown tra cứu
+    df_ref_full = pd.read_excel(file_data, sheet_name=selected_brand_sheet)
+    df_ref_full.columns = [str(c).strip() for c in df_ref_full.columns]
+    
+    ref_code_col = next((c for c in df_ref_full.columns if c.lower() in ['mã sp', 'mã sản phẩm', 'code', 'mã vật tư']), 'Mã SP')
+    ref_name_col = next((c for c in df_ref_full.columns if c.lower() in ['tên chuẩn', 'tên thiết bị', 'tên hàng', 'tên vật tư']), 'Tên chuẩn')
+    ref_price_col = next((c for c in df_ref_full.columns if c.lower() in ['đơn giá', 'price', 'giá']), 'Đơn giá')
+    ref_unit_col = next((c for c in df_ref_full.columns if c.lower() in ['đvt', 'đơn vị tính', 'unit']), 'ĐVT')
+    ref_origin_col = next((c for c in df_ref_full.columns if c.lower() in ['xuất xứ', 'origin']), 'XUẤT XỨ')
+
+    # Tạo danh sách lựa chọn cho dropdown
+    df_ref_full['Option_Display'] = df_ref_full[ref_code_col].astype(str) + " - " + df_ref_full[ref_name_col].astype(str)
+    list_options = ["-- Chọn mã từ bảng giá --"] + df_ref_full['Option_Display'].tolist()
+    
+    dict_mapping_price = {}
+    for _, r in df_ref_full.iterrows():
+        code_val = str(r[ref_code_col])
+        dict_mapping_price[code_val] = {
+            'Tên chuẩn': str(r.get(ref_name_col, '')),
+            'Đơn giá': float(r.get(ref_price_col, 0)) if pd.notna(r.get(ref_price_col)) else 0.0,
+            'ĐVT': str(r.get(ref_unit_col, 'Cái')),
+            'XUẤT XỨ': str(r.get(ref_origin_col, 'LS/ VN'))
+        }
 
     mask_manual = (df_current['Tên Map'] == 'Cần check thủ công') | (df_current['Mã SP'].isna()) | (df_current['Mã SP'] == '')
     df_auto = df_current[~mask_manual].copy()
@@ -387,33 +392,58 @@ if st.session_state.df_raw_result is not None:
     if not df_manual.empty:
         if 'Bỏ qua' not in df_manual.columns:
             df_manual.insert(0, 'Bỏ qua', False)
+        if 'Chọn Mã Từ Bảng Giá' not in df_manual.columns:
+            df_manual['Chọn Mã Từ Bảng Giá'] = "-- Chọn mã từ bảng giá --"
         if 'XUẤT XỨ' not in df_manual.columns:
             df_manual['XUẤT XỨ'] = 'LS/ VN'
         if 'ĐVT' not in df_manual.columns:
-            df_manual['ĐVT'] = 'Mét' if 'cáp' in df_manual['Tên thiết bị BOQ'].str.lower().to_string() else 'Cái'
-        if 'Tên chuẩn' not in df_manual.columns or df_manual['Tên chuẩn'].isna().any():
-            df_manual['Tên chuẩn'] = df_manual['Tên thiết bị BOQ']
+            df_manual['ĐVT'] = 'Cái'
+
+        st.info("💡 **Mẹo:** Nhấp vào ô trong cột **'Chọn Mã Từ Bảng Giá'** để mở hộp tìm kiếm dạng dropdown. Bạn có thể gõ từ khóa (mã hoặc tên) để lọc nhanh, sau đó chọn mã hãng phù hợp — hệ thống sẽ tự động điền đầy đủ Mã SP, Tên chuẩn, Đơn giá và ĐVT.")
 
         edited_manual_df = st.data_editor(
-            df_manual[['Bỏ qua', 'Tên thiết bị BOQ', 'Mã SP', 'Tên chuẩn', 'XUẤT XỨ', 'ĐVT', 'Số lượng', 'Đơn giá']],
+            df_manual[['Bỏ qua', 'Tên thiết bị BOQ', 'Chọn Mã Từ Bảng Giá', 'Mã SP', 'Tên chuẩn', 'XUẤT XỨ', 'ĐVT', 'Số lượng', 'Đơn giá']],
+            column_config={
+                "Chọn Mã Từ Bảng Giá": st.column_config.SelectboxColumn(
+                    "🔍 Tra Cứu & Chọn Mã SP Từ Bảng Giá",
+                    help="Nhấp để tìm kiếm hoặc chọn mã sản phẩm trong bảng giá hãng",
+                    options=list_options,
+                    required=True
+                )
+            },
             num_rows="fixed",
-            key="manual_editor",
+            key="manual_editor_search",
             use_container_width=True
         )
+
+        # Tự động đồng bộ thông tin khi người dùng chọn mã từ dropdown
+        for idx, row in edited_manual_df.iterrows():
+            selected_option = row['Chọn Mã Từ Bảng Giá']
+            if selected_option and selected_option != "-- Chọn mã từ bảng giá --":
+                chosen_code = selected_option.split(" - ")[0].strip()
+                if chosen_code in dict_mapping_price:
+                    info = dict_mapping_price[chosen_code]
+                    edited_manual_df.at[idx, 'Mã SP'] = chosen_code
+                    edited_manual_df.at[idx, 'Tên chuẩn'] = info['Tên chuẩn']
+                    edited_manual_df.at[idx, 'Đơn giá'] = info['Đơn giá']
+                    edited_manual_df.at[idx, 'ĐVT'] = info['ĐVT']
+                    edited_manual_df.at[idx, 'XUẤT XỨ'] = info['XUẤT XỨ']
+
         st.session_state.df_manual_edited = edited_manual_df
     else:
-        st.success("🎉 Tất cả các mục trong BOQ đã được tự động nhận diện thành công!")
+        st.success("🎉 Tuyệt vời! Tất cả các mục trong BOQ đã tự động nhận diện hoàn hảo.")
         st.session_state.df_manual_edited = None
 
-    if st.button("🚀 Xác Nhận & Xuất File Báo Giá Hoàn Chỉnh", type="primary"):
+    st.markdown("---")
+    if st.button("📥 Xuất File Báo Giá Hoàn Chỉnh", type="primary"):
         try:
-            with st.spinner("Đang tổng hợp dữ liệu và xuất file Excel..."):
+            with st.spinner("Đang tổng hợp dữ liệu và điền vào mẫu báo giá QN Tech..."):
                 
                 final_rows = [df_auto]
                 if st.session_state.df_manual_edited is not None:
                     valid_manual = st.session_state.df_manual_edited[st.session_state.df_manual_edited['Bỏ qua'] == False].copy()
                     if not valid_manual.empty:
-                        valid_manual = valid_manual.drop(columns=['Bỏ qua'])
+                        valid_manual = valid_manual.drop(columns=['Bỏ qua', 'Chọn Mã Từ Bảng Giá'], errors='ignore')
                         valid_manual['Số lượng'] = pd.to_numeric(valid_manual['Số lượng'], errors='coerce').fillna(0)
                         valid_manual['Đơn giá'] = pd.to_numeric(valid_manual['Đơn giá'], errors='coerce').fillna(0)
                         final_rows.append(valid_manual)
@@ -460,7 +490,6 @@ if st.session_state.df_raw_result is not None:
                 else:
                     rows_to_add = num_items - available_rows
                     ws.insert_rows(footer_row, amount=rows_to_add)
-                    
                     src_row = footer_row - 1
                     for r_offset in range(rows_to_add):
                         target_r = footer_row + r_offset
@@ -492,10 +521,10 @@ if st.session_state.df_raw_result is not None:
 
                 final_name = output_filename if output_filename.endswith('.xlsx') else output_filename + '.xlsx'
 
-                st.success("✅ Đã xuất file báo giá hoàn chỉnh thành công!")
+                st.success("✅ Đã tạo file Báo giá QN Tech thành công!")
 
                 st.download_button(
-                    label="📥 TẢI BÁO GIÁ HOÀN CHỈNH (EXCEL)",
+                    label="💾 TẢI XUỐNG FILE BÁO GIÁ EXCEL",
                     data=output,
                     file_name=final_name,
                     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
