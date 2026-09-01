@@ -274,6 +274,19 @@ if st.session_state.df_raw_result is not None:
     st.subheader("📋 Bảng Kết Quả & Xử Lý Mã Cần Check Thủ Công")
     st.info("💡 Với những dòng 'Cần check thủ công', bạn có thể nhập trực tiếp Mã SP, Tên chuẩn, Xuất xứ, ĐVT, Đơn giá vào bảng dưới đây. Nếu muốn loại bỏ thiết bị đó ra khỏi báo giá, hãy tích chọn ô **Bỏ qua**.")
 
+    # --- HIỆN KÈM BẢNG GIÁ HÃNG ĐỂ TRA CỨU ---
+    if file_data and selected_brand_sheet:
+        with st.expander(f"📖 Tra cứu nhanh Bảng giá hãng ({selected_brand_sheet})", expanded=False):
+            try:
+                df_ref = pd.read_excel(file_data, sheet_name=selected_brand_sheet)
+                search_ref = st.text_input("🔍 Tìm kiếm nhanh mã hoặc tên thiết bị trong bảng giá hãng:", key="search_ref_price")
+                if search_ref:
+                    mask_ref = df_ref.astype(str).apply(lambda x: x.str.contains(search_ref, case=False, na=False)).any(axis=1)
+                    df_ref = df_ref[mask_ref]
+                st.dataframe(df_ref, use_container_width=True)
+            except Exception as e:
+                st.warning(f"Không thể hiển thị bảng giá hãng: {e}")
+
     # Tách thành 2 phần: Đã map thành công và Cần check thủ công
     mask_manual = (df_current['Tên Map'] == 'Cần check thủ công') | (df_current['Mã SP'].isna()) | (df_current['Mã SP'] == '')
     df_auto = df_current[~mask_manual].copy()
