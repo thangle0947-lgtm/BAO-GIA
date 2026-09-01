@@ -120,7 +120,7 @@ if st.sidebar.button("Xử lý và Xuất Báo Giá", type="primary"):
                 df_boq['Số lượng'] = pd.to_numeric(df_boq['Số lượng'], errors='coerce').fillna(0)
                 df_boq = df_boq.groupby('Tên thiết bị BOQ', sort=False, as_index=False)['Số lượng'].sum()
 
-                # --- HÀM HỖ TRỢ XỬ LÝ CHUỖI VÀ MAP DATA ---
+                # --- HÀM HỖ TRỢ XỬ LÝ CHUỖI VÀ TỰ ĐỘNG NHẬN DIỆN CÁP SILICONE ---
                 def extract_dn(text):
                     match = re.search(r'DN\s*(\d+)', str(text), re.IGNORECASE)
                     return int(match.group(1)) if match else 0
@@ -129,6 +129,64 @@ if st.sidebar.button("Xử lý và Xuất Báo Giá", type="primary"):
                     text_lower = str(ten_boq).lower()
                     dn_val = extract_dn(ten_boq)
 
+                    # NHẬN DIỆN CHÍNH XÁC CÁP SILICONE (HỖ TRỢ CẢ VIẾT TẮT KHÔNG DẤU NHƯ CAP, 250MM,...)
+                    if 'silicone' in text_lower or 'chống cháy' in text_lower or 'cap' in text_lower or 'cáp' in text_lower:
+                        # Kiểm tra kỹ để tránh nhầm lẫn "không chống nhiễu" chứa từ "chống nhiễu"
+                        has_khong_nhieu = 'không chống nhiễu' in text_lower or 'ko chống nhiễu' in text_lower
+                        has_chong_nhieu = ('chống nhiễu' in text_lower or 'shield' in text_lower or 'st' in text_lower) and not has_khong_nhieu
+                        
+                        shield_text = "chống cháy chống nhiễu" if has_chong_nhieu else "chống cháy không chống nhiễu"
+
+                        # Nhận diện số lõi (ví dụ: 2 lõi, 2c, 2x)
+                        core_match = re.search(r'(\d+)\s*(?:lõi|c\b|core|x)', text_lower)
+                        num_cores = int(core_match.group(1)) if core_match else 2
+
+                        # Nhận diện tiết diện thông minh (hỗ trợ cả dạng viết liền 250mm, 2.5mm2, 1.5,...)
+                        size_val = "1.5"
+                        if '250' in text_lower or '2.5' in text_lower or '2,5' in text_lower or '25' in text_lower:
+                            size_val = "2.5"
+                        elif '1.5' in text_lower or '1,5' in text_lower or '15' in text_lower:
+                            size_val = "1.5"
+                        elif '1.0' in text_lower or '1,0' in text_lower:
+                            size_val = "1.0"
+                        elif '0.5' in text_lower or '0,5' in text_lower:
+                            size_val = "0.50"
+                        elif '0.75' in text_lower or '0,75' in text_lower:
+                            size_val = "0.75"
+                        elif '4.0' in text_lower or '4,0' in text_lower:
+                            size_val = "4.0"
+                        else:
+                            floats = re.findall(r'(\d+[\.,]\d+|\d+)', text_lower)
+                            for f in floats:
+                                f_clean = f.replace(',', '.')
+                                try:
+                                    val_f = float(f_clean)
+                                    if val_f in [0.5, 0.50, 0.75, 1.0, 1.25, 1.5, 2.0, 2.5, 4.0]:
+                                        size_val = f_clean
+                                        break
+                                    elif val_f == 25 or val_f == 250:
+                                        size_val = "2.5"
+                                        break
+                                except:
+                                    pass
+                        
+                        try:
+                            f_val = float(size_val)
+                            if f_val == 0.5: size_str = "0.50mm2"
+                            elif f_val == 0.75: size_str = "0.75mm2"
+                            elif f_val == 1.0 or f_val == 1: size_str = "1.0mm2"
+                            elif f_val == 1.25: size_str = "1.25mm2"
+                            elif f_val == 1.5: size_str = "1.5mm2"
+                            elif f_val == 2.0 or f_val == 2: size_str = "2.0mm2"
+                            elif f_val == 2.5: size_str = "2.5mm2"
+                            elif f_val == 4.0 or f_val == 4: size_str = "4.0mm2"
+                            else: size_str = f"{f_val:.2f}mm2"
+                        except:
+                            size_str = "1.5mm2"
+
+                        return f"Cáp tín hiệu điều khiển Silicone {shield_text}, {num_cores} lõi, {size_str}"
+
+                    # CÁC THIẾT BỊ KHÁC
                     if 'khói' in text_lower and ('địa chỉ' in text_lower or 'đ/c' in text_lower): return "Đầu báo khói quang địa chỉ kèm đế"
                     if 'khói' in text_lower and ('cổ điển' in text_lower or 'thường' in text_lower): return "Đầu báo khói quang loại thường kèm đế"
                     if 'nhiệt' in text_lower and ('cổ điển' in text_lower or 'thường' in text_lower): return "Đầu nhiệt tích hợp loại thường kèm đế"
@@ -158,6 +216,33 @@ if st.sidebar.button("Xử lý và Xuất Báo Giá", type="primary"):
                     dn_val = extract_dn(ten_goc_boq)
                     text_lower = str(ten_goc_boq).lower()
                     item_lower_check = str(ten_chuan_boq).lower()
+
+                    # MAP CHÍNH XÁC MÃ CÁP SILICONE (CSZ vs CSZS)
+                    if 'silicone' in item_lower_check or 'chống cháy' in item_lower_check or 'cáp' in item_lower_check:
+                        is_shielded_item = ('chống nhiễu' in item_lower_check and 'không chống nhiễu' not in item_lower_check) or 'cszs' in item_lower_check
+                        
+                        size_match = re.search(r'(\d+[\.,]\d+|\d+)mm2', item_lower_check)
+                        target_size = size_match.group(1) if size_match else "1.5"
+                        
+                        core_match = re.search(r'(\d+)\s*lõi', item_lower_check)
+                        target_core = core_match.group(1) if core_match else "2"
+
+                        best_match = "Cần check thủ công"
+                        for item in danh_sach_chuan:
+                            item_str = str(item).lower()
+                            item_is_shielded = ('chống nhiễu' in item_str and 'không chống nhiễu' not in item_str) or 'cszs' in item_str
+                            
+                            if item_is_shielded == is_shielded_item:
+                                if target_size in item_str and (f"{target_core} lõi" in item_str or f"{target_core}lõi" in item_str):
+                                    best_match = item
+                                    break
+                        if best_match == "Cần check thủ công":
+                            filtered_list = [i for i in danh_sach_chuan if (('chống nhiễu' in str(i).lower() and 'không chống nhiễu' not in str(i).lower()) or 'cszs' in str(i).lower()) == is_shielded_item]
+                            if filtered_list:
+                                match, score = process.extractOne(str(ten_chuan_boq), filtered_list)
+                                if score > 40:
+                                    best_match = match
+                        return best_match
 
                     if 'đầu báo khói quang địa chỉ' in item_lower_check: return next((item for item in danh_sach_chuan if 'aln-en' in str(item).lower()), "Cần check thủ công")
                     if 'module 2 ngõ vào giám sát đầu báo thường' in item_lower_check or 'zm' in text_lower: return next((item for item in danh_sach_chuan if 'chq-dzm' in str(item).lower()), "Cần check thủ công")
@@ -193,7 +278,7 @@ if st.sidebar.button("Xử lý và Xuất Báo Giá", type="primary"):
                 st.dataframe(df_result[['Tên thiết bị BOQ', 'Tên Map', 'Mã SP', 'Số lượng', 'Đơn giá', 'Thành tiền']])
 
                 # ==========================================
-                # XỬ LÝ FILE EXCEL VÀ CĂN CHỈNH BẰNG ẨN DÒNG (AN TOÀN TUYỆT ĐỐI)
+                # XỬ LÝ FILE EXCEL VÀ CĂN CHỈNH BẰNG ẨN DÒNG
                 # ==========================================
                 wb = openpyxl.load_workbook(file_template)
                 ws = wb.active
@@ -231,7 +316,6 @@ if st.sidebar.button("Xử lý và Xuất Báo Giá", type="primary"):
                 available_rows = footer_row - start_row
 
                 if num_items <= available_rows:
-                    # Ẩn các dòng dư thừa, giữ nguyên vẹn form và chữ ký ở dưới
                     for r in range(start_row + num_items, footer_row):
                         ws.row_dimensions[r].hidden = True
                 else:
@@ -270,7 +354,7 @@ if st.sidebar.button("Xử lý và Xuất Báo Giá", type="primary"):
 
                 final_name = output_filename if output_filename.endswith('.xlsx') else output_filename + '.xlsx'
 
-                st.success("✅ Đã xử lý xong! File Excel đã được ẩn dòng thừa và giữ nguyên cấu trúc.")
+                st.success("✅ Đã xử lý xong! Hệ thống đã tự động nhận diện chuẩn xác mã chống nhiễu và tiết diện dây.")
 
                 st.download_button(
                     label="📥 TẢI BÁO GIÁ HOÀN CHỈNH (EXCEL)",
