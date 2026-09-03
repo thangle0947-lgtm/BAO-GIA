@@ -78,6 +78,48 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ==========================================
+# KHAI BÁO TỪ ĐIỂN CHUẨN HÓA (M&E / PCCC)
+# ==========================================
+BOQ_DICTIONARY = {
+    "đầu phun": ["béc phun", "béc chữa cháy", "vòi phun", "đầu cứu hỏa", "đầu béc", "đầu túp", "vòi tưới", "sprinkler head", "fire sprinkler", "sprinkler", "spk"],
+    "hướng xuống": ["quay xuống", "chúi xuống", "hướng đất", "chúc xuống", "pendent", "pendant", "pend"],
+    "hướng lên": ["quay lên", "ngửa lên", "đứng", "quay trần", "upright", "up"],
+    "hướng ngang": ["gắn vách", "vách tường", "ốp tường", "quay ngang", "phun ngang", "horizontal sidewall", "sidewall", "hsw", "sw"],
+    "âm trần": ["che khuất", "giấu tăm", "nắp chụp", "nắp che", "giấu trần", "âm", "concealed", "conceal"],
+    "phản ứng tiêu chuẩn": ["phản ứng chuẩn", "bầu thủy tinh chuẩn", "standard response", "sr"],
+    "phản ứng nhanh": ["bầu thủy tinh nhỏ", "quick response", "fast response", "qr"],
+    "van cổng": ["van chặn", "van khóa", "cổng khóa", "van đóng cắt", "gate valve", "isolation valve", "shut-off valve", "gv"],
+    "ty nổi": ["tay quay ngoài", "ty ngoài", "có cần nổi", "cổ cao", "os&y", "outside stem and yoke", "rising stem"],
+    "ty chìm": ["tay quay trong", "ty trong", "van nắp chụp", "chôn ngầm", "nrs", "non-rising stem"],
+    "kèm công tắc giám sát": ["kèm công tắc", "có tín hiệu điện", "giám sát điện", "kèm sw", "tamper switch", "supervisory switch"],
+    "van bướm": ["van bớm", "butterfly valve", "bfv"],
+    "tay quay": ["vô lăng", "hộp số", "gear operated", "gear type", "worm gear"],
+    "tay gạt": ["mỏ vịt", "tay kẹp", "lever operated", "lever type", "handle"],
+    "van 1 chiều": ["van một chiều", "van chống chảy ngược", "van 1c", "check valve", "non-return valve", "nrv", "cv"],
+    "lá lật": ["cánh lật", "bản lề", "swing check valve", "swing"],
+    "cánh bướm": ["kiểu bướm", "lò xo cánh bướm", "đối trọng", "kẹp đĩa", "dual plate", "wafer check valve"],
+    "lò xo": ["kiểu cối", "đĩa lò xo", "spring check valve", "lift check valve", "silent check valve"],
+    "van báo động": ["van báo cháy", "cụm van báo động ướt", "trạm van báo động", "alarm check valve", "wet alarm valve", "acv"],
+    "van xả tràn": ["van tràn ngập", "van tràn", "màng ngăn nước", "deluge valve", "deluge system", "dv"],
+    "van giảm áp": ["van điều áp", "van hạ áp", "pressure reducing valve", "prv"],
+    "van an toàn": ["van xả áp", "chống quá áp", "pressure relief valve", "safety valve", "relief valve"],
+    "lọc y": ["y lọc", "bộ lọc chữ y", "lưới lọc bụi", "y-strainer", "strainer"],
+    "rọ bơm": ["rọ hút", "luppe", "van hút", "lúp bê", "foot valve"],
+    "van xả khí": ["van xả gió", "van đuổi khí", "air release valve", "air vent"],
+    "công tắc dòng chảy": ["rơ le dòng chảy", "cảm biến dòng chảy", "báo dòng chảy", "water flow switch", "flow indicator", "flow switch"],
+    "công tắc áp lực": ["rơ le áp suất", "cảm biến áp suất", "pressure switch"],
+    "khớp nối mềm": ["khớp giảm chấn", "ống nối mềm", "chống rung", "cao su giảm chấn", "flexible joint", "expansion joint", "rubber joint"]
+}
+
+def chuan_hoa_boq(text):
+    text_str = str(text).lower()
+    for tu_chuan, danh_sach_tu_phu in BOQ_DICTIONARY.items():
+        danh_sach_tu_phu = sorted(danh_sach_tu_phu, key=len, reverse=True)
+        for tu_phu in danh_sach_tu_phu:
+            text_str = re.sub(rf'\b{re.escape(tu_phu)}\b', tu_chuan, text_str)
+    return text_str.strip()
+
+# ==========================================
 # KHAI BÁO ĐƯỜNG DẪN FILE HỆ THỐNG
 # ==========================================
 DATA_FILE_PATH = "BangGia.xlsx"
@@ -146,7 +188,6 @@ with col_btn1:
     run_process = st.button("🚀 Phân Tích BOQ", type="primary")
 
 def safe_float_convert(val):
-    """Hàm chuyển đổi an toàn tránh lỗi string to float khi gặp ký tự '-' hoặc trống"""
     try:
         if val is None or pd.isna(val):
             return 0.0
@@ -162,14 +203,14 @@ if run_process:
         st.error("⚠️ Vui lòng tải lên file BOQ và kiểm tra đầy đủ Bảng Giá / Mẫu Báo Giá trong Sidebar!")
     else:
         try:
-            with st.spinner("Đang phân tích BOQ theo hệ thống thông minh chuẩn hóa K=11.2 -> DN20..."):
+            with st.spinner("Đang đọc dữ liệu, bóc tách thông số K, Nhiệt độ và phân tích BOQ..."):
                 
-                # --- ĐỌC DỮ LIỆU BẢNG GIÁ ---
+                # --- 1. ĐỌC DỮ LIỆU BẢNG GIÁ ---
                 df_data = pd.read_excel(file_data, sheet_name=selected_brand_sheet)
                 df_data.columns = [str(c).strip() for c in df_data.columns]
                 
                 data_code_col = next((c for c in df_data.columns if c.lower() in ['mã sp', 'mã sản phẩm', 'code', 'mã vật tư']), 'Mã SP')
-                data_name_col = next((c for c in df_data.columns if c.lower() in ['tên chuẩn', 'tên thiết bị', 'tên hàng', 'tên vật tư', 'diễn giải']), None)
+                data_name_col = next((c for c in df_data.columns if c.lower() in ['tên chuẩn', 'tên thiết bị', 'tên hàng', 'tên vật tư', 'diễn giải']), 'Tên chuẩn')
                 
                 if data_name_col != 'Tên chuẩn':
                     df_data = df_data.rename(columns={data_name_col: 'Tên chuẩn'})
@@ -181,34 +222,55 @@ if run_process:
                 df_data['Tên chuẩn'] = df_data['Tên chuẩn'].astype(str).str.strip()
                 danh_sach_chuan = df_data['Tên chuẩn'].tolist()
 
-                # --- ĐỌC DỮ LIỆU BOQ ---
+                # --- 2. ĐỌC DỮ LIỆU BOQ (TỪNG CỘT RIÊNG BIỆT CHO K & NHIỆT ĐỘ) ---
                 df_boq = pd.read_excel(file_boq, sheet_name=selected_boq_sheet)
                 df_boq.columns = [str(c).strip() for c in df_boq.columns]
                 
-                name_col_found = next((c for c in df_boq.columns if c.lower() in ['tên thiết bị boq', 'diễn giải', 'tên hàng', 'tên vật tư', 'tên thiết bị', 'tên công tác']), None)
-                if not name_col_found and len(df_boq.columns) > 1:
-                    name_col_found = df_boq.columns[1]
-                
-                if name_col_found != 'Tên thiết bị BOQ':
-                    df_boq = df_boq.rename(columns={name_col_found: 'Tên thiết bị BOQ'})
+                # Nhận diện các cột động từ file BOQ
+                name_col_found = next((c for c in df_boq.columns if c.lower() in ['tên chuẩn', 'tên thiết bị boq', 'diễn giải', 'tên hàng', 'tên vật tư', 'tên thiết bị']), df_boq.columns[1])
+                qty_col_found = next((c for c in df_boq.columns if c.lower() in ['khối lượng', 'số lượng', 'sl']), 'Số lượng')
+                k_col_boq = next((c for c in df_boq.columns if c.lower() in ['k', 'hệ số k']), None)
+                temp_col_boq = next((c for c in df_boq.columns if c.lower() in ['nhiệt độ', 'temp', 'nhiet do']), None)
 
-                qty_col_found = next((c for c in df_boq.columns if c.lower() in ['khối lượng', 'số lượng', 'sl']), None)
-                if qty_col_found:
-                    df_boq = df_boq.rename(columns={qty_col_found: 'Số lượng'})
+                df_boq = df_boq.rename(columns={
+                    name_col_found: 'Tên thiết bị BOQ',
+                    qty_col_found: 'Số lượng'
+                })
+
+                # Gán cột K và Nhiệt độ hoặc tạo mặc định nếu BOQ không có cột riêng
+                if k_col_boq:
+                    df_boq = df_boq.rename(columns={k_col_boq: 'K_BOQ'})
                 else:
-                    df_boq['Số lượng'] = 0
+                    df_boq['K_BOQ'] = 8.0
+
+                if temp_col_boq:
+                    df_boq = df_boq.rename(columns={temp_col_boq: 'Temp_BOQ'})
+                else:
+                    df_boq['Temp_BOQ'] = '68°C'
 
                 df_boq = df_boq.dropna(subset=['Tên thiết bị BOQ'])
                 df_boq['Tên thiết bị BOQ'] = df_boq['Tên thiết bị BOQ'].astype(str).str.replace('\u3000', ' ').str.strip()
                 df_boq['Số lượng'] = pd.to_numeric(df_boq['Số lượng'], errors='coerce').fillna(0)
-                df_boq = df_boq.groupby('Tên thiết bị BOQ', sort=False, as_index=False)['Số lượng'].sum()
+
+                # Làm sạch giá trị K
+                def clean_k_value(val):
+                    match = re.search(r'([0-9]+(?:\.[0-9]*)?)', str(val))
+                    return float(match.group(1)) if match else 8.0
+
+                # Làm sạch giá trị Nhiệt độ
+                def clean_temp_value(val):
+                    match = re.search(r'(\d+)', str(val))
+                    return int(match.group(1)) if match else 68
+
+                df_boq['K_Val'] = df_boq['K_BOQ'].apply(clean_k_value)
+                df_boq['Temp_Val'] = df_boq['Temp_BOQ'].apply(clean_temp_value)
 
                 def extract_dn(text):
                     match = re.search(r'DN\s*[:=]?\s*(\d+)', str(text), re.IGNORECASE)
-                    return int(match.group(1)) if match else 0
+                    return int(match.group(1)) if match else 15
 
                 def extract_k_factor(text):
-                    match = re.search(r'K\s*[:=]?\s*([0-9]+(?:\.[0-9]+)?)', str(text), re.IGNORECASE)
+                    match = re.search(r'K\s*[:=]?\s*([0-9]+(?:\.[0-9]*)?)', str(text), re.IGNORECASE)
                     return float(match.group(1)) if match else 5.5
 
                 def extract_temperature(text):
@@ -217,42 +279,84 @@ if run_process:
                         match = re.search(r'(\d+)\s*°\s*c', str(text), re.IGNORECASE)
                     return int(match.group(1)) if match else 68
 
-                def map_ten_va_quy_tac(ten_boq):
-                    text_lower = str(ten_boq).lower()
-                    dn_val = extract_dn(ten_boq)
-                    k_val = extract_k_factor(text_lower)
-                    temp_val = extract_temperature(text_lower)
-
-                    if 'đầu phun' in text_lower or 'sprinkler' in text_lower:
-                        is_nhanh = 'nhanh' in text_lower
+                # Hàm chuẩn hóa tên và gộp thông số tiêu chuẩn
+                def map_ten_va_quy_tac_chuan(row):
+                    text_chuan = chuan_hoa_boq(row['Tên thiết bị BOQ'])
+                    k_val = row['K_Val']
+                    temp_val = row['Temp_Val']
+                    dn_val = extract_dn(row['Tên thiết bị BOQ'])
+                    
+                    if 'đầu phun' in text_chuan:
+                        is_nhanh = 'nhanh' in text_chuan
                         response_str = "phản ứng nhanh" if is_nhanh else "phản ứng tiêu chuẩn"
-                        if 'hướng lên' in text_lower or 'upright' in text_lower:
+                        if 'hướng lên' in text_chuan:
                             huong_str = "hướng lên"
-                        elif 'hướng ngang' in text_lower or 'sidewall' in text_lower:
+                        elif 'hướng ngang' in text_chuan:
                             huong_str = "hướng ngang"
                         else:
                             huong_str = "hướng xuống"
-                        if dn_val == 0:
+                            
+                        if dn_val == 15:
                             if k_val > 11.2: dn_val = 25
                             elif k_val >= 8.0: dn_val = 20
-                            else: dn_val = 15
+                            
                         return f"Đầu phun chữa cháy hướng {huong_str} {response_str}, K={k_val:g}, DN{dn_val}, {temp_val}°C"
+                    return text_chuan
 
-                    return ten_boq
+                df_boq['Tên BOQ Chuẩn Hóa'] = df_boq.apply(map_ten_va_quy_tac_chuan, axis=1)
 
-                def tim_ma_phu_hop(ten_chuan_boq, ten_goc_boq):
-                    text_lower = str(ten_goc_boq).lower()
-                    dn_val = extract_dn(ten_goc_boq)
-                    k_val = extract_k_factor(ten_goc_boq)
-                    temp_val = extract_temperature(ten_goc_boq)
-                    if dn_val == 0:
-                        if k_val > 11.2: dn_val = 25
-                        elif k_val >= 8.0: dn_val = 20
-                        else: dn_val = 15
+                # --- 3. HÀM KHỚP MÃ CHÍNH XÁC ---
+                def tim_ma_phu_hop_chinh_xac(row):
+                    ten_chuan_boq = str(row['Tên BOQ Chuẩn Hóa']).lower()
+                    k_target = float(row['K_Val'])
+                    temp_target = int(row['Temp_Val'])
+                    dn_val = extract_dn(row['Tên thiết bị BOQ'])
+                    
+                    if dn_val == 15:
+                        if k_target > 11.2: dn_val = 25
+                        elif k_target >= 8.0: dn_val = 20
 
-                    # --- XỬ LÝ RIÊNG CHO NHÓM VAN CỔNG ---
-                    if 'van cổng' in text_lower or 'van cống' in text_lower:
-                        is_osy = 'os&y' in text_lower or 'ty nổi' in text_lower or 'tay quay ngoài' in text_lower
+                    # Khớp chuyên biệt cho Đầu Phun
+                    if 'đầu phun' in ten_chuan_boq:
+                        is_nhanh_boq = 'nhanh' in ten_chuan_boq
+                        is_len_boq = 'hướng lên' in ten_chuan_boq
+                        is_ngang_boq = 'hướng ngang' in ten_chuan_boq
+                        is_xuong_boq = 'hướng xuống' in ten_chuan_boq or (not is_len_boq and not is_ngang_boq)
+
+                        danh_sach_sp_phu_hop = []
+                        for item in danh_sach_chuan:
+                            item_str = str(item).lower()
+                            if 'đầu phun' in item_str or 'sprinkler' in item_str:
+                                is_nhanh_item = 'nhanh' in item_str
+                                if is_nhanh_boq != is_nhanh_item:
+                                    continue
+                                
+                                item_k = extract_k_factor(item_str)
+                                item_temp = extract_temperature(item_str)
+                                item_dn = extract_dn(item_str)
+                                
+                                # Khớp chặt chẽ hệ số K và Nhiệt độ trực tiếp từ cột BOQ
+                                if abs(k_target - item_k) >= 0.1:
+                                    continue
+                                if temp_target != item_temp:
+                                    continue
+                                if dn_val > 0 and dn_val != item_dn:
+                                    continue
+
+                                is_len_item = 'hướng lên' in item_str or 'upright' in item_str
+                                is_ngang_item = 'hướng ngang' in item_str or 'sidewall' in item_str
+                                is_xuong_item = 'hướng xuống' in item_str or 'pendent' in item_str or (not is_len_item and not is_ngang_item)
+
+                                if is_len_boq == is_len_item and is_ngang_boq == is_ngang_item and is_xuong_boq == is_xuong_item:
+                                    danh_sach_sp_phu_hop.append(item)
+
+                        if danh_sach_sp_phu_hop:
+                            return danh_sach_sp_phu_hop[0]
+                        return "Cần check thủ công"
+
+                    # Khớp cho Van Cổng (Ty nổi / Ty chìm)
+                    if 'van cổng' in ten_chuan_boq:
+                        is_osy = 'ty nổi' in ten_chuan_boq 
                         danh_sach_loc = []
                         for item in danh_sach_chuan:
                             item_lower = str(item).lower()
@@ -273,59 +377,22 @@ if run_process:
                                 return match
                         return "Cần check thủ công"
 
-                    # --- XỬ LÝ ĐẦU PHUN SPRINKLER (CHẶT CHẼ HƯỚNG LẮP ĐẶT & DN ĐÚNG CHUẨN) ---
-                    if 'đầu phun' in text_lower or 'sprinkler' in text_lower:
-                        is_nhanh_boq = 'nhanh' in text_lower
-                        is_len_boq = 'hướng lên' in text_lower or 'upright' in text_lower
-                        is_ngang_boq = 'hướng ngang' in text_lower or 'sidewall' in text_lower
-                        is_xuong_boq = 'hướng xuống' in text_lower or 'pendent' in text_lower or (not is_len_boq and not is_ngang_boq)
-
-                        danh_sach_sp_phu_hop = []
-                        for item in danh_sach_chuan:
-                            item_str = str(item).lower()
-                            if 'đầu phun' in item_str or 'sprinkler' in item_str:
-                                is_nhanh_item = 'nhanh' in item_str
-                                if is_nhanh_boq != is_nhanh_item:
-                                    continue
-                                if abs(k_val - extract_k_factor(item_str)) >= 0.1:
-                                    continue
-                                if temp_val != extract_temperature(item_str):
-                                    continue
-                                
-                                item_dn = extract_dn(item_str)
-                                if item_dn == 0:
-                                    item_k = extract_k_factor(item_str)
-                                    item_dn = 25 if item_k > 11.2 else (20 if item_k >= 8.0 else 15)
-                                if dn_val > 0 and dn_val != item_dn:
-                                    continue
-
-                                is_len_item = 'hướng lên' in item_str or 'upright' in item_str
-                                is_ngang_item = 'hướng ngang' in item_str or 'sidewall' in item_str
-                                is_xuong_item = 'hướng xuống' in item_str or 'pendent' in item_str or (not is_len_item and not is_ngang_item)
-
-                                # Bắt buộc khớp hướng lắp đặt tuyệt đối
-                                if is_len_boq == is_len_item and is_ngang_boq == is_ngang_item and is_xuong_boq == is_xuong_item:
-                                    danh_sach_sp_phu_hop.append(item)
-
-                        if danh_sach_sp_phu_hop:
-                            return danh_sach_sp_phu_hop[0]
-                        
-                        return "Cần check thủ công"
-
+                    # Khớp chung bằng FuzzyWuzzy
                     match, score = process.extractOne(str(ten_chuan_boq), danh_sach_chuan)
                     if score > 40:
                         return match
                     return "Cần check thủ công"
 
-                df_boq['Tên BOQ Chuẩn Hóa'] = df_boq['Tên thiết bị BOQ'].apply(map_ten_va_quy_tac)
-                df_boq['Tên Map'] = df_boq.apply(lambda row: tim_ma_phu_hop(row['Tên BOQ Chuẩn Hóa'], row['Tên thiết bị BOQ']), axis=1)
+                df_boq['Tên Map'] = df_boq.apply(tim_ma_phu_hop_chinh_xac, axis=1)
                 
                 df_result = pd.merge(df_boq, df_data, left_on='Tên Map', right_on='Tên chuẩn', how='left')
                 df_result['Đơn giá'] = df_result['Đơn giá'].apply(safe_float_convert)
                 
                 st.session_state.df_raw_result = df_result
                 st.session_state.manual_selections = {}
-                st.success("🎉 Phân tích BOQ thành công!")
+                
+                # --- ĐÃ THAY ĐỔI CÂU THÔNG BÁO Ở ĐÂY ---
+                st.success("🎉 Đã Phân Tích Thành Công!")
 
         except Exception as e:
             st.error(f"Đã xảy ra lỗi trong quá trình xử lý: {e}")
@@ -346,7 +413,7 @@ if st.session_state.df_raw_result is not None:
     m3.metric("Cần kiểm tra thủ công", f"{manual_count} mục", delta=f"-{manual_count}" if manual_count > 0 else "0", delta_color="inverse")
 
     st.markdown("### 🔍 Bảng Đối Chiếu Kết Quả Mapping")
-    display_compare_df = df_current[['Tên thiết bị BOQ', 'Tên BOQ Chuẩn Hóa', 'Tên Map', 'Mã SP', 'Số lượng', 'Đơn giá']].copy()
+    display_compare_df = df_current[['Tên thiết bị BOQ', 'K_Val', 'Temp_Val', 'Tên BOQ Chuẩn Hóa', 'Tên Map', 'Mã SP', 'Số lượng', 'Đơn giá']].copy()
     st.dataframe(display_compare_df, use_container_width=True)
 
     st.markdown("### 📋 Tra Cứu & Chọn Mã Trực Tiếp Trên Bảng")
