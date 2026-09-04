@@ -95,16 +95,17 @@ BOQ_DICTIONARY = {
     "van bướm": ["van bớm", "butterfly valve", "bfv"],
     "tay quay": ["vô lăng", "hộp số", "gear operated", "gear type", "worm gear"],
     "tay gạt": ["mỏ vịt", "tay kẹp", "lever operated", "lever type", "handle"],
+    "van bi": ["van bi tay gạt", "van tay gạt", "ball valve", "van bi"],
     "van 1 chiều": ["van một chiều", "van chống chảy ngược", "van 1c", "check valve", "non-return valve", "nrv", "cv"],
     "lá lật": ["cánh lật", "bản lề", "swing check valve", "swing"],
     "cánh bướm": ["kiểu bướm", "lò xo cánh bướm", "đối trọng", "kẹp đĩa", "dual plate", "wafer check valve"],
     "lò xo": ["kiểu cối", "đĩa lò xo", "spring check valve", "lift check valve", "silent check valve"],
-    "van báo động": ["van báo cháy", "cụm van báo động ướt", "trạm van báo động", "alarm check valve", "wet alarm valve", "acv"],
+    "van báo động": ["van báo cháy", "cụm van báo động ướt", "trạm van báo động", "alarm check valve", "wet alarm valve", "acv", "van báo động"],
     "van xả tràn": ["van tràn ngập", "van tràn", "màng ngăn nước", "deluge valve", "deluge system", "dv"],
     "van giảm áp": ["van điều áp", "van hạ áp", "pressure reducing valve", "prv"],
     "van an toàn": ["van xả áp", "chống quá áp", "pressure relief valve", "safety valve", "relief valve"],
     "lọc y": ["y lọc", "bộ lọc chữ y", "lưới lọc bụi", "y-strainer", "strainer"],
-    "rọ bơm": ["rọ hút", "luppe", "van hút", "lúp bê", "foot valve"],
+    "rọ hút": ["luppe", "lúp bê", "rọ bơm", "foot valve", "van hút"],
     "van xả khí": ["van xả gió", "van đuổi khí", "air release valve", "air vent", "xả khí"],
     "công tắc dòng chảy": ["rơ le dòng chảy", "cảm biến dòng chảy", "báo dòng chảy", "water flow switch", "flow indicator", "flow switch"],
     "công tắc áp lực": ["rơ le áp suất", "cảm biến áp suất", "pressure switch"],
@@ -311,6 +312,52 @@ if run_process:
                         if k_target > 11.2: dn_val = 25
                         elif k_target >= 8.0: dn_val = 20
 
+                    # 1. Xử lý Van báo động
+                    if 'van báo động' in ten_chuan_boq:
+                        danh_sach_loc = []
+                        for item in danh_sach_chuan:
+                            item_lower = str(item).lower()
+                            if 'van báo động' in item_lower or 'alarm check valve' in item_lower:
+                                danh_sach_loc.append(item)
+                        if danh_sach_loc:
+                            if dn_val > 0:
+                                for item in danh_sach_loc:
+                                    if f"dn{dn_val}" in str(item).lower() or f"dn {dn_val}" in str(item).lower():
+                                        return item
+                            return danh_sach_loc[0]
+                        return "Cần check thủ công"
+
+                    # 2. Xử lý Van bi (bao gồm van bi tay gạt)
+                    if 'van bi' in ten_chuan_boq:
+                        danh_sach_loc = []
+                        for item in danh_sach_chuan:
+                            item_lower = str(item).lower()
+                            if 'van bi' in item_lower or 'ball valve' in item_lower:
+                                danh_sach_loc.append(item)
+                        if danh_sach_loc:
+                            if dn_val > 0:
+                                for item in danh_sach_loc:
+                                    if f"dn{dn_val}" in str(item).lower() or f"dn {dn_val}" in str(item).lower():
+                                        return item
+                            return danh_sach_loc[0]
+                        return "Cần check thủ công"
+
+                    # 3. Xử lý Rọ hút / Luppe
+                    if 'rọ hút' in ten_chuan_boq:
+                        danh_sach_loc = []
+                        for item in danh_sach_chuan:
+                            item_lower = str(item).lower()
+                            if 'rọ hút' in item_lower or 'luppe' in item_lower or 'foot valve' in item_lower or 'rọ bơm' in item_lower:
+                                danh_sach_loc.append(item)
+                        if danh_sach_loc:
+                            if dn_val > 0:
+                                for item in danh_sach_loc:
+                                    if f"dn{dn_val}" in str(item).lower() or f"dn {dn_val}" in str(item).lower():
+                                        return item
+                            return danh_sach_loc[0]
+                        return "Cần check thủ công"
+
+                    # 4. Xử lý Đầu phun
                     if 'đầu phun' in ten_chuan_boq:
                         is_nhanh_boq = 'nhanh' in ten_chuan_boq
                         is_len_boq = 'hướng lên' in ten_chuan_boq
@@ -347,6 +394,7 @@ if run_process:
                             return danh_sach_sp_phu_hop[0]
                         return "Cần check thủ công"
 
+                    # 5. Xử lý Van cổng
                     if 'van cổng' in ten_chuan_boq:
                         is_osy = 'ty nổi' in ten_chuan_boq or 'os&y' in ten_chuan_boq
                         has_switch = 'tín hiệu' in ten_chuan_boq or 'giám sát' in ten_chuan_boq or 'công tắc' in ten_chuan_boq or 'sw' in ten_chuan_boq
