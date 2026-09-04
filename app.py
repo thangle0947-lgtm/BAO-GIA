@@ -91,7 +91,7 @@ BOQ_DICTIONARY = {
     "van cổng": ["van chặn", "van khóa", "cổng khóa", "van đóng cắt", "gate valve", "isolation valve", "shut-off valve", "gv"],
     "ty nổi": ["tay quay ngoài", "ty ngoài", "có cần nổi", "cổ cao", "os&y", "outside stem and yoke", "rising stem"],
     "ty chìm": ["tay quay trong", "ty trong", "van nắp chụp", "chôn ngầm", "nrs", "non-rising stem"],
-    "kèm công tắc giám sát": ["kèm công tắc", "có tín hiệu điện", "giám sát điện", "kèm sw", "tamper switch", "supervisory switch"],
+    "kèm công tắc giám sát": ["kèm công tắc", "có tín hiệu điện", "giám sát điện", "kèm sw", "tamper switch", "supervisory switch", "tín hiệu", "giám sát"],
     "van bướm": ["van bớm", "butterfly valve", "bfv"],
     "tay quay": ["vô lăng", "hộp số", "gear operated", "gear type", "worm gear"],
     "tay gạt": ["mỏ vịt", "tay kẹp", "lever operated", "lever type", "handle"],
@@ -105,7 +105,7 @@ BOQ_DICTIONARY = {
     "van an toàn": ["van xả áp", "chống quá áp", "pressure relief valve", "safety valve", "relief valve"],
     "lọc y": ["y lọc", "bộ lọc chữ y", "lưới lọc bụi", "y-strainer", "strainer"],
     "rọ bơm": ["rọ hút", "luppe", "van hút", "lúp bê", "foot valve"],
-    "van xả khí": ["van xả gió", "van đuổi khí", "air release valve", "air vent"],
+    "van xả khí": ["van xả gió", "van đuổi khí", "air release valve", "air vent", "xả khí"],
     "công tắc dòng chảy": ["rơ le dòng chảy", "cảm biến dòng chảy", "báo dòng chảy", "water flow switch", "flow indicator", "flow switch"],
     "công tắc áp lực": ["rơ le áp suất", "cảm biến áp suất", "pressure switch"],
     "khớp nối mềm": ["khớp giảm chấn", "ống nối mềm", "chống rung", "cao su giảm chấn", "flexible joint", "expansion joint", "rubber joint"]
@@ -222,11 +222,10 @@ if run_process:
                 df_data['Tên chuẩn'] = df_data['Tên chuẩn'].astype(str).str.strip()
                 danh_sach_chuan = df_data['Tên chuẩn'].tolist()
 
-                # --- 2. ĐỌC DỮ LIỆU BOQ (TỪNG CỘT RIÊNG BIỆT CHO K & NHIỆT ĐỘ) ---
+                # --- 2. ĐỌC DỮ LIỆU BOQ ---
                 df_boq = pd.read_excel(file_boq, sheet_name=selected_boq_sheet)
                 df_boq.columns = [str(c).strip() for c in df_boq.columns]
                 
-                # Nhận diện các cột động từ file BOQ
                 name_col_found = next((c for c in df_boq.columns if c.lower() in ['tên chuẩn', 'tên thiết bị boq', 'diễn giải', 'tên hàng', 'tên vật tư', 'tên thiết bị']), df_boq.columns[1])
                 qty_col_found = next((c for c in df_boq.columns if c.lower() in ['khối lượng', 'số lượng', 'sl']), 'Số lượng')
                 k_col_boq = next((c for c in df_boq.columns if c.lower() in ['k', 'hệ số k']), None)
@@ -237,7 +236,6 @@ if run_process:
                     qty_col_found: 'Số lượng'
                 })
 
-                # Gán cột K và Nhiệt độ hoặc tạo mặc định nếu BOQ không có cột riêng
                 if k_col_boq:
                     df_boq = df_boq.rename(columns={k_col_boq: 'K_BOQ'})
                 else:
@@ -252,12 +250,10 @@ if run_process:
                 df_boq['Tên thiết bị BOQ'] = df_boq['Tên thiết bị BOQ'].astype(str).str.replace('\u3000', ' ').str.strip()
                 df_boq['Số lượng'] = pd.to_numeric(df_boq['Số lượng'], errors='coerce').fillna(0)
 
-                # Làm sạch giá trị K
                 def clean_k_value(val):
                     match = re.search(r'([0-9]+(?:\.[0-9]*)?)', str(val))
                     return float(match.group(1)) if match else 8.0
 
-                # Làm sạch giá trị Nhiệt độ
                 def clean_temp_value(val):
                     match = re.search(r'(\d+)', str(val))
                     return int(match.group(1)) if match else 68
@@ -279,7 +275,6 @@ if run_process:
                         match = re.search(r'(\d+)\s*°\s*c', str(text), re.IGNORECASE)
                     return int(match.group(1)) if match else 68
 
-                # Hàm chuẩn hóa tên và gộp thông số tiêu chuẩn
                 def map_ten_va_quy_tac_chuan(row):
                     text_chuan = chuan_hoa_boq(row['Tên thiết bị BOQ'])
                     k_val = row['K_Val']
@@ -316,7 +311,6 @@ if run_process:
                         if k_target > 11.2: dn_val = 25
                         elif k_target >= 8.0: dn_val = 20
 
-                    # Khớp chuyên biệt cho Đầu Phun
                     if 'đầu phun' in ten_chuan_boq:
                         is_nhanh_boq = 'nhanh' in ten_chuan_boq
                         is_len_boq = 'hướng lên' in ten_chuan_boq
@@ -335,7 +329,6 @@ if run_process:
                                 item_temp = extract_temperature(item_str)
                                 item_dn = extract_dn(item_str)
                                 
-                                # Khớp chặt chẽ hệ số K và Nhiệt độ trực tiếp từ cột BOQ
                                 if abs(k_target - item_k) >= 0.1:
                                     continue
                                 if temp_target != item_temp:
@@ -354,30 +347,34 @@ if run_process:
                             return danh_sach_sp_phu_hop[0]
                         return "Cần check thủ công"
 
-                    # Khớp cho Van Cổng (Ty nổi / Ty chìm)
                     if 'van cổng' in ten_chuan_boq:
-                        is_osy = 'ty nổi' in ten_chuan_boq 
+                        is_osy = 'ty nổi' in ten_chuan_boq or 'os&y' in ten_chuan_boq
+                        has_switch = 'tín hiệu' in ten_chuan_boq or 'giám sát' in ten_chuan_boq or 'công tắc' in ten_chuan_boq or 'sw' in ten_chuan_boq
+                        
                         danh_sach_loc = []
                         for item in danh_sach_chuan:
                             item_lower = str(item).lower()
-                            if is_osy:
-                                if 'os&y' in item_lower or 'ty nổi' in item_lower:
-                                    danh_sach_loc.append(item)
-                            else:
-                                if 'ty chìm' in item_lower or ('os&y' not in item_lower and 'ty nổi' not in item_lower):
-                                    danh_sach_loc.append(item)
+                            if 'van cổng' not in item_lower and 'cổng' not in item_lower:
+                                continue
+                                
+                            item_is_osy = 'os&y' in item_lower or 'ty nổi' in item_lower
+                            if is_osy != item_is_osy:
+                                continue
+                                
+                            item_has_switch = 'giám sát' in item_lower or 'tín hiệu' in item_lower or 'công tắc' in item_lower or 'tamper' in item_lower or 'switch' in item_lower
+                            if has_switch != item_has_switch:
+                                continue
+                                
+                            danh_sach_loc.append(item)
                         
                         if danh_sach_loc:
                             if dn_val > 0:
                                 for item in danh_sach_loc:
                                     if f"dn{dn_val}" in str(item).lower() or f"dn {dn_val}" in str(item).lower():
                                         return item
-                            match, score = process.extractOne(str(ten_chuan_boq), danh_sach_loc)
-                            if score > 40:
-                                return match
+                            return danh_sach_loc[0]
                         return "Cần check thủ công"
 
-                    # Khớp chung bằng FuzzyWuzzy
                     match, score = process.extractOne(str(ten_chuan_boq), danh_sach_chuan)
                     if score > 40:
                         return match
@@ -391,7 +388,6 @@ if run_process:
                 st.session_state.df_raw_result = df_result
                 st.session_state.manual_selections = {}
                 
-                # --- ĐÃ THAY ĐỔI CÂU THÔNG BÁO Ở ĐÂY ---
                 st.success("🎉 Đã Phân Tích Thành Công!")
 
         except Exception as e:
@@ -522,10 +518,10 @@ if st.session_state.df_raw_result is not None:
                     if not isinstance(cell, MergedCell):
                         cell.value = val
 
-                safe_write(6, 2, to_company)       
-                safe_write(7, 2, add_company)      
-                safe_write(8, 2, att_contact)      
-                safe_write(9, 2, mobile_contact)   
+                safe_write(6, 2, to_company)        
+                safe_write(7, 2, add_company)       
+                safe_write(8, 2, att_contact)       
+                safe_write(9, 2, mobile_contact)    
                 safe_write(10, 2, email_contact)    
                 safe_write(11, 2, ref_content)      
 
@@ -568,13 +564,13 @@ if st.session_state.df_raw_result is not None:
 
                 for index, row_data in df_final.iterrows():
                     current_row = start_row + index
-                    safe_write(current_row, 1, index + 1)                        
+                    safe_write(current_row, 1, index + 1)                
                     safe_write(current_row, 2, row_data.get('Mã SP', ''))        
                     safe_write(current_row, 3, row_data.get('Tên chuẩn', ''))    
                     safe_write(current_row, 4, row_data.get('XUẤT XỨ', ''))      
                     safe_write(current_row, 5, row_data.get('ĐVT', ''))          
                     safe_write(current_row, 6, row_data.get('Số lượng', 0))      
-                    safe_write(current_row, 7, row_data.get('Đơn giá', 0))       
+                    safe_write(current_row, 7, row_data.get('Đơn giá', 0))        
                     safe_write(current_row, 8, row_data.get('Thành tiền', 0))    
                     safe_write(current_row, 9, '')                               
 
