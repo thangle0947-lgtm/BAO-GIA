@@ -175,10 +175,58 @@ validity_quote = st.sidebar.text_input("Validity: Hiệu lực", value="30/09/20
 project_name = st.sidebar.text_input("Project: Tên Dự án", value="NHÀ MÁY TRẦN ĐỨC / BỆNH VIỆN QUÂN Y 7B")
 output_filename = st.sidebar.text_input("Tên file xuất ra:", value="BaoGia_QNTech_HoanChinh.xlsx")
 
-if 'df_raw_result' not in st.session_state:
-    st.session_state.df_raw_result = None
-if 'manual_selections' not in st.session_state:
-    st.session_state.manual_selections = {}
+if 'df_editable' not in st.session_state:
+    st.session_state.df_editable = None
+
+# ==========================================
+# CHUẨN BỊ DỮ LIỆU THAM KHẢO BẢNG GIÁ
+# ==========================================
+list_options = ["-- Chọn mã từ bảng giá --", "-- Dùng tên gốc BOQ (Không có mã) --"]
+dict_mapping_price = {}
+
+if file_data and selected_brand_sheet:
+    try:
+        df_ref_full = pd.read_excel(file_data, sheet_name=selected_brand_sheet)
+        df_ref_full.columns = [str(c).strip() for c in df_ref_full.columns]
+        
+        ref_code_col = next((c for c in df_ref_full.columns if c.lower() in ['mã sp', 'mã sản phẩm', 'code', 'mã vật tư']), 'Mã SP')
+        ref_name_col = next((c for c in df_ref_full.columns if c.lower() in ['tên chuẩn', 'tên thiết bị', 'tên hàng', 'tên vật tư']), 'Tên chuẩn')
+        ref_price_col = next((c for c in df_ref_full.columns if c.lower() in ['đơn giá', 'price', 'giá']), 'Đơn giá')
+        ref_unit_col = next((c for c in df_ref_full.columns if c.lower() in ['đvt', 'đơn vị tính', 'unit']), 'ĐVT')
+        ref_origin_col = next((c for c in df_ref_full.columns if c.lower() in ['xuất xứ', 'origin']), 'XUẤT XỨ')
+
+        df_ref_full = df_ref_full.dropna(subset=[ref_code_col])
+        df_ref_full[ref_code_col] = df_ref_full[ref_code_col].astype(str).str.strip()
+        df_ref_full = df_ref_full[~df_ref_full[ref_code_col].isin(['nan', 'None', '', '-'])]
+        df_ref_full[ref_name_col] = df_ref_full[ref_name_col].astype(str).str.strip()
+
+        df_ref_full['Option_Display'] = df_ref_full[ref_code_col] + " - " + df_ref_full[ref_name_col]
+        df_ref_full = df_ref_full.drop_duplicates(subset=['Option_Display'])
+        
+        list_options = ["-- Chọn mã từ bảng giá --", "-- Dùng tên gốc BOQ (Không có mã) --"] + df_ref_full['Option_Display'].tolist()
+        
+        def safe_float_convert(val):
+            try:
+                if val is None or pd.isna(val):
+                    return 0.0
+                s = str(val).replace(',', '').strip()
+                if not s or s == '-' or s.lower() == 'nan':
+                    return 0.0
+                return float(s)
+            except ValueError:
+                return 0.0
+
+        for _, r in df_ref_full.iterrows():
+            code_val = str(r[ref_code_col])
+            price_val = safe_float_convert(r.get(ref_price_col, 0))
+            dict_mapping_price[code_val] = {
+                'Tên chuẩn': str(r.get(ref_name_col, '')),
+                'Đơn giá': price_val,
+                'ĐVT': str(r.get(ref_unit_col, 'Cái')),
+                'XUẤT XỨ': str(r.get(ref_origin_col, 'LS/ VN'))
+            }
+    except Exception as e:
+        st.sidebar.error(f"Lỗi tải danh mục bảng giá: {e}")
 
 # ==========================================
 # XỬ LÝ DỮ LIỆU BAN ĐẦU
@@ -187,17 +235,6 @@ st.markdown("### ⚡ Bảng Điều Khiển Xử Lý BOQ")
 col_btn1, col_btn2 = st.columns([1, 4])
 with col_btn1:
     run_process = st.button("🚀 Phân Tích BOQ", type="primary")
-
-def safe_float_convert(val):
-    try:
-        if val is None or pd.isna(val):
-            return 0.0
-        s = str(val).replace(',', '').strip()
-        if not s or s == '-' or s.lower() == 'nan':
-            return 0.0
-        return float(s)
-    except ValueError:
-        return 0.0
 
 if run_process:
     if not (file_data and file_boq and file_template and selected_brand_sheet):
@@ -237,15 +274,8 @@ if run_process:
                     qty_col_found: 'Số lượng'
                 })
 
-                if k_col_boq:
-                    df_boq = df_boq.rename(columns={k_col_boq: 'K_BOQ'})
-                else:
-                    df_boq['K_BOQ'] = 8.0
-
-                if temp_col_boq:
-                    df_boq = df_boq.rename(columns={temp_col_boq: 'Temp_BOQ'})
-                else:
-                    df_boq['Temp_BOQ'] = '68°C'
+                df_boq['K_BOQ'] = df_boq[k_col_boq] if k_col_boq else 8.0
+                df_boq['Temp_BOQ'] = df_boq[temp_col_boq] if temp_col_boq else '68°C'
 
                 df_boq = df_boq.dropna(subset=['Tên thiết bị BOQ'])
                 df_boq['Tên thiết bị BOQ'] = df_boq['Tên thiết bị BOQ'].astype(str).str.replace('\u3000', ' ').str.strip()
@@ -301,7 +331,6 @@ if run_process:
 
                 df_boq['Tên BOQ Chuẩn Hóa'] = df_boq.apply(map_ten_va_quy_tac_chuan, axis=1)
 
-                # --- 3. HÀM KHỚP MÃ CHÍNH XÁC ---
                 def tim_ma_phu_hop_chinh_xac(row):
                     ten_chuan_boq = str(row['Tên BOQ Chuẩn Hóa']).lower()
                     k_target = float(row['K_Val'])
@@ -312,13 +341,8 @@ if run_process:
                         if k_target > 11.2: dn_val = 25
                         elif k_target >= 8.0: dn_val = 20
 
-                    # 1. Xử lý Van báo động
                     if 'van báo động' in ten_chuan_boq:
-                        danh_sach_loc = []
-                        for item in danh_sach_chuan:
-                            item_lower = str(item).lower()
-                            if 'van báo động' in item_lower or 'alarm check valve' in item_lower:
-                                danh_sach_loc.append(item)
+                        danh_sach_loc = [item for item in danh_sach_chuan if 'van báo động' in str(item).lower() or 'alarm check valve' in str(item).lower()]
                         if danh_sach_loc:
                             if dn_val > 0:
                                 for item in danh_sach_loc:
@@ -327,13 +351,8 @@ if run_process:
                             return danh_sach_loc[0]
                         return "Cần check thủ công"
 
-                    # 2. Xử lý Van bi (bao gồm van bi tay gạt)
                     if 'van bi' in ten_chuan_boq:
-                        danh_sach_loc = []
-                        for item in danh_sach_chuan:
-                            item_lower = str(item).lower()
-                            if 'van bi' in item_lower or 'ball valve' in item_lower:
-                                danh_sach_loc.append(item)
+                        danh_sach_loc = [item for item in danh_sach_chuan if 'van bi' in str(item).lower() or 'ball valve' in str(item).lower()]
                         if danh_sach_loc:
                             if dn_val > 0:
                                 for item in danh_sach_loc:
@@ -342,13 +361,8 @@ if run_process:
                             return danh_sach_loc[0]
                         return "Cần check thủ công"
 
-                    # 3. Xử lý Rọ hút / Luppe
                     if 'rọ hút' in ten_chuan_boq:
-                        danh_sach_loc = []
-                        for item in danh_sach_chuan:
-                            item_lower = str(item).lower()
-                            if 'rọ hút' in item_lower or 'luppe' in item_lower or 'foot valve' in item_lower or 'rọ bơm' in item_lower:
-                                danh_sach_loc.append(item)
+                        danh_sach_loc = [item for item in danh_sach_chuan if 'rọ hút' in str(item).lower() or 'luppe' in str(item).lower() or 'foot valve' in str(item).lower() or 'rọ bơm' in str(item).lower()]
                         if danh_sach_loc:
                             if dn_val > 0:
                                 for item in danh_sach_loc:
@@ -357,7 +371,6 @@ if run_process:
                             return danh_sach_loc[0]
                         return "Cần check thủ công"
 
-                    # 4. Xử lý Đầu phun
                     if 'đầu phun' in ten_chuan_boq:
                         is_nhanh_boq = 'nhanh' in ten_chuan_boq
                         is_len_boq = 'hướng lên' in ten_chuan_boq
@@ -368,17 +381,13 @@ if run_process:
                         for item in danh_sach_chuan:
                             item_str = str(item).lower()
                             if 'đầu phun' in item_str or 'sprinkler' in item_str:
-                                is_nhanh_item = 'nhanh' in item_str
-                                if is_nhanh_boq != is_nhanh_item:
+                                if is_nhanh_boq != ('nhanh' in item_str):
                                     continue
-                                
                                 item_k = extract_k_factor(item_str)
                                 item_temp = extract_temperature(item_str)
                                 item_dn = extract_dn(item_str)
                                 
-                                if abs(k_target - item_k) >= 0.1:
-                                    continue
-                                if temp_target != item_temp:
+                                if abs(k_target - item_k) >= 0.1 or temp_target != item_temp:
                                     continue
                                 if dn_val > 0 and dn_val != item_dn:
                                     continue
@@ -389,12 +398,10 @@ if run_process:
 
                                 if is_len_boq == is_len_item and is_ngang_boq == is_ngang_item and is_xuong_boq == is_xuong_item:
                                     danh_sach_sp_phu_hop.append(item)
-
                         if danh_sach_sp_phu_hop:
                             return danh_sach_sp_phu_hop[0]
                         return "Cần check thủ công"
 
-                    # 5. Xử lý Van cổng
                     if 'van cổng' in ten_chuan_boq:
                         is_osy = 'ty nổi' in ten_chuan_boq or 'os&y' in ten_chuan_boq
                         has_switch = 'tín hiệu' in ten_chuan_boq or 'giám sát' in ten_chuan_boq or 'công tắc' in ten_chuan_boq or 'sw' in ten_chuan_boq
@@ -404,15 +411,10 @@ if run_process:
                             item_lower = str(item).lower()
                             if 'van cổng' not in item_lower and 'cổng' not in item_lower:
                                 continue
-                                
-                            item_is_osy = 'os&y' in item_lower or 'ty nổi' in item_lower
-                            if is_osy != item_is_osy:
+                            if is_osy != ('os&y' in item_lower or 'ty nổi' in item_lower):
                                 continue
-                                
-                            item_has_switch = 'giám sát' in item_lower or 'tín hiệu' in item_lower or 'công tắc' in item_lower or 'tamper' in item_lower or 'switch' in item_lower
-                            if has_switch != item_has_switch:
+                            if has_switch != ('giám sát' in item_lower or 'tín hiệu' in item_lower or 'công tắc' in item_lower or 'tamper' in item_lower or 'switch' in item_lower):
                                 continue
-                                
                             danh_sach_loc.append(item)
                         
                         if danh_sach_loc:
@@ -424,31 +426,32 @@ if run_process:
                         return "Cần check thủ công"
 
                     match, score = process.extractOne(str(ten_chuan_boq), danh_sach_chuan)
-                    if score > 40:
-                        return match
-                    return "Cần check thủ công"
+                    return match if score > 40 else "Cần check thủ công"
 
                 df_boq['Tên Map'] = df_boq.apply(tim_ma_phu_hop_chinh_xac, axis=1)
-                
                 df_result = pd.merge(df_boq, df_data, left_on='Tên Map', right_on='Tên chuẩn', how='left')
-                df_result['Đơn giá'] = df_result['Đơn giá'].apply(safe_float_convert)
                 
-                st.session_state.df_raw_result = df_result
-                st.session_state.manual_selections = {}
+                default_selections = []
+                for _, r in df_result.iterrows():
+                    m = str(r.get('Mã SP', ''))
+                    match_opt = next((opt for opt in list_options if opt.startswith(m + " -")), "-- Chọn mã từ bảng giá --")
+                    default_selections.append(match_opt)
                 
+                df_result['Chọn / Đổi Mã SP'] = default_selections
+                st.session_state.df_editable = df_result
                 st.success("🎉 Đã Phân Tích Thành Công!")
 
         except Exception as e:
             st.error(f"Đã xảy ra lỗi trong quá trình xử lý: {e}")
 
 # ==========================================
-# GIAO DIỆN HIỂN THỊ KẾT QUẢ & TRA CỨU THỦ CÔNG
+# GIAO DIỆN HIỂN THỊ & CHỈNH SỬA RÚT GỌN
 # ==========================================
-if st.session_state.df_raw_result is not None:
-    df_current = st.session_state.df_raw_result
+if st.session_state.df_editable is not None:
+    df_current = st.session_state.df_editable
     
     total_items = len(df_current)
-    manual_count = len(df_current[df_current['Tên Map'] == 'Cần check thủ công'])
+    manual_count = len(df_current[(df_current['Tên Map'] == 'Cần check thủ công') | (df_current['Mã SP'].isna()) | (df_current['Mã SP'] == '') | (df_current['Mã SP'] == 'None')])
     auto_count = total_items - manual_count
 
     m1, m2, m3 = st.columns(3)
@@ -456,109 +459,61 @@ if st.session_state.df_raw_result is not None:
     m2.metric("Nhận diện tự động chuẩn", f"{auto_count} mục", delta="Thành công")
     m3.metric("Cần kiểm tra thủ công", f"{manual_count} mục", delta=f"-{manual_count}" if manual_count > 0 else "0", delta_color="inverse")
 
-    st.markdown("### 🔍 Bảng Đối Chiếu Kết Quả Mapping")
-    display_compare_df = df_current[['Tên thiết bị BOQ', 'K_Val', 'Temp_Val', 'Tên BOQ Chuẩn Hóa', 'Tên Map', 'Mã SP', 'Số lượng', 'Đơn giá']].copy()
-    st.dataframe(display_compare_df, use_container_width=True)
+    st.markdown("### 📋 Bảng Tra Cứu & Chỉnh Sửa Rút Gọn")
+    st.info("💡 **Hướng dẫn:** Bảng hiển thị rút gọn các cột chính. Bạn có thể chọn lại mã hàng, hoặc chọn **'-- Dùng tên gốc BOQ (Không có mã) --'** để hệ thống tự điền tên gốc từ BOQ vào báo giá.")
 
-    st.markdown("### 📋 Tra Cứu & Chọn Mã Trực Tiếp Trên Bảng")
-    
-    df_ref_full = pd.read_excel(file_data, sheet_name=selected_brand_sheet)
-    df_ref_full.columns = [str(c).strip() for c in df_ref_full.columns]
-    
-    ref_code_col = next((c for c in df_ref_full.columns if c.lower() in ['mã sp', 'mã sản phẩm', 'code', 'mã vật tư']), 'Mã SP')
-    ref_name_col = next((c for c in df_ref_full.columns if c.lower() in ['tên chuẩn', 'tên thiết bị', 'tên hàng', 'tên vật tư']), 'Tên chuẩn')
-    ref_price_col = next((c for c in df_ref_full.columns if c.lower() in ['đơn giá', 'price', 'giá']), 'Đơn giá')
-    ref_unit_col = next((c for c in df_ref_full.columns if c.lower() in ['đvt', 'đơn vị tính', 'unit']), 'ĐVT')
-    ref_origin_col = next((c for c in df_ref_full.columns if c.lower() in ['xuất xứ', 'origin']), 'XUẤT XỨ')
+    if 'Chọn / Đổi Mã SP' not in df_current.columns:
+        df_current['Chọn / Đổi Mã SP'] = "-- Chọn mã từ bảng giá --"
 
-    df_ref_full = df_ref_full.dropna(subset=[ref_code_col])
-    df_ref_full[ref_code_col] = df_ref_full[ref_code_col].astype(str).str.strip()
-    df_ref_full = df_ref_full[~df_ref_full[ref_code_col].isin(['nan', 'None', '', '-'])]
-    df_ref_full[ref_name_col] = df_ref_full[ref_name_col].astype(str).str.strip()
+    edited_df = st.data_editor(
+        df_current,
+        column_config={
+            "Chọn / Đổi Mã SP": st.column_config.SelectboxColumn(
+                "Chọn / Đổi Mã SP",
+                options=list_options,
+                required=True,
+            ),
+            "Tên thiết bị BOQ": st.column_config.TextColumn("Tên thiết bị BOQ", disabled=True),
+            "Tên Map": st.column_config.TextColumn("Tên Map", disabled=True),
+            "Mã SP": st.column_config.TextColumn("Mã SP"),
+            "Số lượng": st.column_config.NumberColumn("Số lượng", min_value=0),
+            "Đơn giá": st.column_config.NumberColumn("Đơn giá (VNĐ)", min_value=0, format="%d"),
+        },
+        column_order=["Chọn / Đổi Mã SP", "Tên thiết bị BOQ", "Tên Map", "Mã SP", "Số lượng", "Đơn giá"],
+        hide_index=False,
+        key="master_grid_editor_compact"
+    )
 
-    df_ref_full['Option_Display'] = df_ref_full[ref_code_col] + " - " + df_ref_full[ref_name_col]
-    df_ref_full = df_ref_full.drop_duplicates(subset=['Option_Display'])
-    
-    list_options = ["-- Chọn mã từ bảng giá --"] + df_ref_full['Option_Display'].tolist()
-    
-    dict_mapping_price = {}
-    for _, r in df_ref_full.iterrows():
-        code_val = str(r[ref_code_col])
-        price_val = safe_float_convert(r.get(ref_price_col, 0))
+    # Xử lý cập nhật thông tin khi thay đổi lựa chọn trong dropdown
+    for idx, row in edited_df.iterrows():
+        selected_option = row.get('Chọn / Đổi Mã SP')
+        if selected_option == "-- Dùng tên gốc BOQ (Không có mã) --":
+            edited_df.at[idx, 'Mã SP'] = ""
+            edited_df.at[idx, 'Tên chuẩn'] = row.get('Tên thiết bị BOQ', '')
+            edited_df.at[idx, 'Đơn giá'] = 0.0
+            edited_df.at[idx, 'ĐVT'] = "Cái"
+            edited_df.at[idx, 'XUẤT XỨ'] = ""
+        elif selected_option and selected_option != "-- Chọn mã từ bảng giá --":
+            chosen_code = selected_option.split(" - ")[0].strip()
+            if chosen_code in dict_mapping_price and chosen_code != str(row.get('Mã SP', '')):
+                info = dict_mapping_price[chosen_code]
+                edited_df.at[idx, 'Mã SP'] = chosen_code
+                edited_df.at[idx, 'Tên chuẩn'] = info['Tên chuẩn']
+                edited_df.at[idx, 'Đơn giá'] = info['Đơn giá']
+                edited_df.at[idx, 'ĐVT'] = info['ĐVT']
+                edited_df.at[idx, 'XUẤT XỨ'] = info['XUẤT XỨ']
 
-        dict_mapping_price[code_val] = {
-            'Tên chuẩn': str(r.get(ref_name_col, '')),
-            'Đơn giá': price_val,
-            'ĐVT': str(r.get(ref_unit_col, 'Cái')),
-            'XUẤT XỨ': str(r.get(ref_origin_col, 'LS/ VN'))
-        }
+    st.session_state.df_editable = edited_df
 
-    mask_manual = (df_current['Tên Map'] == 'Cần check thủ công') | (df_current['Mã SP'].isna()) | (df_current['Mã SP'] == '') | (df_current['Mã SP'] == 'None')
-    df_auto = df_current[~mask_manual].copy()
-    df_manual = df_current[mask_manual].copy()
-
-    if not df_manual.empty:
-        st.info("💡 **Hướng dẫn:** Nhấp vào cột **'Tra Cứu & Chọn Mã SP Từ Bảng Giá'** trực tiếp trong bảng dưới đây để chọn mã sản phẩm.")
-
-        if 'Tra Cứu & Chọn Mã SP Từ Bảng Giá' not in df_manual.columns:
-            df_manual['Tra Cứu & Chọn Mã SP Từ Bảng Giá'] = '-- Chọn mã từ bảng giá --'
-            
-        for idx in df_manual.index:
-            if idx in st.session_state.manual_selections:
-                df_manual.at[idx, 'Tra Cứu & Chọn Mã SP Từ Bảng Giá'] = st.session_state.manual_selections[idx]
-
-        edited_df = st.data_editor(
-            df_manual,
-            column_config={
-                "Tra Cứu & Chọn Mã SP Từ Bảng Giá": st.column_config.SelectboxColumn(
-                    "Tra Cứu & Chọn Mã SP Từ Bảng Giá",
-                    options=list_options,
-                    required=True,
-                ),
-                "Tên thiết bị BOQ": st.column_config.TextColumn("Tên thiết bị BOQ", disabled=True),
-                "Số lượng": st.column_config.NumberColumn("Số lượng", disabled=True),
-                "Mã SP": st.column_config.TextColumn("Mã SP", disabled=True),
-                "Tên chuẩn": st.column_config.TextColumn("Tên chuẩn", disabled=True),
-                "XUẤT XỨ": st.column_config.TextColumn("XUẤT XỨ", disabled=True),
-                "ĐVT": st.column_config.TextColumn("ĐVT", disabled=True),
-                "Đơn giá": st.column_config.NumberColumn("Đơn giá", disabled=True),
-            },
-            hide_index=False,
-            key="manual_grid_editor"
-        )
-
-        for idx, row in edited_df.iterrows():
-            selected_option = row['Tra Cứu & Chọn Mã SP Từ Bảng Giá']
-            st.session_state.manual_selections[idx] = selected_option
-            
-            if selected_option and selected_option != "-- Chọn mã từ bảng giá --":
-                chosen_code = selected_option.split(" - ")[0].strip()
-                if chosen_code in dict_mapping_price:
-                    info = dict_mapping_price[chosen_code]
-                    edited_df.at[idx, 'Mã SP'] = chosen_code
-                    edited_df.at[idx, 'Tên chuẩn'] = info['Tên chuẩn']
-                    edited_df.at[idx, 'Đơn giá'] = info['Đơn giá']
-                    edited_df.at[idx, 'ĐVT'] = info['ĐVT']
-                    edited_df.at[idx, 'XUẤT XỨ'] = info['XUẤT XỨ']
-
-        st.session_state.df_manual_edited = edited_df
-    else:
-        st.success("🎉 Tất cả các mục trong BOQ đã tự động nhận diện hoàn hảo.")
-        st.session_state.df_manual_edited = None
-
+    st.markdown("---")
     if st.button("📥 Xuất File Báo Giá Hoàn Chỉnh", type="primary"):
         try:
             with st.spinner("Đang tổng hợp dữ liệu và điền vào mẫu báo giá QN Tech..."):
                 
-                final_rows = [df_auto]
-                if st.session_state.df_manual_edited is not None:
-                    df_manual_clean = st.session_state.df_manual_edited.drop(columns=['Tra Cứu & Chọn Mã SP Từ Bảng Giá'], errors='ignore')
-                    final_rows.append(df_manual_clean)
+                df_final = st.session_state.df_editable.copy()
+                df_final['Thành tiền'] = pd.to_numeric(df_final['Số lượng'], errors='coerce').fillna(0) * pd.to_numeric(df_final['Đơn giá'], errors='coerce').fillna(0)
 
-                df_final = pd.concat(final_rows, ignore_index=True)
-                df_final['Thành tiền'] = df_final['Số lượng'] * df_final['Đơn giá']
-
-                wb = openpyxl.load_workbook(file_template)
+                wb = openpyxl.load_workbook(TEMPLATE_FILE_PATH)
                 ws = wb.active
 
                 def safe_write(row, col, val):
@@ -616,7 +571,7 @@ if st.session_state.df_raw_result is not None:
                     safe_write(current_row, 2, row_data.get('Mã SP', ''))        
                     safe_write(current_row, 3, row_data.get('Tên chuẩn', ''))    
                     safe_write(current_row, 4, row_data.get('XUẤT XỨ', ''))      
-                    safe_write(current_row, 5, row_data.get('ĐVT', ''))          
+                    safe_write(current_row, 5, row_data.get('ĐVT', 'Cái') if pd.notna(row_data.get('ĐVT')) else 'Cái')
                     safe_write(current_row, 6, row_data.get('Số lượng', 0))      
                     safe_write(current_row, 7, row_data.get('Đơn giá', 0))        
                     safe_write(current_row, 8, row_data.get('Thành tiền', 0))    
@@ -627,8 +582,6 @@ if st.session_state.df_raw_result is not None:
                 output.seek(0)
 
                 final_name = output_filename if output_filename.endswith('.xlsx') else output_filename + '.xlsx'
-
-                st.success("✅ Đã tạo file Báo giá QN Tech thành công!")
 
                 st.download_button(
                     label="💾 TẢI XUỐNG FILE BÁO GIÁ EXCEL",
