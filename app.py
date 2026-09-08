@@ -200,7 +200,7 @@ if uploaded_boq is not None:
 
         if st.sidebar.button("🚀 BẮT ĐẦU XỬ LÝ BOQ", type="primary", use_container_width=True):
             with st.spinner("Phần mềm đang phân tích dữ liệu..."):
-                columns_template = ['Mã hàng', 'Diễn giải', 'Xuất xứ', 'ĐVT', 'SL', 'Đơn giá (VND)', 'Thành tiền (VND)', 'Ghi chú']
+                columns_template = ['Xóa', 'Mã hàng', 'Diễn giải', 'Xuất xứ', 'ĐVT', 'SL', 'Đơn giá (VND)', 'Thành tiền (VND)', 'Ghi chú']
                 df_processed = pd.DataFrame(columns=columns_template)
     
                 price_dict = {}
@@ -247,12 +247,16 @@ if uploaded_boq is not None:
                     boq_qty = row.get(boq_qty_col, 0)
                     if not boq_name or boq_name.lower() == 'nan': continue
     
+                    qty_val = pd.to_numeric(boq_qty, errors='coerce')
+                    if pd.isna(qty_val): qty_val = 0
+
                     new_row = {
+                        'Xóa': False,
                         'Mã hàng': '',
                         'Diễn giải': boq_name, 
                         'Xuất xứ': '',
                         'ĐVT': 'Cái' if 'cáp' not in boq_name.lower() else 'Mét', 
-                        'SL': pd.to_numeric(boq_qty, errors='coerce') or 0,
+                        'SL': qty_val,
                         'Đơn giá (VND)': 0,
                         'Thành tiền (VND)': 0,
                         'Ghi chú': ''
@@ -289,21 +293,26 @@ if st.session_state.df_editable is not None:
     st.markdown("<hr style='border: 1px solid #4A90E2;'>", unsafe_allow_html=True)
     st.markdown("<h3>🛠 CHI TIẾT KHỐI LƯỢNG & ĐƠN GIÁ</h3>", unsafe_allow_html=True)
     
+    if 'Xóa' not in st.session_state.df_editable.columns:
+        st.session_state.df_editable.insert(0, 'Xóa', False)
+    else:
+        st.session_state.df_editable['Xóa'] = st.session_state.df_editable['Xóa'].fillna(False).astype(bool)
+
     # --- CÔNG CỤ TRA CỨU THỦ CÔNG ---
     if len(st.session_state.price_list_cache) > 0:
-        with st.expander("🔍 TÌM KIẾM VÀ CHÈN MÃ THỦ CÔNG (Dành cho thiết bị chưa nhận diện được)"):
-            st.markdown("<p style='color: #A0A0A0; font-size: 14px;'>Gõ tên hoặc mã vật tư vào ô <b>Tìm kiếm</b>. Sau đó chọn dòng muốn sửa và bấm <b>Áp dụng</b>.</p>", unsafe_allow_html=True)
+        with st.expander("🔍 TÌM KIẾM VÀ CHÈN MÃ NHANH VÀO DÒNG BẤT KỲ"):
+            st.markdown("<p style='color: #A0A0A0; font-size: 14px;'>Chọn thiết bị từ Bảng giá rồi bấm <b>Áp dụng</b> để chèn đè vào dòng chỉ định.</p>", unsafe_allow_html=True)
             
             c1, c2 = st.columns([1, 2])
             with c1:
                 row_options = st.session_state.df_editable.index
-                selected_row = st.selectbox("1. Chọn dòng thiết bị cần sửa:", options=row_options, 
+                selected_row = st.selectbox("1. Chọn dòng cần điền:", options=row_options, 
                                             format_func=lambda x: f"Dòng {x+1}: {st.session_state.df_editable.at[x, 'Diễn giải']}")
             with c2:
                 price_opts = {f"[{p['Mã hàng']}] {p['Tên']} - {p['Đơn giá']:,.0f} đ": p for p in st.session_state.price_list_cache}
-                selected_item_str = st.selectbox("2. Tìm và Chọn thiết bị trong Bảng giá:", options=["-- Trống --"] + list(price_opts.keys()))
+                selected_item_str = st.selectbox("2. Chọn thiết bị trong Bảng giá:", options=["-- Trống --"] + list(price_opts.keys()))
                 
-            if st.button("✅ ÁP DỤNG MÃ VÀO BẢNG"):
+            if st.button("✅ ÁP DỤNG MÃ VÀO DÒNG ĐÃ CHỌN"):
                 if selected_item_str != "-- Trống --":
                     p_data = price_opts[selected_item_str]
                     st.session_state.df_editable.at[selected_row, 'Mã hàng'] = p_data['Mã hàng']
@@ -311,24 +320,69 @@ if st.session_state.df_editable is not None:
                     st.session_state.df_editable.at[selected_row, 'Xuất xứ'] = p_data['Xuất xứ']
                     st.session_state.df_editable.at[selected_row, 'ĐVT'] = p_data['ĐVT']
                     st.session_state.df_editable.at[selected_row, 'Đơn giá (VND)'] = p_data['Đơn giá']
-                    st.session_state.df_editable.at[selected_row, 'Thành tiền (VND)'] = st.session_state.df_editable.at[selected_row, 'SL'] * p_data['Đơn giá']
+                    
+                    current_sl = st.session_state.df_editable.at[selected_row, 'SL']
+                    sl_val = float(current_sl) if pd.notna(current_sl) and str(current_sl).strip() != '' else 0.0
+                    st.session_state.df_editable.at[selected_row, 'SL'] = sl_val
+                    st.session_state.df_editable.at[selected_row, 'Thành tiền (VND)'] = sl_val * float(p_data['Đơn giá'])
                     st.rerun()
 
+    # --- NÚT THAO TÁC XÓA DÒNG RÕ RÀNG ---
+    col_act1, col_act2 = st.columns([1, 4])
+    with col_act1:
+        if st.button("🗑️ XÓA DÒNG ĐÃ TICK", use_container_width=True):
+            st.session_state.df_editable = st.session_state.df_editable[st.session_state.df_editable['Xóa'] != True].reset_index(drop=True)
+            st.success("Đã xóa các dòng được chọn!")
+            st.rerun()
+
+    # --- BẢNG DỮ LIỆU CHO PHÉP THÊM / SỬA TRỰC TIẾP ---
     edited_df = st.data_editor(
         st.session_state.df_editable, 
         num_rows="dynamic", 
         use_container_width=True,
         height=500,
         column_config={
-            "SL": st.column_config.NumberColumn("SL", format="%d"),
-            "Đơn giá (VND)": st.column_config.NumberColumn("Đơn giá (VND)", format="%,d"),
+            "Xóa": st.column_config.CheckboxColumn("🗑️ Xóa", help="Tick chọn để xóa dòng này", default=False),
+            "SL": st.column_config.NumberColumn("SL", format="%d", min_value=0),
+            "Đơn giá (VND)": st.column_config.NumberColumn("Đơn giá (VND)", format="%,d", min_value=0),
             "Thành tiền (VND)": st.column_config.NumberColumn("Thành tiền (VND)", format="%,d", disabled=True)
         }
     )
+    
+    edited_df['SL'] = pd.to_numeric(edited_df['SL'], errors='coerce').fillna(0)
+    edited_df['Đơn giá (VND)'] = pd.to_numeric(edited_df['Đơn giá (VND)'], errors='coerce').fillna(0)
+    edited_df['Thành tiền (VND)'] = edited_df['SL'] * edited_df['Đơn giá (VND)']
     st.session_state.df_editable = edited_df
 
     st.markdown("<br>", unsafe_allow_html=True)
     
+    # --- FORM NHẬP THÔNG TIN KHÁCH HÀNG & ĐIỀU KHOẢN ---
+    st.markdown("<h3>📝 THÔNG TIN DỰ ÁN & ĐIỀU KHOẢN THƯƠNG MẠI</h3>", unsafe_allow_html=True)
+    
+    with st.expander("👤 Thông tin Khách hàng (Header)", expanded=True):
+        hc1, hc2 = st.columns(2)
+        with hc1:
+            info_to = st.text_input("To (Tên công ty):", placeholder="VD: Công ty TNHH ABC...")
+            info_add = st.text_input("Add (Địa chỉ):")
+            info_att = st.text_input("Att (Người liên hệ):")
+            info_mobile = st.text_input("Mobile (Số điện thoại):")
+            info_email = st.text_input("Email:")
+            info_ref = st.text_input("Ref:")
+        with hc2:
+            info_no = st.text_input("No (Số báo giá):", value=f"BG-{datetime.now().strftime('%d%m%y')}-01")
+            info_date = st.date_input("Date (Ngày báo giá):", value=datetime.now())
+            info_revise = st.text_input("Revise (Lần chỉnh sửa):", value="0")
+            info_validity = st.text_input("Validity (Hiệu lực báo giá):", value="30 ngày")
+            info_project = st.text_input("Project (Tên dự án):")
+
+    with st.expander("🤝 Điều khoản thương mại (Footer)", expanded=False):
+        term_note = st.text_area("Lưu ý:", value="Báo giá đã bao gồm vận chuyển và giấy thông hành")
+        term_delivery_line1 = st.text_input("Giao hàng (Dòng 1):", value="Tại địa chỉ dự án bên mua.")
+        term_delivery_line2 = st.text_input("Giao hàng (Dòng 2):", value="Nhập hàng 04-06 Tuần + giấy lưu thông 04-06 tuần")
+        term_payment = st.text_area("Thanh toán:", value="Tạm ứng 30% khi đặt hàng\nThanh toán 70% còn lại trước khi giao hàng")
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
     col_out1, col_out2 = st.columns([3, 1])
     with col_out1:
         output_filename = st.text_input("Tên file Excel xuất ra:", value=f"BaoGia_QNTech_{datetime.now().strftime('%Y%m%d')}.xlsx")
@@ -341,13 +395,36 @@ if st.session_state.df_editable is not None:
                     wb = openpyxl.load_workbook(TEMPLATE_PATH)
                     ws = wb.active
 
+                    # --- HÀM AN TOÀN CHỐNG LỖI MERGED CELL ---
                     def safe_write(row, col, val):
-                        try: ws.cell(row=row, column=col).value = val
-                        except Exception: pass
+                        try:
+                            cell = ws.cell(row=row, column=col)
+                            for rng in ws.merged_cells.ranges:
+                                if row in range(rng.min_row, rng.max_row + 1) and col in range(rng.min_col, rng.max_col + 1):
+                                    cell = ws.cell(row=rng.min_row, column=rng.min_col)
+                                    break
+                            cell.value = val
+                        except Exception: 
+                            pass
+
+                    # --- GHI THÔNG TIN HEADER VÀO ĐÚNG TỌA ĐỘ MẪU CHUẨN ---
+                    safe_write(6, 2, info_to)       
+                    safe_write(7, 2, info_add)      
+                    safe_write(8, 2, info_att)      
+                    safe_write(9, 2, info_mobile)   
+                    safe_write(10, 2, info_email)   
+                    safe_write(11, 2, info_ref)     
+                    
+                    safe_write(6, 7, info_no)                           
+                    safe_write(7, 7, info_date.strftime("%d/%m/%Y"))    
+                    safe_write(8, 7, info_revise)                       
+                    safe_write(9, 7, info_validity)                     
+                    safe_write(10, 7, info_project)                     
 
                     start_row = 14
                     num_items = len(edited_df)
                     
+                    # Tự động tìm dòng chứa từ khóa Tổng / Cộng làm ranh giới mẫu
                     end_template_row = start_row
                     for r in range(start_row, start_row + 150):
                         val_c2 = str(ws.cell(row=r, column=2).value or "").lower()
@@ -358,7 +435,7 @@ if st.session_state.df_editable is not None:
                     
                     available_rows = end_template_row - start_row
                     
-                    # === BẢN VÁ LỖI XÓA DÒNG BỊ MẤT FORMAT ===
+                    # === XỬ LÝ CO GIÃN DÒNG (THÊM / XÓA ĐẢM BẢO KHÔNG LỆCH FORMAT) ===
                     if num_items > available_rows:
                         rows_to_insert = num_items - available_rows
                         for m in list(ws.merged_cells.ranges):
@@ -392,32 +469,28 @@ if st.session_state.df_editable is not None:
                         rows_to_delete = available_rows - num_items
                         delete_start = start_row + num_items
                         
-                        # 1. Dịch chuyển ô gộp (Merged Cells)
                         new_merged = []
                         for m in list(ws.merged_cells.ranges):
                             if m.min_row > delete_start:
                                 m.shift(row_shift=-rows_to_delete)
                             new_merged.append(m)
                             
-                        # 2. Sao lưu chiều cao dòng (Row dimensions) của Footer
                         max_dim = max(list(ws.row_dimensions.keys()) + [0])
                         old_heights = {}
                         for r in range(delete_start + rows_to_delete, max_dim + 1):
                             if r in ws.row_dimensions:
                                 old_heights[r] = ws.row_dimensions[r].height
                                 
-                        # 3. Tiến hành Xóa dòng
                         ws.delete_rows(delete_start, amount=rows_to_delete)
                         
-                        # 4. Gắn lại chiều cao cho Footer
                         for r in range(delete_start, max_dim - rows_to_delete + 1):
-                            ws.row_dimensions[r].height = None  # Xóa cache chiều cao cũ
+                            ws.row_dimensions[r].height = None 
                         for r, h in old_heights.items():
                             ws.row_dimensions[r - rows_to_delete].height = h
                             
                         end_template_row -= rows_to_delete
 
-                    # --- Ghi dữ liệu ---
+                    # --- Ghi dữ liệu khối lượng ---
                     for idx, row in edited_df.iterrows():
                         current_row = start_row + idx
                         safe_write(current_row, 1, idx + 1)
@@ -431,8 +504,24 @@ if st.session_state.df_editable is not None:
                         except Exception: pass
                         safe_write(current_row, 9, row.get('Ghi chú', ''))
 
+                    # Cập nhật công thức tổng cộng động
                     try: ws.cell(row=end_template_row, column=8).value = f"=SUM(H{start_row}:H{end_template_row-1})"
                     except Exception: pass
+
+                    # --- GHI THÔNG TIN FOOTER VÀO EXCEL (TÁCH BIỆT TỪNG DÒNG ĐÚNG CHUẨN MẪU) ---
+                    for r in range(end_template_row, ws.max_row + 1):
+                        cell_c1 = str(ws.cell(row=r, column=1).value or "").strip().lower()
+                        cell_c2 = str(ws.cell(row=r, column=2).value or "").strip().lower()
+                        cell_c3 = str(ws.cell(row=r, column=3).value or "").strip().lower()
+                        
+                        if "lưu ý" in cell_c2:
+                            ws.cell(row=r, column=3).value = term_note      
+                        elif "giao hàng" in cell_c2:
+                            ws.cell(row=r, column=3).value = term_delivery_line1  
+                        elif "nhập hàng" in cell_c3 or "giấy lưu thông" in cell_c3:
+                            ws.cell(row=r, column=3).value = term_delivery_line2
+                        elif "thanh toán" in cell_c2:
+                            ws.cell(row=r, column=3).value = term_payment
 
                     output_buffer = BytesIO()
                     wb.save(output_buffer)
