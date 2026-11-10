@@ -1,21 +1,34 @@
-import streamlit as st
-import pandas as pd
-import openpyxl
-from io import BytesIO
-from datetime import datetime
-import copy
 import os
-import re
+import copy
+from datetime import datetime
+from io import BytesIO
+
+import openpyxl
+import pandas as pd
+import streamlit as st
+
+from ai_assistant import (
+    COLUMNS, KnowledgeStore, audit_quote, build_quote_rows, clean,
+    detect_boq_columns, has_llm, sync_codes,
+    load_price_items, promote_header, suggest_matches, apply_approved,
+)
+
+# --- ĐƯỜNG DẪN (luôn tính theo thư mục chứa app.py) ---
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+TEMPLATE_PATH = os.path.join(BASE_DIR, "MauBaoGia.xlsx")
+PRICE_LIST_PATH = os.path.join(BASE_DIR, "BangGia.xlsx")
+KNOWLEDGE_PATH = os.path.join(BASE_DIR, "learned_knowledge.json")
+PLACEHOLDER_SHEET = "XXXXXXXXX"
+QUOTE_SHEET = "BÁO GIÁ"
 
 # --- CẤU HÌNH TRANG & GIAO DIỆN ---
 st.set_page_config(
     page_title="QN TECH - Hệ Thống Báo Giá",
     page_icon="💠",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="expanded",
 )
 
-# --- CSS TÙY CHỈNH (GIAO DIỆN DARK THEME) ---
 st.markdown("""
 <style>
     .stApp { background-color: #121212; color: #E0E0E0; }
@@ -39,502 +52,426 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# --- CẤU HÌNH ĐƯỜNG DẪN TÍCH HỢP SẴN ---
-TEMPLATE_PATH = "MauBaoGia.xlsx"
-PRICE_LIST_PATH = "BangGia.xlsx"
-
 if not os.path.exists(TEMPLATE_PATH):
     st.error(f"❌ Không tìm thấy file mẫu `{TEMPLATE_PATH}`.")
     st.stop()
 
-# --- SIDEBAR (GIAO DIỆN TẢI FILE) ---
+# --- TRẠNG THÁI PHIÊN ---
+for _key, _default in {"df_editable": None, "learned_keys": set(), "last_stats": None, "editor_ver": 0}.items():
+    if _key not in st.session_state:
+        st.session_state[_key] = _default
+
+store = KnowledgeStore(KNOWLEDGE_PATH)
+
+
+@st.cache_data(show_spinner=False)
+def cached_price_items(path, mtime, sheets):
+    return load_price_items(path, list(sheets))
+
+
+def label_item(it):
+    return f"[{it['ma']}] {it['ten']} - {it['don_gia']:,.0f} đ"
+
+
+def recalc(df):
+    df = df.copy()
+    defaults = {"Xóa": False, "Duyệt": False, "SL": 0, "Đơn giá (VND)": 0,
+                "Thành tiền (VND)": 0, "Độ khớp": 0.0}
+    for c in COLUMNS:
+        if c not in df.columns:
+            df[c] = defaults.get(c, "")
+    df["Xóa"] = df["Xóa"].fillna(False).astype(bool)
+    df["Duyệt"] = df["Duyệt"].fillna(False).astype(bool)
+    df["Độ khớp"] = pd.to_numeric(df["Độ khớp"], errors="coerce").fillna(0.0)
+    df["SL"] = pd.to_numeric(df["SL"], errors="coerce").fillna(0)
+    df["Đơn giá (VND)"] = pd.to_numeric(df["Đơn giá (VND)"], errors="coerce").fillna(0)
+    df["Thành tiền (VND)"] = df["SL"] * df["Đơn giá (VND)"]
+    for c in ["Mã hàng", "Diễn giải", "Xuất xứ", "ĐVT", "Ghi chú", "BOQ gốc", "Gợi ý",
+              "Mã đề xuất", "Nguồn"]:
+        df[c] = df[c].fillna("")
+    return df
+
+
+def apply_item(df, idx, it):
+    df.at[idx, "Mã hàng"] = it["ma"]
+    df.at[idx, "Diễn giải"] = it["ten"]
+    df.at[idx, "Xuất xứ"] = it["xuat_xu"]
+    df.at[idx, "ĐVT"] = it["dvt"] or df.at[idx, "ĐVT"]
+    df.at[idx, "Đơn giá (VND)"] = it["don_gia"]
+    df.at[idx, "Nguồn"] = "Chọn tay"
+    df.at[idx, "Duyệt"] = True
+
+
+# --- SIDEBAR: TẢI DỮ LIỆU ---
 st.sidebar.markdown("<h2 style='text-align: center; color: #E85D04;'>📥 TẢI DỮ LIỆU</h2>", unsafe_allow_html=True)
-uploaded_boq = st.sidebar.file_uploader("Tải lên File BOQ khối lượng gốc (Excel/CSV)", type=["xlsx", "xls", "csv"])
+uploaded_boq = st.sidebar.file_uploader(
+    "Tải lên File BOQ khối lượng gốc (Excel/CSV)", type=["xlsx", "xls", "csv"])
 
 boq_sheet_selected = None
-price_sheet_selected = None
-
-if uploaded_boq is not None and uploaded_boq.name.endswith(('xlsx', 'xls')):
+if uploaded_boq is not None and uploaded_boq.name.lower().endswith(("xlsx", "xls")):
     try:
+        uploaded_boq.seek(0)
         xl_boq = pd.ExcelFile(uploaded_boq)
         st.sidebar.markdown("---")
         boq_sheet_selected = st.sidebar.selectbox("📂 Chọn Sheet chứa khối lượng (BOQ):", xl_boq.sheet_names)
     except Exception as e:
         st.sidebar.error(f"Lỗi đọc file BOQ: {e}")
 
+price_items = []
 if os.path.exists(PRICE_LIST_PATH):
-    st.sidebar.markdown("---")
     try:
-        xl_price = pd.ExcelFile(PRICE_LIST_PATH)
-        price_sheet_selected = st.sidebar.selectbox("📋 Chọn Sheet Bảng Giá áp dụng:", xl_price.sheet_names)
+        all_sheets = pd.ExcelFile(PRICE_LIST_PATH).sheet_names
+        sheet_options = [s for s in all_sheets if s.upper() != PLACEHOLDER_SHEET]
+        st.sidebar.markdown("---")
+        price_sheets = st.sidebar.multiselect(
+            "📋 Sheet Bảng Giá áp dụng:", sheet_options, default=sheet_options)
+        if price_sheets:
+            price_items = cached_price_items(
+                PRICE_LIST_PATH, os.path.getmtime(PRICE_LIST_PATH), tuple(price_sheets))
     except Exception as e:
         st.sidebar.error(f"Lỗi đọc Bảng Giá: {e}")
 
-if "df_editable" not in st.session_state: st.session_state.df_editable = None
-if "price_list_cache" not in st.session_state: st.session_state.price_list_cache = []
+st.sidebar.markdown("---")
+st.sidebar.markdown("<h3 style='color: #4A90E2;'>🧠 TRỢ LÝ AI</h3>", unsafe_allow_html=True)
+st.sidebar.caption(f"Bảng giá: {len(price_items)} mục · Đã học: {len(store.data['mappings'])} ghép mã")
+use_llm = st.sidebar.checkbox(
+    "Dùng Claude cho dòng khó", value=False, disabled=not has_llm(),
+    help="Cần biến môi trường ANTHROPIC_API_KEY. Chỉ gọi cho các dòng hệ thống không chắc.")
+if not has_llm():
+    st.sidebar.caption("Chưa bật Claude (thiếu ANTHROPIC_API_KEY). Vẫn dùng gợi ý nội bộ.")
 
-# --- BỘ NÃO XỬ LÝ NGÔN NGỮ ---
-def parse_boq_name(boq_name):
-    name_lower = str(boq_name).lower().strip()
-    dn_val = None
-    dn_match = re.search(r'(dn|d|phi|ø|ф)\s*(\d+)', name_lower)
-    if dn_match: dn_val = int(dn_match.group(2))
-
-    norm_name = name_lower
-
-    if any(k in name_lower for k in ['van hút', 'van đáy', 'rọ hút']): norm_name = f"rọ hút dn{dn_val}" if dn_val else "rọ hút"
-    elif any(k in name_lower for k in ['van cổng', 'van chặn', 'van cửa', 'van xả đáy', 'van cô lập']):
-        if 'giám sát' in name_lower or 'tín hiệu' in name_lower: norm_name = f"van cổng os&y kèm công tắc giám sát dn{dn_val}" if dn_val else "van cổng os&y kèm công tắc giám sát"
-        elif any(k in name_lower for k in ['os&y', 'osy', 'ty nổi']): norm_name = f"van cổng os&y dn{dn_val}" if dn_val else "van cổng os&y"
-        elif any(k in name_lower for k in ['nrs', 'ty chìm']): norm_name = f"van cổng nrs dn{dn_val}" if dn_val else "van cổng nrs"
-        else: norm_name = f"van cổng dn{dn_val}" if dn_val and dn_val <= 50 else (f"van cổng nrs dn{dn_val}" if dn_val else "van cổng")
-    elif 'van bướm' in name_lower:
-        if 'giám sát' in name_lower or 'tín hiệu' in name_lower: norm_name = f"van bướm tín hiệu dn{dn_val}" if dn_val else "van bướm tín hiệu"
-        elif 'tay gạt' in name_lower: norm_name = f"van bướm tay gạt dn{dn_val}" if dn_val else "van bướm tay gạt"
-        else: norm_name = f"van bướm tay quay dn{dn_val}" if dn_val else "van bướm tay quay"
-    elif any(k in name_lower for k in ['1 chiều', 'một chiều', 'lá lật', 'cản ngược']):
-        norm_name = f"van một chiều dn{dn_val}" if dn_val else "van một chiều"
-        if dn_val: norm_name += " nhỏ" if dn_val <= 50 else " lớn"
-    elif any(k in name_lower for k in ['báo động', 'alarm']): norm_name = f"van báo động dn{dn_val}" if dn_val else "van báo động"
-    elif any(k in name_lower for k in ['xả tràn', 'deluge']): norm_name = f"van xả tràn dn{dn_val}" if dn_val else "van xả tràn"
-    elif any(k in name_lower for k in ['xả khí', 'air valve']): norm_name = f"van xả khí dn{dn_val}" if dn_val else "van xả khí"
-    elif any(k in name_lower for k in ['giảm áp', 'prv']): norm_name = f"van giảm áp dn{dn_val}" if dn_val else "van giảm áp"
-    elif any(k in name_lower for k in ['xả áp', 'an toàn', 'relief']): norm_name = f"van an toàn dn{dn_val}" if dn_val else "van an toàn"
-    elif 'van phao' in name_lower: norm_name = f"van phao dn{dn_val}" if dn_val else "van phao"
-    elif any(k in name_lower for k in ['y lọc', 'lọc y', 'strainer']): norm_name = f"y lọc dn{dn_val}" if dn_val else "y lọc"
-    elif any(k in name_lower for k in ['nối mềm', 'khớp nối mềm']): norm_name = f"khớp nối mềm dn{dn_val}" if dn_val else "khớp nối mềm"
-    elif any(k in name_lower for k in ['đồng hồ áp', 'áp kế']): norm_name = "đồng hồ áp suất"
-    elif any(k in name_lower for k in ['công tắc áp', 'rơ le áp']): norm_name = "công tắc áp suất"
-    elif any(k in name_lower for k in ['dòng chảy', 'flow switch']): norm_name = "công tắc dòng chảy"
-    elif 'sprinkler' in name_lower or 'đầu phun' in name_lower:
-        norm_name = "đầu phun"
-        if any(k in name_lower for k in ['hướng lên', 'quay lên', 'upright']): norm_name += " hướng lên"
-        elif any(k in name_lower for k in ['hướng xuống', 'quay xuống', 'pendent', 'xuống lên']): norm_name += " hướng xuống"
-        elif any(k in name_lower for k in ['gắn tường', 'sidewall']): norm_name += " gắn tường"
-        
-        if any(k in name_lower for k in ['nhanh', 'quick']): norm_name += " phản ứng nhanh"
-        else: norm_name += " phản ứng tiêu chuẩn"
-            
-        t_match = re.search(r'(\d+)\s*(độ|c|°c)', name_lower)
-        if t_match: norm_name += f" {t_match.group(1)} độ"
-        
-        k_match = re.search(r'k\s*=?\s*(\d+\.?\d*)', name_lower)
-        if k_match: norm_name += f" k{k_match.group(1)}"
-        
-    elif any(k in name_lower for k in ['đầu báo khói', 'báo khói', 'smoke detector']): 
-        norm_name = "đầu báo khói"
-        if 'địa chỉ' in name_lower: norm_name += " địa chỉ"
-    elif any(k in name_lower for k in ['đầu báo nhiệt', 'báo nhiệt', 'heat detector']): 
-        norm_name = "đầu báo nhiệt"
-        if 'địa chỉ' in name_lower: norm_name += " địa chỉ"
-        if 'gia tăng' in name_lower: norm_name += " gia tăng"
-        if 'cố định' in name_lower: norm_name += " cố định"
-    elif any(k in name_lower for k in ['nút nhấn', 'nút ấn', 'call point']): 
-        norm_name = "nút nhấn khẩn"
-        if 'địa chỉ' in name_lower: norm_name += " địa chỉ"
-    elif any(k in name_lower for k in ['chuông', 'fire bell']): norm_name = "chuông báo cháy"
-    elif any(k in name_lower for k in ['còi', 'đèn chớp', 'horn strobe']): norm_name = "còi đèn báo cháy"
-    elif 'module' in name_lower or 'mô đun' in name_lower:
-        if 'giám sát' in name_lower: norm_name = "module giám sát"
-        elif 'điều khiển' in name_lower: norm_name = "module điều khiển"
-        elif 'cách ly' in name_lower: norm_name = "module cách ly"
-        else: norm_name = "module báo cháy"
-    elif any(k in name_lower for k in ['tủ trung tâm', 'tủ báo cháy', 'facp']): norm_name = "tủ trung tâm báo cháy"
-    elif 'cáp' in name_lower or 'cable' in name_lower or 'dây điện' in name_lower:
-        if 'chống cháy' in name_lower or 'fr' in name_lower: norm_name = "cáp chống cháy"
-        elif 'chậm cháy' in name_lower: norm_name = "cáp chậm cháy"
-        elif 'tín hiệu' in name_lower: norm_name = "cáp tín hiệu"
-        else: norm_name = "cáp điện"
-        c_match = re.search(r'(\d+)\s*[cx*x]\s*(\d+\.?\d*)', name_lower)
-        if c_match: norm_name += f" {c_match.group(1)}x{c_match.group(2)}"
-    elif any(k in name_lower for k in ['ty ren', 'ty treo', 'thanh ren']): norm_name = "ty ren"
-    elif any(k in name_lower for k in ['cùm', 'đai treo', 'quang treo']): norm_name = f"cùm treo dn{dn_val}" if dn_val else "cùm treo"
-    elif any(k in name_lower for k in ['ubolt', 'u-bolt', 'u bolt']): norm_name = f"u-bolt dn{dn_val}" if dn_val else "u-bolt"
-        
-    return norm_name, dn_val
-
-def fuzzy_match(parsed_name, dn_val, price_dict):
-    parsed_name = parsed_name.replace("nhỏ", "").replace("lớn", "").strip()
-    if parsed_name in price_dict:
-        return price_dict[parsed_name]
-        
-    keywords = parsed_name.split()
-    best_match = None
-    max_score = 0
-    
-    p_k_match = re.search(r'k\s*=?\s*(\d+\.?\d*)', parsed_name)
-    p_t_match = re.search(r'(\d+)\s*độ', parsed_name)
-    
-    for db_name, data in price_dict.items():
-        score = sum(1 for kw in keywords if kw in db_name)
-        if dn_val:
-            db_dn_match = re.search(r'(dn|d|phi|ø)\s*(\d+)', db_name)
-            if db_dn_match and int(db_dn_match.group(2)) != dn_val: continue 
-        if p_k_match:
-            db_k = re.search(r'k\s*=?\s*(\d+\.?\d*)', db_name)
-            if db_k and db_k.group(1) != p_k_match.group(1): continue
-        if p_t_match:
-            db_t = re.search(r'(\d+)\s*(độ|c|°c)', db_name)
-            if db_t and db_t.group(1) != p_t_match.group(1): continue
-        if score > max_score and score >= len(keywords) * 0.5: 
-            max_score = score
-            best_match = data
-            
-    return best_match
-
-# --- MAIN EXECUTION ---
-if uploaded_boq is not None:
-    try:
-        if uploaded_boq.name.endswith('.csv'): df_raw = pd.read_csv(uploaded_boq)
-        else: df_raw = pd.read_excel(uploaded_boq, sheet_name=boq_sheet_selected).dropna(how='all').dropna(axis=1, how='all')
-        
-        if len(df_raw.columns) == 0:
-            st.error(f"❌ Sheet '{boq_sheet_selected}' không có dữ liệu.")
-            st.stop()
-
-        boq_name_col, boq_qty_col = df_raw.columns[0], df_raw.columns[0]
-        for col in df_raw.columns:
-            col_lower = str(col).lower()
-            if any(k in col_lower for k in ['tên', 'thiết bị', 'mô tả', 'diễn giải', 'tiêu chuẩn']): boq_name_col = col
-            if any(k in col_lower for k in ['số lượng', 'sl', 'qty']): boq_qty_col = col
-
-        if st.sidebar.button("🚀 BẮT ĐẦU XỬ LÝ BOQ", type="primary", use_container_width=True):
-            with st.spinner("Phần mềm đang phân tích dữ liệu..."):
-                columns_template = ['Xóa', 'Mã hàng', 'Diễn giải', 'Xuất xứ', 'ĐVT', 'SL', 'Đơn giá (VND)', 'Thành tiền (VND)', 'Ghi chú']
-                df_processed = pd.DataFrame(columns=columns_template)
-    
-                price_dict = {}
-                name_col_price = None
-                extracted_price_list = [] 
-    
-                if os.path.exists(PRICE_LIST_PATH) and price_sheet_selected:
-                    df_price = pd.read_excel(PRICE_LIST_PATH, sheet_name=price_sheet_selected).dropna(how='all').dropna(axis=1, how='all')
-                    if len(df_price.columns) > 0:
-                        name_col_price = df_price.columns[0]
-                        for col in df_price.columns:
-                            if any(k in str(col).lower() for k in ['tên', 'mô tả', 'thiết bị', 'tiêu chuẩn']):
-                                name_col_price = col
-                                break
-                        for _, pr in df_price.iterrows():
-                            k = str(pr.get(name_col_price, '')).strip().lower()
-                            if k and k != 'nan':
-                                price_dict[k] = pr
-                                ma = ""
-                                for m_col in ['Mã SP', 'Mã hàng', 'Mã sản phẩm']:
-                                    if m_col in pr and pd.notna(pr[m_col]): ma = str(pr[m_col]); break
-                                dg = 0
-                                for p_col in ['Đơn giá', 'Giá', 'Price', 'Đơn giá (VND)']:
-                                    if p_col in pr and pd.notna(pr[p_col]): dg = pd.to_numeric(pr[p_col], errors='coerce') or 0; break
-                                xx = ""
-                                for o_col in ['Xuất xứ', 'XUẤT XỨ', 'Thương hiệu']:
-                                    if o_col in pr and pd.notna(pr[o_col]): xx = str(pr[o_col]); break
-                                dvt = "Cái"
-                                for dvt_col in ['ĐVT', 'Đơn vị tính']:
-                                    if dvt_col in pr and pd.notna(pr[dvt_col]): dvt = str(pr[dvt_col]); break
-                                
-                                extracted_price_list.append({
-                                    'Tên': str(pr.get(name_col_price, '')),
-                                    'Mã hàng': ma,
-                                    'Đơn giá': dg,
-                                    'Xuất xứ': xx,
-                                    'ĐVT': dvt
-                                })
-                
-                st.session_state.price_list_cache = extracted_price_list
-    
-                for idx, row in df_raw.iterrows():
-                    boq_name = str(row.get(boq_name_col, '')).strip()
-                    boq_qty = row.get(boq_qty_col, 0)
-                    if not boq_name or boq_name.lower() == 'nan': continue
-    
-                    qty_val = pd.to_numeric(boq_qty, errors='coerce')
-                    if pd.isna(qty_val): qty_val = 0
-
-                    new_row = {
-                        'Xóa': False,
-                        'Mã hàng': '',
-                        'Diễn giải': boq_name, 
-                        'Xuất xứ': '',
-                        'ĐVT': 'Cái' if 'cáp' not in boq_name.lower() else 'Mét', 
-                        'SL': qty_val,
-                        'Đơn giá (VND)': 0,
-                        'Thành tiền (VND)': 0,
-                        'Ghi chú': ''
-                    }
-    
-                    parsed_name, dn_val = parse_boq_name(boq_name)
-                    matched = fuzzy_match(parsed_name, dn_val, price_dict)
-                    
-                    if matched is not None:
-                        if name_col_price and pd.notna(matched[name_col_price]):
-                            new_row['Diễn giải'] = str(matched[name_col_price])
-                        for m_col in ['Mã SP', 'Mã hàng', 'Mã sản phẩm']:
-                            if m_col in matched and pd.notna(matched[m_col]): new_row['Mã hàng'] = matched[m_col]; break
-                        for p_col in ['Đơn giá', 'Giá', 'Price', 'Đơn giá (VND)']:
-                            if p_col in matched and pd.notna(matched[p_col]): new_row['Đơn giá (VND)'] = pd.to_numeric(matched[p_col], errors='coerce') or 0; break
-                        for o_col in ['Xuất xứ', 'XUẤT XỨ', 'Thương hiệu']:
-                            if o_col in matched and pd.notna(matched[o_col]): new_row['Xuất xứ'] = matched[o_col]; break
-                        for dvt_col in ['ĐVT', 'Đơn vị tính']:
-                            if dvt_col in matched and pd.notna(matched[dvt_col]): new_row['ĐVT'] = matched[dvt_col]; break
-    
-                    new_row['Thành tiền (VND)'] = new_row['SL'] * new_row['Đơn giá (VND)']
-                    df_processed = pd.concat([df_processed, pd.DataFrame([new_row])], ignore_index=True)
-    
-                st.session_state.df_editable = df_processed
-
-    except Exception as e:
-        st.error(f"Lỗi xử lý file BOQ: {e}")
-
-else:
+# --- ĐỌC FILE BOQ & NHẬN DIỆN CỘT ---
+if uploaded_boq is None:
     st.info("👈 Vui lòng tải lên file Khối Lượng (BOQ) ở menu bên trái để bắt đầu lập báo giá.")
+else:
+    df_raw = None
+    raw = None
+    try:
+        uploaded_boq.seek(0)
+        if uploaded_boq.name.lower().endswith(".csv"):
+            raw = pd.read_csv(uploaded_boq, header=None)
+        else:
+            raw = pd.read_excel(uploaded_boq, sheet_name=boq_sheet_selected, header=None)
+    except Exception as e:
+        st.error(f"Lỗi đọc file BOQ: {e}")
 
-# --- GIAO DIỆN CHỈNH SỬA & XUẤT EXCEL TỐI ƯU ---
+    if raw is not None:
+        raw = raw.dropna(how="all")
+        if raw.empty:
+            st.error(f"❌ Sheet '{boq_sheet_selected}' không có dữ liệu.")
+        else:
+            df_raw, header_row = promote_header(raw)
+            detected = detect_boq_columns(df_raw)
+            df_raw = df_raw.dropna(how="all")
+            all_cols = [str(c) for c in df_raw.columns]
+            file_tag = f"{uploaded_boq.name}_{boq_sheet_selected}"
+            labels = {"name": "Tên hàng hóa", "qty": "Số lượng (SL)",
+                      "unit": "Đơn vị", "spec": "Thông số kỹ thuật"}
+            opts = ["(không có)"] + all_cols
+            auto_ok = bool(detected.get("name") and detected.get("qty"))
+            with st.expander("🔎 Xác nhận cột (hệ thống đã tự chọn, bạn có thể đổi)", expanded=not auto_ok):
+                st.caption(f"Tiêu đề lấy từ dòng {header_row + 1} của sheet. "
+                           "Nếu cột nào sai, chọn lại trong danh sách.")
+                c1, c2 = st.columns(2)
+                cols = {}
+                for i, (key, label) in enumerate(labels.items()):
+                    default = detected.get(key)
+                    idx = opts.index(default) if default in opts else 0
+                    chosen = (c1 if i % 2 == 0 else c2).selectbox(
+                        label, opts, index=idx, key=f"col_{key}_{file_tag}")
+                    cols[key] = None if chosen == "(không có)" else chosen
+                cols["price"] = detected.get("price")
+                st.caption("Xem trước 8 dòng đầu của sheet:")
+                st.dataframe(raw.head(8), use_container_width=True)
+
+            if not cols["name"] or not cols["qty"]:
+                st.error("❌ Chưa chọn đủ cột Tên hàng và Số lượng. Mở mục 'Xác nhận cột' để chọn.")
+            elif st.sidebar.button("🚀 BẮT ĐẦU XỬ LÝ BOQ", type="primary", use_container_width=True):
+                if not price_items:
+                    st.warning("Chưa có bảng giá nào được chọn ở sidebar. Các dòng sẽ không được ghép mã.")
+                with st.spinner("AI đang phân tích và gợi ý mã hàng..."):
+                    rows, stats = build_quote_rows(df_raw, cols, price_items, store, use_llm=use_llm)
+                    st.session_state.df_editable = pd.DataFrame(rows, columns=COLUMNS)
+                    st.session_state.learned_keys = set()
+                    st.session_state.last_stats = stats
+                    st.session_state.editor_ver += 1
+
+# --- GIAO DIỆN CHỈNH SỬA ---
 if st.session_state.df_editable is not None:
+    df = recalc(st.session_state.df_editable)
     st.markdown("<hr style='border: 1px solid #4A90E2;'>", unsafe_allow_html=True)
     st.markdown("<h3>🛠 CHI TIẾT KHỐI LƯỢNG & ĐƠN GIÁ</h3>", unsafe_allow_html=True)
-    
-    if 'Xóa' not in st.session_state.df_editable.columns:
-        st.session_state.df_editable.insert(0, 'Xóa', False)
-    else:
-        st.session_state.df_editable['Xóa'] = st.session_state.df_editable['Xóa'].fillna(False).astype(bool)
 
-    # --- CÔNG CỤ TRA CỨU THỦ CÔNG ---
-    if len(st.session_state.price_list_cache) > 0:
+    stats = st.session_state.last_stats
+    if stats:
+        st.success(
+            f"AI đã xử lý {stats['total']} hạng mục: {stats['learned']} hạng mục đã học sẵn (tích Duyệt sẵn), "
+            f"{stats['proposed']} hạng mục có mã đề xuất, {stats['none']} hạng mục chưa có mã phù hợp. "
+            f"Hãy kiểm tra cột 'Mã đề xuất' và tích cột 'Duyệt' để điền mã vào file.")
+
+    # --- Tra cứu nhanh (có gợi ý và tự học) ---
+    if price_items and len(df) > 0:
         with st.expander("🔍 TÌM KIẾM VÀ CHÈN MÃ NHANH VÀO DÒNG BẤT KỲ"):
-            st.markdown("<p style='color: #A0A0A0; font-size: 14px;'>Chọn thiết bị từ Bảng giá rồi bấm <b>Áp dụng</b> để chèn đè vào dòng chỉ định.</p>", unsafe_allow_html=True)
-            
             c1, c2 = st.columns([1, 2])
             with c1:
-                row_options = st.session_state.df_editable.index
-                selected_row = st.selectbox("1. Chọn dòng cần điền:", options=row_options, 
-                                            format_func=lambda x: f"Dòng {x+1}: {st.session_state.df_editable.at[x, 'Diễn giải']}")
+                row_idx = st.selectbox(
+                    "1. Chọn dòng cần điền:", options=list(df.index), key="qp_row",
+                    format_func=lambda x: f"Dòng {x + 1}: {clean(df.at[x, 'Diễn giải'])[:60]}")
+            query = clean(df.at[row_idx, "BOQ gốc"]) or clean(df.at[row_idx, "Diễn giải"])
+            suggestions = suggest_matches(query, price_items, store, top_k=5)
+            options = {}
+            for s in suggestions:
+                options[f"★ {label_item(s['item'])}"] = s["item"]
+            for it in price_items:
+                if it["ma"]:
+                    options.setdefault(label_item(it), it)
             with c2:
-                price_opts = {f"[{p['Mã hàng']}] {p['Tên']} - {p['Đơn giá']:,.0f} đ": p for p in st.session_state.price_list_cache}
-                selected_item_str = st.selectbox("2. Chọn thiết bị trong Bảng giá:", options=["-- Trống --"] + list(price_opts.keys()))
-                
-            if st.button("✅ ÁP DỤNG MÃ VÀO DÒNG ĐÃ CHỌN"):
-                if selected_item_str != "-- Trống --":
-                    p_data = price_opts[selected_item_str]
-                    st.session_state.df_editable.at[selected_row, 'Mã hàng'] = p_data['Mã hàng']
-                    st.session_state.df_editable.at[selected_row, 'Diễn giải'] = p_data['Tên']
-                    st.session_state.df_editable.at[selected_row, 'Xuất xứ'] = p_data['Xuất xứ']
-                    st.session_state.df_editable.at[selected_row, 'ĐVT'] = p_data['ĐVT']
-                    st.session_state.df_editable.at[selected_row, 'Đơn giá (VND)'] = p_data['Đơn giá']
-                    
-                    current_sl = st.session_state.df_editable.at[selected_row, 'SL']
-                    sl_val = float(current_sl) if pd.notna(current_sl) and str(current_sl).strip() != '' else 0.0
-                    st.session_state.df_editable.at[selected_row, 'SL'] = sl_val
-                    st.session_state.df_editable.at[selected_row, 'Thành tiền (VND)'] = sl_val * float(p_data['Đơn giá'])
+                choice = st.selectbox("2. Chọn thiết bị trong Bảng giá (★ = AI gợi ý):",
+                                      ["-- Trống --"] + list(options), key="qp_item")
+            if st.button("✅ ÁP DỤNG MÃ VÀO DÒNG ĐÃ CHỌN", key="qp_apply"):
+                if choice != "-- Trống --":
+                    it = options[choice]
+                    before = clean(df.at[row_idx, "Mã hàng"])
+                    apply_item(df, row_idx, it)
+                    if query:
+                        store.learn_mapping(query, it)
+                        store.log_correction(query, before, it["ma"])
+                    st.session_state.df_editable = recalc(df)
+                    st.session_state.editor_ver += 1
                     st.rerun()
 
-    # --- NÚT THAO TÁC XÓA DÒNG RÕ RÀNG ---
-    col_act1, col_act2 = st.columns([1, 4])
+    # --- Xóa dòng đã tick ---
+    col_act1, col_act2, _ = st.columns([1, 1, 3])
     with col_act1:
         if st.button("🗑️ XÓA DÒNG ĐÃ TICK", use_container_width=True):
-            st.session_state.df_editable = st.session_state.df_editable[st.session_state.df_editable['Xóa'] != True].reset_index(drop=True)
-            st.success("Đã xóa các dòng được chọn!")
+            st.session_state.df_editable = df[df["Xóa"] != True].reset_index(drop=True)
+            st.session_state.editor_ver += 1
+            st.rerun()
+    with col_act2:
+        if st.button("✅ DUYỆT TẤT CẢ ĐỀ XUẤT", use_container_width=True):
+            df.loc[df["Mã đề xuất"] != "", "Duyệt"] = True
+            st.session_state.df_editable = df
+            st.session_state.editor_ver += 1
             st.rerun()
 
-    # --- BẢNG DỮ LIỆU CHO PHÉP THÊM / SỬA TRỰC TIẾP ---
+    # --- Bảng chỉnh sửa ---
+    code_options = sorted({p["ma"] for p in price_items if p["ma"]})
+    editor_key = f"boq_editor_{st.session_state.editor_ver}"
     edited_df = st.data_editor(
-        st.session_state.df_editable, 
-        num_rows="dynamic", 
+        df,
+        key=editor_key,
+        num_rows="dynamic",
         use_container_width=True,
         height=500,
         column_config={
-            "Xóa": st.column_config.CheckboxColumn("🗑️ Xóa", help="Tick chọn để xóa dòng này", default=False),
-            "SL": st.column_config.NumberColumn("SL", format="%d", min_value=0),
-            "Đơn giá (VND)": st.column_config.NumberColumn("Đơn giá (VND)", format="%,d", min_value=0),
-            "Thành tiền (VND)": st.column_config.NumberColumn("Thành tiền (VND)", format="%,d", disabled=True)
-        }
+            "Xóa": st.column_config.CheckboxColumn("🗑️ Xóa", help="Tick để xóa dòng này", default=False),
+            "Duyệt": st.column_config.CheckboxColumn("✅ Duyệt", help="Tick để điền mã đề xuất vào file", default=False),
+            "BOQ gốc": st.column_config.TextColumn("BOQ gốc", disabled=True, width="large"),
+            "Mã đề xuất": st.column_config.TextColumn("Mã đề xuất (AI)", disabled=True),
+            "Độ khớp": st.column_config.NumberColumn("Độ khớp", format="%.2f", disabled=True),
+            "Nguồn": st.column_config.TextColumn("Nguồn", disabled=True),
+            "Mã hàng": st.column_config.SelectboxColumn(
+                "Mã hàng", options=code_options, help="Chọn mã từ bảng giá. Tên và giá sẽ tự điền."),
+            "Gợi ý": st.column_config.TextColumn("Gợi ý khác", disabled=True),
+            "SL": st.column_config.NumberColumn("SL", format="%.2f", min_value=0),
+            "Đơn giá (VND)": st.column_config.NumberColumn("Đơn giá (VND)", format="%,.0f", min_value=0),
+            "Thành tiền (VND)": st.column_config.NumberColumn("Thành tiền (VND)", format="%,.0f", disabled=True),
+        },
     )
-    
-    edited_df['SL'] = pd.to_numeric(edited_df['SL'], errors='coerce').fillna(0)
-    edited_df['Đơn giá (VND)'] = pd.to_numeric(edited_df['Đơn giá (VND)'], errors='coerce').fillna(0)
-    edited_df['Thành tiền (VND)'] = edited_df['SL'] * edited_df['Đơn giá (VND)']
-    st.session_state.df_editable = edited_df
 
+    # Đồng bộ mã người dùng chọn, rồi điền các dòng đã duyệt
+    editor_state = st.session_state.get(editor_key, {})
+    edited_df = recalc(edited_df)
+    edited_rows = editor_state.get("edited_rows", {}) if isinstance(editor_state, dict) else {}
+    synced = sync_codes(edited_df, edited_rows, price_items, store, st.session_state.learned_keys)
+    applied_now = apply_approved(edited_df, price_items, store, st.session_state.learned_keys)
+    st.session_state.df_editable = edited_df
+    if synced or applied_now:
+        st.session_state.editor_ver += 1
+        st.toast(f"✅ Đã cập nhật {synced + applied_now} dòng và ghi nhớ cho lần sau")
+        st.rerun()
+    df = st.session_state.df_editable
+
+    # --- Kiểm tra trước khi xuất ---
+    audit_rows = [{"ma": clean(r["Mã hàng"]), "sl": r["SL"], "don_gia": r["Đơn giá (VND)"]}
+                  for _, r in df.iterrows()]
+    issues = audit_quote(audit_rows, store)
+    n_err = sum(1 for i in issues if i["level"] == "error")
+    n_warn = sum(1 for i in issues if i["level"] == "warn")
+    with st.expander(f"🩺 KIỂM TRA BÁO GIÁ ({n_err} lỗi · {n_warn} cảnh báo)", expanded=n_err > 0):
+        if not issues:
+            st.success("Không phát hiện vấn đề.")
+        show = {"error": st.error, "warn": st.warning, "info": st.info}
+        for w in issues[:40]:
+            show[w["level"]](w["message"])
+        if len(issues) > 40:
+            st.caption(f"... và {len(issues) - 40} cảnh báo khác.")
+
+    # --- Thông tin khách hàng & điều khoản ---
     st.markdown("<br>", unsafe_allow_html=True)
-    
-    # --- FORM NHẬP THÔNG TIN KHÁCH HÀNG & ĐIỀU KHOẢN ---
     st.markdown("<h3>📝 THÔNG TIN DỰ ÁN & ĐIỀU KHOẢN THƯƠNG MẠI</h3>", unsafe_allow_html=True)
-    
+
     with st.expander("👤 Thông tin Khách hàng (Header)", expanded=True):
         hc1, hc2 = st.columns(2)
         with hc1:
-            info_to = st.text_input("To (Tên công ty):", placeholder="VD: Công ty TNHH ABC...")
-            info_add = st.text_input("Add (Địa chỉ):")
-            info_att = st.text_input("Att (Người liên hệ):")
-            info_mobile = st.text_input("Mobile (Số điện thoại):")
-            info_email = st.text_input("Email:")
-            info_ref = st.text_input("Ref:")
+            h_to = st.text_input("To (Tên công ty):", placeholder="VD: Công ty TNHH ABC...", key="h_to")
+            h_add = st.text_input("Add (Địa chỉ):", key="h_add")
+            h_att = st.text_input("Att (Người liên hệ):", key="h_att")
+            h_mobile = st.text_input("Mobile (Số điện thoại):", key="h_mobile")
+            h_email = st.text_input("Email:", key="h_email")
+            h_ref = st.text_input("Ref:", key="h_ref")
         with hc2:
-            info_no = st.text_input("No (Số báo giá):", value=f"BG-{datetime.now().strftime('%d%m%y')}-01")
-            info_date = st.date_input("Date (Ngày báo giá):", value=datetime.now())
-            info_revise = st.text_input("Revise (Lần chỉnh sửa):", value="0")
-            info_validity = st.text_input("Validity (Hiệu lực báo giá):", value="30 ngày")
-            info_project = st.text_input("Project (Tên dự án):")
+            h_no = st.text_input("No (Số báo giá):", value=f"BG-{datetime.now().strftime('%d%m%y')}-01", key="h_no")
+            h_date = st.date_input("Date (Ngày báo giá):", value=datetime.now(), key="h_date")
+            h_revise = st.text_input("Revise (Lần chỉnh sửa):", value="0", key="h_revise")
+            h_validity = st.text_input("Validity (Hiệu lực báo giá):", value="30 ngày", key="h_validity")
+            h_project = st.text_input("Project (Tên dự án):", key="h_project")
 
     with st.expander("🤝 Điều khoản thương mại (Footer)", expanded=False):
-        term_note = st.text_area("Lưu ý:", value="Báo giá đã bao gồm vận chuyển và giấy thông hành")
-        term_delivery_line1 = st.text_input("Giao hàng (Dòng 1):", value="Tại địa chỉ dự án bên mua.")
-        term_delivery_line2 = st.text_input("Giao hàng (Dòng 2):", value="Nhập hàng 04-06 Tuần + giấy lưu thông 04-06 tuần")
-        term_payment = st.text_area("Thanh toán:", value="Tạm ứng 30% khi đặt hàng\nThanh toán 70% còn lại trước khi giao hàng")
+        f_note = st.text_area("Lưu ý:", value="Báo giá đã bao gồm vận chuyển và giấy thông hành", key="f_note")
+        f_deliv1 = st.text_input("Giao hàng (Dòng 1):", value="Tại địa chỉ dự án bên mua.", key="f_deliv1")
+        f_deliv2 = st.text_input("Giao hàng (Dòng 2):",
+                                 value="Nhập hàng 04-06 Tuần + giấy lưu thông 04-06 tuần", key="f_deliv2")
+        f_payment = st.text_area("Thanh toán:",
+                                 value="Tạm ứng 30% khi đặt hàng\nThanh toán 70% còn lại trước khi giao hàng",
+                                 key="f_payment")
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-    col_out1, col_out2 = st.columns([3, 1])
-    with col_out1:
-        output_filename = st.text_input("Tên file Excel xuất ra:", value=f"BaoGia_QNTech_{datetime.now().strftime('%Y%m%d')}.xlsx")
-    with col_out2:
-        st.write("") 
-        st.write("")
-        if st.button("📥 XUẤT FILE BÁO GIÁ", use_container_width=True):
-            try:
-                with st.spinner("Đang xử lý thu phóng dòng tự động, bảo vệ cấu trúc Excel..."):
-                    wb = openpyxl.load_workbook(TEMPLATE_PATH)
-                    ws = wb.active
+    # --- Xuất Excel ---
+    def build_excel(data: pd.DataFrame) -> bytes:
+        wb = openpyxl.load_workbook(TEMPLATE_PATH)
+        ws = wb[QUOTE_SHEET] if QUOTE_SHEET in wb.sheetnames else wb.active
 
-                    # --- HÀM AN TOÀN CHỐNG LỖI MERGED CELL ---
-                    def safe_write(row, col, val):
-                        try:
-                            cell = ws.cell(row=row, column=col)
-                            for rng in ws.merged_cells.ranges:
-                                if row in range(rng.min_row, rng.max_row + 1) and col in range(rng.min_col, rng.max_col + 1):
-                                    cell = ws.cell(row=rng.min_row, column=rng.min_col)
-                                    break
-                            cell.value = val
-                        except Exception: 
-                            pass
+        def safe_write(row, col, val):
+            cell = ws.cell(row=row, column=col)
+            for rng in ws.merged_cells.ranges:
+                if rng.min_row <= row <= rng.max_row and rng.min_col <= col <= rng.max_col:
+                    cell = ws.cell(row=rng.min_row, column=rng.min_col)
+                    break
+            cell.value = val
 
-                    # --- GHI THÔNG TIN HEADER VÀO ĐÚNG TỌA ĐỘ MẪU CHUẨN ---
-                    safe_write(6, 2, info_to)       
-                    safe_write(7, 2, info_add)      
-                    safe_write(8, 2, info_att)      
-                    safe_write(9, 2, info_mobile)   
-                    safe_write(10, 2, info_email)   
-                    safe_write(11, 2, info_ref)     
-                    
-                    safe_write(6, 7, info_no)                           
-                    safe_write(7, 7, info_date.strftime("%d/%m/%Y"))    
-                    safe_write(8, 7, info_revise)                       
-                    safe_write(9, 7, info_validity)                     
-                    safe_write(10, 7, info_project)                     
+        def shift_rows(at_row, amount):
+            """Thêm (amount > 0) hoặc xóa (amount < 0) dòng tại at_row.
+            Giữ nguyên merge ô và chiều cao dòng."""
+            max_row = ws.max_row
+            heights = {r: ws.row_dimensions[r].height for r in range(at_row, max_row + 1)
+                       if r in ws.row_dimensions and ws.row_dimensions[r].height}
+            deleted_upto = at_row - amount if amount < 0 else at_row
+            merges = []
+            for rng in list(ws.merged_cells.ranges):
+                if rng.min_row >= at_row:
+                    merges.append((rng.min_row, rng.min_col, rng.max_row, rng.max_col))
+                    ws.unmerge_cells(start_row=rng.min_row, start_column=rng.min_col,
+                                     end_row=rng.max_row, end_column=rng.max_col)
+            if amount > 0:
+                ws.insert_rows(at_row, amount)
+            else:
+                ws.delete_rows(at_row, -amount)
+            for r in range(at_row, max_row + abs(amount) + 1):
+                if r in ws.row_dimensions:
+                    ws.row_dimensions[r].height = None
+            for r, h in heights.items():
+                if r >= deleted_upto:
+                    ws.row_dimensions[r + amount].height = h
+            for r1, c1, r2, c2 in merges:
+                if r1 < deleted_upto:
+                    continue  # merge nằm trong vùng đã xóa
+                ws.merge_cells(start_row=r1 + amount, start_column=c1,
+                               end_row=r2 + amount, end_column=c2)
 
-                    start_row = 14
-                    num_items = len(edited_df)
-                    
-                    # Tự động tìm dòng chứa từ khóa Tổng / Cộng làm ranh giới mẫu
-                    end_template_row = start_row
-                    for r in range(start_row, start_row + 150):
-                        val_c2 = str(ws.cell(row=r, column=2).value or "").lower()
-                        val_c3 = str(ws.cell(row=r, column=3).value or "").lower()
-                        if "cộng" in val_c2 or "tổng" in val_c2 or "cộng" in val_c3 or "tổng" in val_c3:
-                            end_template_row = r
-                            break
-                    
-                    available_rows = end_template_row - start_row
-                    
-                    # === XỬ LÝ CO GIÃN DÒNG (THÊM / XÓA ĐẢM BẢO KHÔNG LỆCH FORMAT) ===
-                    if num_items > available_rows:
-                        rows_to_insert = num_items - available_rows
-                        for m in list(ws.merged_cells.ranges):
-                            if m.min_row >= end_template_row: m.shift(row_shift=rows_to_insert)
+        # Header
+        safe_write(6, 2, h_to)
+        safe_write(7, 2, h_add)
+        safe_write(8, 2, h_att)
+        safe_write(9, 2, h_mobile)
+        safe_write(10, 2, h_email)
+        safe_write(11, 2, h_ref)
+        safe_write(6, 7, h_no)
+        safe_write(7, 7, h_date.strftime("%d/%m/%Y"))
+        safe_write(8, 7, h_revise)
+        safe_write(9, 7, h_validity)
+        safe_write(10, 7, h_project)
 
-                        max_dim = max(list(ws.row_dimensions.keys()) + [0])
-                        old_heights = {}
-                        for r in range(end_template_row, max_dim + 1):
-                            if r in ws.row_dimensions: old_heights[r] = ws.row_dimensions[r].height
-                                
-                        ws.insert_rows(end_template_row, amount=rows_to_insert)
-                        
-                        for r, h in old_heights.items(): ws.row_dimensions[r + rows_to_insert].height = h
-                            
-                        source_row = end_template_row - 1
-                        item_height = ws.row_dimensions[source_row].height if source_row in ws.row_dimensions else None
-                        
-                        for r in range(end_template_row, end_template_row + rows_to_insert):
-                            if item_height: ws.row_dimensions[r].height = item_height
-                            for col in range(1, 10):
-                                s_cell = ws.cell(row=source_row, column=col)
-                                t_cell = ws.cell(row=r, column=col)
-                                if s_cell.has_style:
-                                    t_cell.font = copy.copy(s_cell.font); t_cell.border = copy.copy(s_cell.border)
-                                    t_cell.fill = copy.copy(s_cell.fill); t_cell.number_format = copy.copy(s_cell.number_format)
-                                    t_cell.alignment = copy.copy(s_cell.alignment)
+        # Tìm dòng "Cộng/Tổng" làm ranh giới vùng hàng hóa
+        start_row = 14
+        end_row = start_row
+        for r in range(start_row, start_row + 150):
+            c2 = str(ws.cell(row=r, column=2).value or "").lower()
+            c3 = str(ws.cell(row=r, column=3).value or "").lower()
+            if "cộng" in c2 or "tổng" in c2 or "cộng" in c3 or "tổng" in c3:
+                end_row = r
+                break
+        available = end_row - start_row
+        n = len(data)
 
-                        end_template_row += rows_to_insert
+        if n > available:
+            extra = n - available
+            shift_rows(end_row, extra)
+            for r in range(end_row, end_row + extra):
+                for col in range(1, 10):
+                    s_cell = ws.cell(row=end_row - 1, column=col)
+                    t_cell = ws.cell(row=r, column=col)
+                    if s_cell.has_style:
+                        t_cell.font = copy.copy(s_cell.font)
+                        t_cell.border = copy.copy(s_cell.border)
+                        t_cell.fill = copy.copy(s_cell.fill)
+                        t_cell.number_format = s_cell.number_format
+                        t_cell.alignment = copy.copy(s_cell.alignment)
+            end_row += extra
+        elif n < available:
+            fewer = available - n
+            shift_rows(start_row + n, -fewer)
+            end_row -= fewer
 
-                    elif num_items < available_rows:
-                        rows_to_delete = available_rows - num_items
-                        delete_start = start_row + num_items
-                        
-                        new_merged = []
-                        for m in list(ws.merged_cells.ranges):
-                            if m.min_row > delete_start:
-                                m.shift(row_shift=-rows_to_delete)
-                            new_merged.append(m)
-                            
-                        max_dim = max(list(ws.row_dimensions.keys()) + [0])
-                        old_heights = {}
-                        for r in range(delete_start + rows_to_delete, max_dim + 1):
-                            if r in ws.row_dimensions:
-                                old_heights[r] = ws.row_dimensions[r].height
-                                
-                        ws.delete_rows(delete_start, amount=rows_to_delete)
-                        
-                        for r in range(delete_start, max_dim - rows_to_delete + 1):
-                            ws.row_dimensions[r].height = None 
-                        for r, h in old_heights.items():
-                            ws.row_dimensions[r - rows_to_delete].height = h
-                            
-                        end_template_row -= rows_to_delete
+        for i, (_, r) in enumerate(data.iterrows()):
+            rr = start_row + i
+            safe_write(rr, 1, i + 1)
+            safe_write(rr, 2, clean(r["Mã hàng"]))
+            safe_write(rr, 3, clean(r["Diễn giải"]))
+            safe_write(rr, 4, clean(r["Xuất xứ"]))
+            safe_write(rr, 5, clean(r["ĐVT"]) or "Cái")
+            safe_write(rr, 6, float(r["SL"]))
+            safe_write(rr, 7, float(r["Đơn giá (VND)"]))
+            safe_write(rr, 8, f"=F{rr}*G{rr}")
+            safe_write(rr, 9, clean(r["Ghi chú"]))
 
-                    # --- Ghi dữ liệu khối lượng ---
-                    for idx, row in edited_df.iterrows():
-                        current_row = start_row + idx
-                        safe_write(current_row, 1, idx + 1)
-                        safe_write(current_row, 2, row.get('Mã hàng', ''))
-                        safe_write(current_row, 3, row.get('Diễn giải', ''))
-                        safe_write(current_row, 4, row.get('Xuất xứ', ''))
-                        safe_write(current_row, 5, row.get('ĐVT', 'Cái'))
-                        safe_write(current_row, 6, row.get('SL', 0))
-                        safe_write(current_row, 7, row.get('Đơn giá (VND)', 0))
-                        try: ws.cell(row=current_row, column=8).value = f"=F{current_row}*G{current_row}"
-                        except Exception: pass
-                        safe_write(current_row, 9, row.get('Ghi chú', ''))
+        safe_write(end_row, 8, f"=SUM(H{start_row}:H{end_row - 1})")
 
-                    # Cập nhật công thức tổng cộng động
-                    try: ws.cell(row=end_template_row, column=8).value = f"=SUM(H{start_row}:H{end_template_row-1})"
-                    except Exception: pass
+        for r in range(end_row, ws.max_row + 1):
+            c1 = str(ws.cell(row=r, column=1).value or "").strip().lower()
+            c2 = str(ws.cell(row=r, column=2).value or "").strip().lower()
+            c3 = str(ws.cell(row=r, column=3).value or "").strip().lower()
+            if "lưu ý" in c2:
+                safe_write(r, 3, f_note)
+            elif "giao hàng" in c2:
+                safe_write(r, 3, f_deliv1)
+            elif "nhập hàng" in c3 or "giấy lưu thông" in c3:
+                safe_write(r, 3, f_deliv2)
+            elif "thanh toán" in c2:
+                safe_write(r, 3, f_payment)
 
-                    # --- GHI THÔNG TIN FOOTER VÀO EXCEL (TÁCH BIỆT TỪNG DÒNG ĐÚNG CHUẨN MẪU) ---
-                    for r in range(end_template_row, ws.max_row + 1):
-                        cell_c1 = str(ws.cell(row=r, column=1).value or "").strip().lower()
-                        cell_c2 = str(ws.cell(row=r, column=2).value or "").strip().lower()
-                        cell_c3 = str(ws.cell(row=r, column=3).value or "").strip().lower()
-                        
-                        if "lưu ý" in cell_c2:
-                            ws.cell(row=r, column=3).value = term_note      
-                        elif "giao hàng" in cell_c2:
-                            ws.cell(row=r, column=3).value = term_delivery_line1  
-                        elif "nhập hàng" in cell_c3 or "giấy lưu thông" in cell_c3:
-                            ws.cell(row=r, column=3).value = term_delivery_line2
-                        elif "thanh toán" in cell_c2:
-                            ws.cell(row=r, column=3).value = term_payment
+        buf = BytesIO()
+        wb.save(buf)
+        return buf.getvalue()
 
-                    output_buffer = BytesIO()
-                    wb.save(output_buffer)
-                    output_buffer.seek(0)
+    output_filename = st.text_input(
+        "Tên file Excel xuất ra:", value=f"BaoGia_QNTech_{datetime.now().strftime('%Y%m%d')}.xlsx", key="out_name")
 
-                    st.success("🎉 GHI DỮ LIỆU THÀNH CÔNG! Bấm tải xuống bên dưới.")
-                    st.download_button(
-                        label="⬇️ NHẤN ĐỂ LƯU FILE EXCEL",
-                        data=output_buffer,
-                        file_name=output_filename,
-                        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                        use_container_width=True
-                    )
-
-            except Exception as e:
-                st.error(f"Đã xảy ra lỗi hệ thống: {e}")
+    if st.button("📥 XUẤT FILE BÁO GIÁ", use_container_width=True):
+        if n_err > 0:
+            st.warning(f"Báo giá còn {n_err} lỗi (đơn giá = 0). Bạn vẫn có thể xuất, nhưng nên kiểm tra lại.")
+        try:
+            with st.spinner("Đang ghi dữ liệu vào mẫu báo giá..."):
+                excel_bytes = build_excel(df)
+            store.record_quote_prices(audit_rows)
+            st.success("🎉 GHI DỮ LIỆU THÀNH CÔNG! Bấm tải xuống bên dưới.")
+            st.download_button(
+                label="⬇️ NHẤN ĐỂ LƯU FILE EXCEL",
+                data=excel_bytes,
+                file_name=output_filename,
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                use_container_width=True,
+            )
+        except Exception as e:
+            st.error(f"Đã xảy ra lỗi khi xuất file: {e}")

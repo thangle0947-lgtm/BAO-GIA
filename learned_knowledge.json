@@ -1,0 +1,47 @@
+{
+  "mappings": {
+    "đầu phun sprinkler dn20, k=8, 68°c, hướng xuống": {
+      "ma": "T-ZSTX 115-68°C Q5",
+      "ten": "Đầu phun chữa cháy xuống lên phản ứng tiêu chuẩn, K=8.0, DN20, 68°C",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0.0,
+      "count": 1,
+      "updated": "2026-11-10T12:30:05"
+    }
+  },
+  "price_history": {
+    "K-ZSTX 115-68°C Q3": [
+      {
+        "gia": 115000.0,
+        "ngay": "2026-11-10"
+      }
+    ],
+    "T-ZSTX 115-68°C Q5": [
+      {
+        "gia": 115000.0,
+        "ngay": "2026-11-10"
+      }
+    ]
+  },
+  "corrections": [
+    {
+      "time": "2026-11-10T12:18:30",
+      "boq": "đầu phun sprinkler dn20, k=8, 68°c, hướng xuống",
+      "before": "",
+      "after": "K-ZSTX 115-68°C Q3"
+    },
+    {
+      "time": "2026-11-10T12:18:42",
+      "boq": "đầu phun sprinkler dn20, k=8, 68°c, hướng xuống",
+      "before": "",
+      "after": "K-ZSTX 115-68°C Q3"
+    },
+    {
+      "time": "2026-11-10T12:30:05",
+      "boq": "đầu phun sprinkler dn20, k=8, 68°c, hướng xuống",
+      "before": "",
+      "after": "T-ZSTX 115-68°C Q5"
+    }
+  ]
+}
