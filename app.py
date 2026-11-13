@@ -93,7 +93,7 @@ if not os.path.exists(TEMPLATE_PATH):
     st.stop()
 
 # --- TRẠNG THÁI PHIÊN ---
-for _key, _default in {"df_editable": None, "learned_keys": set(), "last_stats": None, "editor_ver": 0, "prev_ver": 0, "merge_msg": 0}.items():
+for _key, _default in {"df_editable": None, "learned_keys": set(), "last_stats": None, "editor_ver": 0, "prev_ver": 0, "merge_msg": 0, "device": None}.items():
     if _key not in st.session_state:
         st.session_state[_key] = _default
 
@@ -599,7 +599,252 @@ def apply_item(df, idx, it):
     df.at[idx, "Duyệt"] = True
 
 
+def build_excel(data: pd.DataFrame, hdr: dict, ftr: dict, customer: bool = False) -> bytes:
+    """hdr: to, add, att, mobile, email, ref, no, date (chuỗi dd/mm/yyyy), revise, validity, project.
+    ftr: note, deliv1, deliv2, payment."""
+    wb = openpyxl.load_workbook(TEMPLATE_PATH)
+    ws = wb[QUOTE_SHEET] if QUOTE_SHEET in wb.sheetnames else wb.active
+    # Chỉ giữ sheet báo giá: bỏ các sheet mẫu/cũ (ví dụ VN_1 chứa báo giá của khách khác)
+    for _name in list(wb.sheetnames):
+        if _name != ws.title:
+            del wb[_name]
+    wb.active = 0
+
+    def safe_write(row, col, val):
+        cell = ws.cell(row=row, column=col)
+        for rng in ws.merged_cells.ranges:
+            if rng.min_row <= row <= rng.max_row and rng.min_col <= col <= rng.max_col:
+                cell = ws.cell(row=rng.min_row, column=rng.min_col)
+                break
+        cell.value = val
+
+    def find_row(prefixes, first, last, cols=(1, 2, 3)):
+        for r in range(first, min(last, ws.max_row) + 1):
+            for c in cols:
+                k = ascii_key(ws.cell(row=r, column=c).value)
+                if any(k.startswith(p) for p in prefixes):
+                    return r
+        return None
+
+    def shift_rows(at_row, amount):
+        """Thêm (amount > 0) hoặc xóa (amount < 0) dòng tại at_row, giữ merge và chiều cao dòng."""
+        max_row = ws.max_row
+        heights = {r: ws.row_dimensions[r].height for r in range(at_row, max_row + 1)
+                   if r in ws.row_dimensions and ws.row_dimensions[r].height}
+        deleted_upto = at_row - amount if amount < 0 else at_row
+        merges = []
+        for rng in list(ws.merged_cells.ranges):
+            if rng.min_row >= at_row:
+                merges.append((rng.min_row, rng.min_col, rng.max_row, rng.max_col))
+                ws.unmerge_cells(start_row=rng.min_row, start_column=rng.min_col,
+                                 end_row=rng.max_row, end_column=rng.max_col)
+        if amount > 0:
+            ws.insert_rows(at_row, amount)
+        else:
+            ws.delete_rows(at_row, -amount)
+        for r in range(at_row, max_row + abs(amount) + 1):
+            if r in ws.row_dimensions:
+                ws.row_dimensions[r].height = None
+        for r, h in heights.items():
+            if r >= deleted_upto:
+                ws.row_dimensions[r + amount].height = h
+        for r1, c1, r2, c2 in merges:
+            if r1 < deleted_upto:
+                continue
+            ws.merge_cells(start_row=r1 + amount, start_column=c1,
+                           end_row=r2 + amount, end_column=c2)
+
+    # 1) Header (vị trí giống mẫu Q1011 và mẫu hiện tại)
+    safe_write(6, 2, hdr["to"])
+    safe_write(7, 2, hdr["add"])
+    safe_write(8, 2, hdr["att"])
+    safe_write(9, 2, hdr["mobile"])
+    safe_write(10, 2, hdr["email"])
+    safe_write(11, 2, hdr["ref"])
+    safe_write(6, 7, hdr["no"])
+    safe_write(7, 7, hdr["date"])
+    safe_write(8, 7, hdr["revise"])
+    safe_write(9, 7, hdr["validity"])
+    safe_write(10, 7, hdr["project"])
+
+    # 2) Tìm dòng tiêu đề "Mã hàng" và dòng "Cộng" làm mốc vùng hàng hóa
+    hdr = find_row(["ma hang"], 1, 60, cols=(2,))
+    if hdr is None:
+        raise ValueError("Không tìm thấy dòng tiêu đề 'Mã hàng' trong mẫu báo giá.")
+    start_row = hdr + 1
+    total_row = find_row(["cong"], start_row, start_row + 500)
+    if total_row is None:
+        raise ValueError("Không tìm thấy dòng 'Cộng' trong mẫu báo giá.")
+    available = total_row - start_row
+    n = len(data)
+    item_h = ws.row_dimensions[start_row].height or 43.9  # chiều cao dòng hàng hóa của mẫu
+    last_item_row = total_row - 1
+
+    # 3) Thêm hoặc bớt dòng hàng hóa cho khớp số hàng
+    if n > available:
+        extra = n - available
+        shift_rows(total_row, extra)
+        for r in range(total_row, total_row + extra):
+            for col in range(1, 10):
+                s_cell = ws.cell(row=last_item_row, column=col)
+                t_cell = ws.cell(row=r, column=col)
+                if s_cell.has_style:
+                    t_cell.font = copy.copy(s_cell.font)
+                    t_cell.border = copy.copy(s_cell.border)
+                    t_cell.fill = copy.copy(s_cell.fill)
+                    t_cell.number_format = s_cell.number_format
+                    t_cell.alignment = copy.copy(s_cell.alignment)
+    elif n < available:
+        fewer = available - n
+        shift_rows(start_row + n, -fewer)
+
+    # Mọi dòng hàng hóa cao bằng nhau (dòng thêm mới không có chiều cao sẽ bị thấp hơn dòng của mẫu)
+    for r in range(start_row, start_row + n):
+        ws.row_dimensions[r].height = item_h
+
+    # 4) Ghi hàng hóa (nền vùng hàng hóa về trắng như mẫu; chỉ tô vàng dòng cần soát ở bản nội bộ)
+    flag_fill = PatternFill("solid", fgColor="FFF2A8")
+    for r in range(start_row, start_row + n):
+        ws.row_dimensions[r].fill = PatternFill(fill_type=None)
+        for c in range(1, 10):
+            ws.cell(row=r, column=c).fill = PatternFill(fill_type=None)
+    for i, (_, r) in enumerate(data.iterrows()):
+        rr = start_row + i
+        code = code_of(r["Mã hàng"])
+        price = float(r["Đơn giá (VND)"] or 0)
+        name = clean(r["Diễn giải"]) if code else (clean(r["BOQ gốc"]) or clean(r["Diễn giải"]))
+        notes = []
+        if clean(r["Ghi chú"]):
+            notes.append(clean(r["Ghi chú"]))
+        safe_write(rr, 1, i + 1)
+        safe_write(rr, 2, code)
+        safe_write(rr, 3, name)
+        safe_write(rr, 4, clean(r["Xuất xứ"]))
+        safe_write(rr, 5, clean(r["ĐVT"]) or "Cái")
+        safe_write(rr, 6, float(r["SL"]))
+        safe_write(rr, 7, price if price > 0 else None)
+        safe_write(rr, 8, f"=F{rr}*G{rr}")
+        safe_write(rr, 9, " | ".join(notes))
+        if not customer and (not code or price <= 0):
+            for c in range(1, 10):
+                ws.cell(row=rr, column=c).fill = flag_fill
+
+    # 5) Công thức Cộng, Thuế, Tổng cộng: viết lại theo vị trí mới
+    cong = start_row + n
+    safe_write(cong, 8, f"=SUM(H{start_row}:H{cong - 1})")
+    thue = find_row(["thue"], cong + 1, cong + 3)
+    tong = find_row(["tong cong"], cong + 1, cong + 6)
+    if thue is not None:
+        rate = ws.cell(row=thue, column=4).value
+        if isinstance(rate, (int, float)):
+            safe_write(thue, 8, f"=H{cong}*D{thue}")
+        else:
+            safe_write(thue, 4, 0.08)
+            safe_write(thue, 8, f"=H{cong}*D{thue}")
+    if tong is not None:
+        safe_write(tong, 8, f"=H{cong}+H{thue}" if thue is not None else f"=H{cong}")
+
+    # 6) Điều khoản dưới bảng
+    footer_start = (tong or cong) + 1
+    for r in range(footer_start, ws.max_row + 1):
+        k2 = ascii_key(ws.cell(row=r, column=2).value)
+        k3 = ascii_key(ws.cell(row=r, column=3).value)
+        if k2.startswith("luu y"):
+            safe_write(r, 3, ftr["note"])
+        elif k2.startswith("giao hang"):
+            safe_write(r, 3, ftr["deliv1"])
+        elif k3.startswith("nhap hang") or "giay luu thong" in k3:
+            safe_write(r, 3, ftr["deliv2"])
+        elif k2.startswith("thanh toan"):
+            # Khối thanh toán của mẫu: gom hết các dòng trống phía dưới nhãn, đến dòng "Thanh toán bằng..."
+            lines = [ln.strip() for ln in ftr["payment"].split("\n") if ln.strip()]
+            slots = [r]
+            rr = r + 1
+            while rr <= ws.max_row:
+                if ascii_key(ws.cell(row=rr, column=3).value).startswith("thanh toan bang") \
+                        or clean(ws.cell(row=rr, column=2).value):
+                    break
+                slots.append(rr)
+                rr += 1
+            if len(lines) >= len(slots):
+                for k_, srow in enumerate(slots[:-1]):
+                    safe_write(srow, 3, lines[k_])
+                safe_write(slots[-1], 3, " / ".join(lines[len(slots) - 1:]) if lines else None)
+            else:
+                for k_, srow in enumerate(slots):
+                    safe_write(srow, 3, lines[k_] if k_ < len(lines) else None)
+            break
+
+    # Mẫu có số điện thoại lặp: ô tên người báo giá đã ghi sẵn SĐT, dòng ngay dưới lại ghi thêm lần nữa -> xóa
+    for r in range((tong or cong) + 1, ws.max_row):
+        if "le quoc" in ascii_key(ws.cell(row=r, column=1).value):
+            below = ws.cell(row=r + 1, column=1)
+            if re.fullmatch(r"[\d\s.+-]{8,}", clean(below.value) or "x"):
+                safe_write(r + 1, 1, None)
+            break
+
+    # Xóa nền tô ở các dòng trống phía dưới chữ ký (tránh ô đen/lạ ở cuối file)
+    last_content = max((r for r in range(1, ws.max_row + 1)
+                        if any(ws.cell(row=r, column=c).value not in (None, "") for c in range(1, 10))),
+                       default=1)
+    for r in range(last_content + 1, ws.max_row + 1):
+        for c in range(1, 10):
+            ws.cell(row=r, column=c).fill = PatternFill(fill_type=None)
+
+    # Nới nhẹ 3 cột số để không hiện "########" trong Excel (chỉ tăng, không thu hẹp)
+    for _col, _min_w in (("F", 9.5), ("G", 14.5), ("H", 16.5)):
+        _cur = ws.column_dimensions[_col].width or 0
+        if _cur < _min_w:
+            ws.column_dimensions[_col].width = _min_w
+
+    # Vùng in phải phủ hết phần chân báo giá sau khi đã thêm/bớt dòng
+    ws.print_area = f"A1:I{last_content}"
+    ws.sheet_properties.pageSetUpPr = PageSetupProperties(fitToPage=True)
+    ws.page_setup.fitToWidth = 1
+    ws.page_setup.fitToHeight = 0
+
+    # Không để openpyxl ghi ảnh (Excel báo lỗi drawing1.xml); ghép lại logo gốc của mẫu sau khi lưu
+    ws._images = []
+    buf = BytesIO()
+    wb.save(buf)
+    fixed = restore_template_drawing(buf.getvalue(), TEMPLATE_PATH, ws.title)
+    return clean_xlsx_for_excel(fixed)
+
+
+# --- CHỌN THIẾT BỊ: máy tính (giao diện cũ) hoặc điện thoại (giao diện tối ưu) ---
+if st.session_state.get("device") is None:
+    st.markdown("""<style>
+        [data-testid="stSidebar"], [data-testid="stSidebarCollapsedControl"], [data-testid="collapsedControl"] { display: none; }
+        .st-key-dev_pc button, .st-key-dev_mobile button { min-height: 96px; font-size: 20px; }
+    </style>""", unsafe_allow_html=True)
+    st.markdown("<h3 style='text-align:center'>Bạn đang dùng thiết bị nào?</h3>", unsafe_allow_html=True)
+    _c1, _c2 = st.columns(2)
+    with _c1:
+        if st.button("🖥️  MÁY TÍNH", use_container_width=True, key="dev_pc"):
+            st.session_state.device = "desktop"
+            st.rerun()
+    with _c2:
+        if st.button("📱  ĐIỆN THOẠI", use_container_width=True, key="dev_mobile"):
+            st.session_state.device = "mobile"
+            st.rerun()
+    st.caption("Máy tính: giao diện bảng rộng. Điện thoại: giao diện một cột, thẻ từng dòng, nút to.")
+    st.stop()
+
+if st.session_state.device == "mobile":
+    import types as _types
+    import mobile_ui
+    mobile_ui.run(_types.SimpleNamespace(
+        store=store, PRICE_LIST_PATH=PRICE_LIST_PATH, PLACEHOLDER_SHEET=PLACEHOLDER_SHEET,
+        cached_price_items=cached_price_items, cached_price_sheet_names=cached_price_sheet_names,
+        cached_boq_sheet_names=cached_boq_sheet_names, cached_boq_raw=cached_boq_raw,
+        recalc=recalc, build_excel=build_excel, xlsx_to_pdf=xlsx_to_pdf, build_quote_pdf=build_quote_pdf,
+        quote_totals=quote_totals, merge_and_remap=merge_and_remap, GOLD=GOLD))
+    st.stop()
+
 # --- SIDEBAR: TẢI DỮ LIỆU ---
+if st.sidebar.button("🔄 Đổi thiết bị (máy tính / điện thoại)", use_container_width=True, key="dev_switch"):
+    st.session_state.device = None
+    st.rerun()
 st.sidebar.markdown(f"<h2 style='text-align: center; color: {GOLD};'>📥 TẢI DỮ LIỆU</h2>", unsafe_allow_html=True)
 uploaded_boq = st.sidebar.file_uploader(
     "Tải lên File BOQ khối lượng gốc (Excel/CSV)", type=["xlsx", "xls", "csv"])
@@ -859,214 +1104,6 @@ if st.session_state.df_editable is not None:
     st.markdown("<br>", unsafe_allow_html=True)
 
     # --- Xuất Excel (tìm dòng theo nhãn, tự thêm/bớt dòng, viết lại công thức tổng) ---
-    def build_excel(data: pd.DataFrame, customer: bool = False) -> bytes:
-        wb = openpyxl.load_workbook(TEMPLATE_PATH)
-        ws = wb[QUOTE_SHEET] if QUOTE_SHEET in wb.sheetnames else wb.active
-        # Chỉ giữ sheet báo giá: bỏ các sheet mẫu/cũ (ví dụ VN_1 chứa báo giá của khách khác)
-        for _name in list(wb.sheetnames):
-            if _name != ws.title:
-                del wb[_name]
-        wb.active = 0
-
-        def safe_write(row, col, val):
-            cell = ws.cell(row=row, column=col)
-            for rng in ws.merged_cells.ranges:
-                if rng.min_row <= row <= rng.max_row and rng.min_col <= col <= rng.max_col:
-                    cell = ws.cell(row=rng.min_row, column=rng.min_col)
-                    break
-            cell.value = val
-
-        def find_row(prefixes, first, last, cols=(1, 2, 3)):
-            for r in range(first, min(last, ws.max_row) + 1):
-                for c in cols:
-                    k = ascii_key(ws.cell(row=r, column=c).value)
-                    if any(k.startswith(p) for p in prefixes):
-                        return r
-            return None
-
-        def shift_rows(at_row, amount):
-            """Thêm (amount > 0) hoặc xóa (amount < 0) dòng tại at_row, giữ merge và chiều cao dòng."""
-            max_row = ws.max_row
-            heights = {r: ws.row_dimensions[r].height for r in range(at_row, max_row + 1)
-                       if r in ws.row_dimensions and ws.row_dimensions[r].height}
-            deleted_upto = at_row - amount if amount < 0 else at_row
-            merges = []
-            for rng in list(ws.merged_cells.ranges):
-                if rng.min_row >= at_row:
-                    merges.append((rng.min_row, rng.min_col, rng.max_row, rng.max_col))
-                    ws.unmerge_cells(start_row=rng.min_row, start_column=rng.min_col,
-                                     end_row=rng.max_row, end_column=rng.max_col)
-            if amount > 0:
-                ws.insert_rows(at_row, amount)
-            else:
-                ws.delete_rows(at_row, -amount)
-            for r in range(at_row, max_row + abs(amount) + 1):
-                if r in ws.row_dimensions:
-                    ws.row_dimensions[r].height = None
-            for r, h in heights.items():
-                if r >= deleted_upto:
-                    ws.row_dimensions[r + amount].height = h
-            for r1, c1, r2, c2 in merges:
-                if r1 < deleted_upto:
-                    continue
-                ws.merge_cells(start_row=r1 + amount, start_column=c1,
-                               end_row=r2 + amount, end_column=c2)
-
-        # 1) Header (vị trí giống mẫu Q1011 và mẫu hiện tại)
-        safe_write(6, 2, h_to)
-        safe_write(7, 2, h_add)
-        safe_write(8, 2, h_att)
-        safe_write(9, 2, h_mobile)
-        safe_write(10, 2, h_email)
-        safe_write(11, 2, h_ref)
-        safe_write(6, 7, h_no)
-        safe_write(7, 7, h_date.strftime("%d/%m/%Y"))
-        safe_write(8, 7, h_revise)
-        safe_write(9, 7, h_validity)
-        safe_write(10, 7, h_project)
-
-        # 2) Tìm dòng tiêu đề "Mã hàng" và dòng "Cộng" làm mốc vùng hàng hóa
-        hdr = find_row(["ma hang"], 1, 60, cols=(2,))
-        if hdr is None:
-            raise ValueError("Không tìm thấy dòng tiêu đề 'Mã hàng' trong mẫu báo giá.")
-        start_row = hdr + 1
-        total_row = find_row(["cong"], start_row, start_row + 500)
-        if total_row is None:
-            raise ValueError("Không tìm thấy dòng 'Cộng' trong mẫu báo giá.")
-        available = total_row - start_row
-        n = len(data)
-        item_h = ws.row_dimensions[start_row].height or 43.9  # chiều cao dòng hàng hóa của mẫu
-        last_item_row = total_row - 1
-
-        # 3) Thêm hoặc bớt dòng hàng hóa cho khớp số hàng
-        if n > available:
-            extra = n - available
-            shift_rows(total_row, extra)
-            for r in range(total_row, total_row + extra):
-                for col in range(1, 10):
-                    s_cell = ws.cell(row=last_item_row, column=col)
-                    t_cell = ws.cell(row=r, column=col)
-                    if s_cell.has_style:
-                        t_cell.font = copy.copy(s_cell.font)
-                        t_cell.border = copy.copy(s_cell.border)
-                        t_cell.fill = copy.copy(s_cell.fill)
-                        t_cell.number_format = s_cell.number_format
-                        t_cell.alignment = copy.copy(s_cell.alignment)
-        elif n < available:
-            fewer = available - n
-            shift_rows(start_row + n, -fewer)
-
-        # Mọi dòng hàng hóa cao bằng nhau (dòng thêm mới không có chiều cao sẽ bị thấp hơn dòng của mẫu)
-        for r in range(start_row, start_row + n):
-            ws.row_dimensions[r].height = item_h
-
-        # 4) Ghi hàng hóa (nền vùng hàng hóa về trắng như mẫu; chỉ tô vàng dòng cần soát ở bản nội bộ)
-        flag_fill = PatternFill("solid", fgColor="FFF2A8")
-        for r in range(start_row, start_row + n):
-            ws.row_dimensions[r].fill = PatternFill(fill_type=None)
-            for c in range(1, 10):
-                ws.cell(row=r, column=c).fill = PatternFill(fill_type=None)
-        for i, (_, r) in enumerate(data.iterrows()):
-            rr = start_row + i
-            code = code_of(r["Mã hàng"])
-            price = float(r["Đơn giá (VND)"] or 0)
-            name = clean(r["Diễn giải"]) if code else (clean(r["BOQ gốc"]) or clean(r["Diễn giải"]))
-            notes = []
-            if clean(r["Ghi chú"]):
-                notes.append(clean(r["Ghi chú"]))
-            safe_write(rr, 1, i + 1)
-            safe_write(rr, 2, code)
-            safe_write(rr, 3, name)
-            safe_write(rr, 4, clean(r["Xuất xứ"]))
-            safe_write(rr, 5, clean(r["ĐVT"]) or "Cái")
-            safe_write(rr, 6, float(r["SL"]))
-            safe_write(rr, 7, price if price > 0 else None)
-            safe_write(rr, 8, f"=F{rr}*G{rr}")
-            safe_write(rr, 9, " | ".join(notes))
-            if not customer and (not code or price <= 0):
-                for c in range(1, 10):
-                    ws.cell(row=rr, column=c).fill = flag_fill
-
-        # 5) Công thức Cộng, Thuế, Tổng cộng: viết lại theo vị trí mới
-        cong = start_row + n
-        safe_write(cong, 8, f"=SUM(H{start_row}:H{cong - 1})")
-        thue = find_row(["thue"], cong + 1, cong + 3)
-        tong = find_row(["tong cong"], cong + 1, cong + 6)
-        if thue is not None:
-            rate = ws.cell(row=thue, column=4).value
-            if isinstance(rate, (int, float)):
-                safe_write(thue, 8, f"=H{cong}*D{thue}")
-            else:
-                safe_write(thue, 4, 0.08)
-                safe_write(thue, 8, f"=H{cong}*D{thue}")
-        if tong is not None:
-            safe_write(tong, 8, f"=H{cong}+H{thue}" if thue is not None else f"=H{cong}")
-
-        # 6) Điều khoản dưới bảng
-        footer_start = (tong or cong) + 1
-        for r in range(footer_start, ws.max_row + 1):
-            k2 = ascii_key(ws.cell(row=r, column=2).value)
-            k3 = ascii_key(ws.cell(row=r, column=3).value)
-            if k2.startswith("luu y"):
-                safe_write(r, 3, f_note)
-            elif k2.startswith("giao hang"):
-                safe_write(r, 3, f_deliv1)
-            elif k3.startswith("nhap hang") or "giay luu thong" in k3:
-                safe_write(r, 3, f_deliv2)
-            elif k2.startswith("thanh toan"):
-                # Khối thanh toán của mẫu: gom hết các dòng trống phía dưới nhãn, đến dòng "Thanh toán bằng..."
-                lines = [ln.strip() for ln in f_payment.split("\n") if ln.strip()]
-                slots = [r]
-                rr = r + 1
-                while rr <= ws.max_row:
-                    if ascii_key(ws.cell(row=rr, column=3).value).startswith("thanh toan bang") \
-                            or clean(ws.cell(row=rr, column=2).value):
-                        break
-                    slots.append(rr)
-                    rr += 1
-                if len(lines) >= len(slots):
-                    for k_, srow in enumerate(slots[:-1]):
-                        safe_write(srow, 3, lines[k_])
-                    safe_write(slots[-1], 3, " / ".join(lines[len(slots) - 1:]) if lines else None)
-                else:
-                    for k_, srow in enumerate(slots):
-                        safe_write(srow, 3, lines[k_] if k_ < len(lines) else None)
-                break
-
-        # Mẫu có số điện thoại lặp: ô tên người báo giá đã ghi sẵn SĐT, dòng ngay dưới lại ghi thêm lần nữa -> xóa
-        for r in range((tong or cong) + 1, ws.max_row):
-            if "le quoc" in ascii_key(ws.cell(row=r, column=1).value):
-                below = ws.cell(row=r + 1, column=1)
-                if re.fullmatch(r"[\d\s.+-]{8,}", clean(below.value) or "x"):
-                    safe_write(r + 1, 1, None)
-                break
-
-        # Xóa nền tô ở các dòng trống phía dưới chữ ký (tránh ô đen/lạ ở cuối file)
-        last_content = max((r for r in range(1, ws.max_row + 1)
-                            if any(ws.cell(row=r, column=c).value not in (None, "") for c in range(1, 10))),
-                           default=1)
-        for r in range(last_content + 1, ws.max_row + 1):
-            for c in range(1, 10):
-                ws.cell(row=r, column=c).fill = PatternFill(fill_type=None)
-
-        # Nới nhẹ 3 cột số để không hiện "########" trong Excel (chỉ tăng, không thu hẹp)
-        for _col, _min_w in (("F", 9.5), ("G", 14.5), ("H", 16.5)):
-            _cur = ws.column_dimensions[_col].width or 0
-            if _cur < _min_w:
-                ws.column_dimensions[_col].width = _min_w
-
-        # Vùng in phải phủ hết phần chân báo giá sau khi đã thêm/bớt dòng
-        ws.print_area = f"A1:I{last_content}"
-        ws.sheet_properties.pageSetUpPr = PageSetupProperties(fitToPage=True)
-        ws.page_setup.fitToWidth = 1
-        ws.page_setup.fitToHeight = 0
-
-        # Không để openpyxl ghi ảnh (Excel báo lỗi drawing1.xml); ghép lại logo gốc của mẫu sau khi lưu
-        ws._images = []
-        buf = BytesIO()
-        wb.save(buf)
-        fixed = restore_template_drawing(buf.getvalue(), TEMPLATE_PATH, ws.title)
-        return clean_xlsx_for_excel(fixed)
 
     # --- Xem trước báo giá (cập nhật ngay khi sửa ở trên) ---
     st.markdown("<hr>", unsafe_allow_html=True)
@@ -1133,7 +1170,7 @@ if st.session_state.df_editable is not None:
         if st.button("📊 XUẤT EXCEL (.xlsx)", use_container_width=True, key="btn_xl"):
             try:
                 with st.spinner("Đang ghi vào mẫu Excel..."):
-                    st.session_state["out_xlsx"] = build_excel(df, customer=cust_mode)
+                    st.session_state["out_xlsx"] = build_excel(df, hdr_vals, ftr_vals, customer=cust_mode)
                     st.session_state["out_xlsx_sig"] = sig
                 store.record_quote_prices(audit_rows)
             except Exception as e:
@@ -1149,7 +1186,7 @@ if st.session_state.df_editable is not None:
         if st.button("📄 XUẤT PDF", use_container_width=True, key="btn_pdf"):
             try:
                 with st.spinner("Đang tạo PDF đúng mẫu..."):
-                    pdf_bytes = xlsx_to_pdf(build_excel(df, customer=cust_mode))
+                    pdf_bytes = xlsx_to_pdf(build_excel(df, hdr_vals, ftr_vals, customer=cust_mode))
                     if pdf_bytes is None:
                         st.warning("Chưa tìm thấy LibreOffice nên PDF này là bản đơn giản, chưa đúng mẫu. "
                                    "Cài LibreOffice (miễn phí) để xuất PDF đúng mẫu.")
