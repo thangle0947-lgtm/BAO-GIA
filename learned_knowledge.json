@@ -72,15 +72,6 @@
       "count": 1,
       "updated": "2026-11-11T11:32:04"
     },
-    "van bướm kèm công tắc giám sát dn65 van bướm kèm công tắc giám sát dn65": {
-      "ma": "ZSXZF4-Q-65-16-A",
-      "ten": "Van cổng NRS DN65 kèm công tắc giám sát",
-      "xuat_xu": "Jilong/China",
-      "dvt": "Cái",
-      "don_gia": 2079000.0,
-      "count": 1,
-      "updated": "2026-11-11T11:32:04"
-    },
     "van cổng os&y dn200 van cổng os&y dn200": {
       "ma": "ZSZF4-Q-200-16-M",
       "ten": "Van Cổng OS&Y DN200",
@@ -1590,33 +1581,6 @@
       "count": 1,
       "updated": "2026-11-13T09:24:05"
     },
-    "van cổng kèm công tắc giám sát dn125 van cổng kèm công tắc giám sát dn125": {
-      "ma": "ZSXZF4-Q-120-16-A",
-      "ten": "Van cổng NRS DN125 kèm công tắc giám sát",
-      "xuat_xu": "Jilong/China",
-      "dvt": "Cái",
-      "don_gia": 3767000.0,
-      "count": 1,
-      "updated": "2026-11-13T09:24:05"
-    },
-    "van cổng dn100 van cổng dn100": {
-      "ma": "ZSZF4-Q-100-16-A",
-      "ten": "Van cổng NRS DN100",
-      "xuat_xu": "Jilong/China",
-      "dvt": "Cái",
-      "don_gia": 2599000.0,
-      "count": 1,
-      "updated": "2026-11-13T09:24:05"
-    },
-    "van cổng kèm công tắc giám sát dn50 van cổng kèm công tắc giám sát dn50": {
-      "ma": "ZSXZF4-Q-50-16-A",
-      "ten": "Van cổng NRS DN50 kèm công tắc giám sát",
-      "xuat_xu": "Jilong/China",
-      "dvt": "Cái",
-      "don_gia": 1883000.0,
-      "count": 1,
-      "updated": "2026-11-13T09:24:05"
-    },
     "van 1 chiều dn125 van 1 chiều dn125": {
       "ma": "H44X-16Q",
       "ten": "Van 1 chiều DN125",
@@ -1689,24 +1653,6 @@
       "count": 1,
       "updated": "2026-11-13T09:24:05"
     },
-    "van cổng có công tắc giám sát dn125 van cổng có công tắc giám sát dn125": {
-      "ma": "ZSXZF4-Q-120-16-A",
-      "ten": "Van cổng NRS DN125 kèm công tắc giám sát",
-      "xuat_xu": "Jilong/China",
-      "dvt": "Cái",
-      "don_gia": 3767000.0,
-      "count": 1,
-      "updated": "2026-11-13T09:24:05"
-    },
-    "van cổng có công tắc giám sát dn100 van cổng có công tắc giám sát dn100": {
-      "ma": "ZSXZF4-Q-100-16-A",
-      "ten": "Van cổng NRS DN100 kèm công tắc giám sát",
-      "xuat_xu": "Jilong/China",
-      "dvt": "Cái",
-      "don_gia": 2990000.0,
-      "count": 1,
-      "updated": "2026-11-13T09:24:05"
-    },
     "van báo động dn125 van báo động dn125": {
       "ma": "ZSFZ 125-1.6",
       "ten": "Van báo động DN125",
@@ -1751,24 +1697,6 @@
       "don_gia": 0.0,
       "count": 1,
       "updated": "2026-11-13T09:24:05"
-    },
-    "van cổng dn80 van cổng dn80": {
-      "ma": "ZSZF4-Q-80-16-A",
-      "ten": "Van cổng NRS DN80",
-      "xuat_xu": "Jilong/China",
-      "dvt": "Cái",
-      "don_gia": 1958000.0,
-      "count": 1,
-      "updated": "2026-11-13T09:24:05"
-    },
-    "van bướm điều khiển điện dn200, on/off 220v, kèm công tắc hành trình": {
-      "ma": "ZSXZF4-Q-200-16-A",
-      "ten": "Van cổng NRS DN200 kèm công tắc giám sát",
-      "xuat_xu": "Jilong/China",
-      "dvt": "Cái",
-      "don_gia": 7918000.0,
-      "count": 1,
-      "updated": "2026-11-13T09:31:17"
     },
     "van bướm / van bi dn65, pn16": {
       "ma": "D71X-16Q",
@@ -1877,6 +1805,631 @@
       "don_gia": 0.0,
       "count": 1,
       "updated": "2026-11-13T09:31:17"
+    },
+    "van cổng ty nổi dn200": {
+      "ma": "ZSZF4-Q-200-16-M",
+      "ten": "Van Cổng OS&Y DN200",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 8181000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 3"
+    },
+    "van an toàn dn200 - dn250": {
+      "ma": "500X-16Q",
+      "ten": "Van an toàn DN200",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 23004000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 3"
+    },
+    "van báo động dn150, pn16": {
+      "ma": "ZSFZ 150-1.6",
+      "ten": "Van báo động DN150",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 14148000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 3"
+    },
+    "van báo động kèm phụ kiện dn65": {
+      "ma": "ZSFZ 65-1.6",
+      "ten": "Van báo động DN65",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 13284000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 3"
+    },
+    "van bi dn15": {
+      "ma": "H14W-16T",
+      "ten": "Van 1 chiều DN15",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 178000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 3"
+    },
+    "van bi dn25": {
+      "ma": "H14W-16T",
+      "ten": "Van 1 chiều DN25",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 313000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 3"
+    },
+    "van bi dn32": {
+      "ma": "H14W-16T",
+      "ten": "Van 1 chiều DN32",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 470000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 3"
+    },
+    "van bi dn40": {
+      "ma": "H14W-16T",
+      "ten": "Van 1 chiều DN40",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 675000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 3"
+    },
+    "van bướm kèm công tắc giám sát dn100, pn16": {
+      "ma": "ZSXDF7-Q-100-16C",
+      "ten": "Van bướm tín hiệu DN100",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 2032000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 3"
+    },
+    "van bướm kèm công tắc giám sát dn150, pn16": {
+      "ma": "ZSXDF7-Q-150-16C",
+      "ten": "Van bướm tín hiệu DN150",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 2599000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 3"
+    },
+    "van bướm kèm công tắc giám sát dn65": {
+      "ma": "ZSXDF7-Q-65-16C",
+      "ten": "Van bướm tín hiệu DN65",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1431000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 3"
+    },
+    "van bướm kèm giám sát d80": {
+      "ma": "ZSXDF7-Q-80-16C",
+      "ten": "Van bướm  tín hiệu DN80",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1586000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 3"
+    },
+    "van cổng dn40": {
+      "ma": "Z15W-16T",
+      "ten": "Van cổng DN40",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 675000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 3"
+    },
+    "van một chiều dn15": {
+      "ma": "H14W-16T",
+      "ten": "Van 1 chiều DN15",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 178000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 3"
+    },
+    "van một chiều dn250": {
+      "ma": "H44X-16Q",
+      "ten": "Van 1 chiều DN250",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 11624000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 3"
+    },
+    "đầu phun hướng lên k= 11.2 68*c": {
+      "ma": "T-ZSTZ 161-68°C Q5",
+      "ten": "Đầu phun chữa cháy hướng lên phản ứng tiêu chuẩn, K=11,2, DN20, 68°C",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 3"
+    },
+    "rọ hút, pn16 dn100, fl": {
+      "ma": "H42X-16Q",
+      "ten": "Rọ hút  DN100",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 2160000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 3"
+    },
+    "van phao thủy lực dn150, fl": {
+      "ma": "100X-16Q",
+      "ten": "Van Phao DN150",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 3"
+    },
+    "van bướm dn150, fl": {
+      "ma": "D71X-16Q",
+      "ten": "Van bướm DN150",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 3314000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 3"
+    },
+    "van 1 chiều dn150, fl": {
+      "ma": "H44X-16Q",
+      "ten": "Van 1 chiều DN150",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 4286000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 3"
+    },
+    "van 1 chiều dn100, fl": {
+      "ma": "H44X-16Q",
+      "ten": "Van 1 chiều DN100",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 2336000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 3"
+    },
+    "van đồng 1 chiều - d32, nối ren": {
+      "ma": "H14W-16T",
+      "ten": "Van 1 chiều DN32",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 470000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 3"
+    },
+    "van đồng 1 chiều - d40, nối ren": {
+      "ma": "H14W-16T",
+      "ten": "Van 1 chiều DN40",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 675000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 3"
+    },
+    "van đồng 1 chiều - d25, nối ren": {
+      "ma": "H14W-16T",
+      "ten": "Van 1 chiều DN25",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 313000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 3"
+    },
+    "van bướm dn100, fl": {
+      "ma": "D71X-16Q",
+      "ten": "Van bướm DN100",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1364000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 3"
+    },
+    "van 1 chiều dn65, fl": {
+      "ma": "H44X-16Q",
+      "ten": "Van 1 chiều DN65",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1499000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 3"
+    },
+    "van 1 chiều dn80, fl": {
+      "ma": "H44X-16Q",
+      "ten": "Van 1 chiều DN80",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 2160000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 3"
+    },
+    "van bướm dn50, fl": {
+      "ma": "D71X-16Q",
+      "ten": "Van bướm DN50",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 716000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 3"
+    },
+    "van bướm dn80, fl": {
+      "ma": "D71X-16Q",
+      "ten": "Van bướm DN80",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 979000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 3"
+    },
+    "van bảo vệ vỏ bơm điện (relif valve)": {
+      "ma": "PRV",
+      "ten": "Van bảo vệ vỏ bơm DN25",
+      "xuat_xu": "",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 3"
+    },
+    "công tắc áp suất kèm van bi": {
+      "ma": "YLKG + QF11-16T",
+      "ten": "Công tắc áp suất kèm van bi",
+      "xuat_xu": "",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 3"
+    },
+    "van cổng ty nổi dn200 van cổng ty nổi dn200": {
+      "ma": "ZSZF4-Q-200-16-M",
+      "ten": "Van Cổng OS&Y DN200",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 8181000.0,
+      "count": 1,
+      "updated": "2026-11-13T10:29:09"
+    },
+    "van an toàn dn200 - dn250 van an toàn dn200 - dn250": {
+      "ma": "500X-16Q",
+      "ten": "Van an toàn DN200",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 23004000.0,
+      "count": 1,
+      "updated": "2026-11-13T10:29:09"
+    },
+    "van báo động dn150, pn16 van báo động dn150, pn16": {
+      "ma": "ZSFZ 150-1.6",
+      "ten": "Van báo động DN150",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 14148000.0,
+      "count": 1,
+      "updated": "2026-11-13T10:29:09"
+    },
+    "van báo động kèm phụ kiện dn65 van báo động kèm phụ kiện dn65": {
+      "ma": "ZSFZ 65-1.6",
+      "ten": "Van báo động DN65",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 13284000.0,
+      "count": 1,
+      "updated": "2026-11-13T10:29:09"
+    },
+    "van bảo vệ vỏ bơm điện (relif valve) van bảo vệ vỏ bơm điện (relif valve)": {
+      "ma": "55L-60",
+      "ten": "Van bảo vệ vỏ bơm",
+      "xuat_xu": "Claval/\nCanada",
+      "dvt": "Cái",
+      "don_gia": 0.0,
+      "count": 1,
+      "updated": "2026-11-13T10:29:09"
+    },
+    "van bi dn15 van bi dn15": {
+      "ma": "QF11-16T",
+      "ten": "Van bi DN15",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 178000.0,
+      "count": 1,
+      "updated": "2026-11-13T10:29:09"
+    },
+    "van bi dn25 van bi dn25": {
+      "ma": "QF11-16T",
+      "ten": "Van bi DN25",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 351000.0,
+      "count": 1,
+      "updated": "2026-11-13T10:29:09"
+    },
+    "van bướm dn65 van bướm dn65": {
+      "ma": "D71X-16Q",
+      "ten": "Van bướm DN65",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 810000.0,
+      "count": 1,
+      "updated": "2026-11-13T10:29:09"
+    },
+    "van bướm kèm công tắc giám sát dn100, pn16 van bướm kèm công tắc giám sát dn100, pn16": {
+      "ma": "ZSXDF7-Q-100-16C",
+      "ten": "Van bướm tín hiệu DN100",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 2032000.0,
+      "count": 1,
+      "updated": "2026-11-13T10:29:09"
+    },
+    "van bướm kèm công tắc giám sát dn150, pn16 van bướm kèm công tắc giám sát dn150, pn16": {
+      "ma": "ZSXDF7-Q-150-16C",
+      "ten": "Van bướm tín hiệu DN150",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 2599000.0,
+      "count": 2,
+      "updated": "2026-11-13T10:29:09"
+    },
+    "van bướm kèm công tắc giám sát dn65 van bướm kèm công tắc giám sát dn65": {
+      "ma": "ZSXDF7-Q-65-16C",
+      "ten": "Van bướm tín hiệu DN65",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1431000.0,
+      "count": 1,
+      "updated": "2026-11-13T10:29:09"
+    },
+    "van bướm kèm giám sát d80 van bướm kèm giám sát d80": {
+      "ma": "ZSXDF7-Q-80-16C",
+      "ten": "Van bướm  tín hiệu DN80",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1586000.0,
+      "count": 1,
+      "updated": "2026-11-13T10:29:09"
+    },
+    "van cổng dn40 van cổng dn40": {
+      "ma": "Z15W-16T",
+      "ten": "Van cổng DN40",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 675000.0,
+      "count": 1,
+      "updated": "2026-11-13T10:29:09"
+    },
+    "van một chiều dn15 van một chiều dn15": {
+      "ma": "H14W-16T",
+      "ten": "Van 1 chiều DN15",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 178000.0,
+      "count": 1,
+      "updated": "2026-11-13T10:29:09"
+    },
+    "van một chiều dn250 van một chiều dn250": {
+      "ma": "H44X-16Q",
+      "ten": "Van 1 chiều DN250",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 11624000.0,
+      "count": 2,
+      "updated": "2026-11-13T10:29:10"
+    },
+    "y lọc ren dn40 y lọc ren dn40": {
+      "ma": "GL11W-16T",
+      "ten": "Van Y Lọc DN40",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 675000.0,
+      "count": 1,
+      "updated": "2026-11-13T10:29:10"
+    },
+    "công tắc áp suất kèm van bi công tắc áp suất kèm van bi": {
+      "ma": "YLKG + QF11-16T",
+      "ten": "Công tắc áp suất kèm van bi",
+      "xuat_xu": "",
+      "dvt": "Cái",
+      "don_gia": 0.0,
+      "count": 1,
+      "updated": "2026-11-13T10:29:10"
+    },
+    "công tắc dòng chảy công tắc dòng chảy": {
+      "ma": "ZSJZ",
+      "ten": "Công tắc dòng chảy DN50",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1050000.0,
+      "count": 1,
+      "updated": "2026-11-13T10:29:10"
+    },
+    "đồng hồ đo áp suất + van bi dn15 đồng hồ đo áp suất + van bi dn15": {
+      "ma": "Y60 + QF11-16T",
+      "ten": "Đồng hồ áp suất kèm van bi",
+      "xuat_xu": "",
+      "dvt": "Cái",
+      "don_gia": 0.0,
+      "count": 1,
+      "updated": "2026-11-13T10:29:10"
+    },
+    "đồng hồ đo lưu lượng dn200 đồng hồ đo lưu lượng dn200": {
+      "ma": "HXLD",
+      "ten": "Đồng hồ lưu lượng DN200",
+      "xuat_xu": "",
+      "dvt": "Cái",
+      "don_gia": 0.0,
+      "count": 1,
+      "updated": "2026-11-13T10:29:10"
+    },
+    "đầu phun hướng lên k= 11.2 68*c đầu phun hướng lên k= 11.2 68*c": {
+      "ma": "K-ZSTZ 161-68°C Q3",
+      "ten": "Đầu phun chữa cháy hướng lên phản ứng nhanh, K=11.2, DN20, 68°C",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0.0,
+      "count": 4,
+      "updated": "2026-11-13T10:29:10"
+    },
+    "rọ hút, pn16 dn100, fl rọ hút, pn16 dn100, fl": {
+      "ma": "H42X-16Q",
+      "ten": "Rọ hút  DN100",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 2160000.0,
+      "count": 1,
+      "updated": "2026-11-13T10:29:10"
+    },
+    "van phao thủy lực dn150, fl van phao thủy lực dn150, fl": {
+      "ma": "100X-16Q",
+      "ten": "Van Phao DN150",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0.0,
+      "count": 1,
+      "updated": "2026-11-13T10:29:10"
+    },
+    "van bướm dn150, fl van bướm dn150, fl": {
+      "ma": "D71X-16Q",
+      "ten": "Van bướm DN150",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 3314000.0,
+      "count": 2,
+      "updated": "2026-11-13T10:29:10"
+    },
+    "van 1 chiều dn150, fl van 1 chiều dn150, fl": {
+      "ma": "H44X-16Q",
+      "ten": "Van 1 chiều DN150",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 4286000.0,
+      "count": 1,
+      "updated": "2026-11-13T10:29:10"
+    },
+    "van 1 chiều dn100, fl van 1 chiều dn100, fl": {
+      "ma": "H44X-16Q",
+      "ten": "Van 1 chiều DN100",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 2336000.0,
+      "count": 1,
+      "updated": "2026-11-13T10:29:10"
+    },
+    "van đồng 1 chiều - d32, nối ren van đồng 1 chiều - d32, nối ren": {
+      "ma": "H14W-16T",
+      "ten": "Van 1 chiều DN15",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 178000.0,
+      "count": 1,
+      "updated": "2026-11-13T10:29:10"
+    },
+    "van đồng 1 chiều - d40, nối ren van đồng 1 chiều - d40, nối ren": {
+      "ma": "H14W-16T",
+      "ten": "Van 1 chiều DN15",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 178000.0,
+      "count": 1,
+      "updated": "2026-11-13T10:29:10"
+    },
+    "van đồng 1 chiều - d25, nối ren van đồng 1 chiều - d25, nối ren": {
+      "ma": "H14W-16T",
+      "ten": "Van 1 chiều DN25",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 313000.0,
+      "count": 1,
+      "updated": "2026-11-13T10:29:10"
+    },
+    "van bướm dn100, fl van bướm dn100, fl": {
+      "ma": "D71X-16Q",
+      "ten": "Van bướm DN100",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1364000.0,
+      "count": 2,
+      "updated": "2026-11-13T10:29:10"
+    },
+    "van 1 chiều dn65, fl van 1 chiều dn65, fl": {
+      "ma": "H44X-16Q",
+      "ten": "Van 1 chiều DN65",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1499000.0,
+      "count": 1,
+      "updated": "2026-11-13T10:29:10"
+    },
+    "van 1 chiều dn80, fl van 1 chiều dn80, fl": {
+      "ma": "H44X-16Q",
+      "ten": "Van 1 chiều DN80",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 2160000.0,
+      "count": 1,
+      "updated": "2026-11-13T10:29:10"
+    },
+    "van bướm dn50, fl van bướm dn50, fl": {
+      "ma": "D71X-16Q",
+      "ten": "Van bướm DN50",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 716000.0,
+      "count": 1,
+      "updated": "2026-11-13T10:29:10"
+    },
+    "van bướm dn65, fl van bướm dn65, fl": {
+      "ma": "D71X-16Q",
+      "ten": "Van bướm DN65",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 810000.0,
+      "count": 1,
+      "updated": "2026-11-13T10:29:10"
+    },
+    "van bướm dn80, fl van bướm dn80, fl": {
+      "ma": "D71X-16Q",
+      "ten": "Van bướm DN80",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 979000.0,
+      "count": 1,
+      "updated": "2026-11-13T10:29:10"
     }
   },
   "price_history": {
@@ -1925,27 +2478,83 @@
     "ZSFZ 150-1.6": [
       {
         "gia": 14148000.0,
-        "ngay": "2026-11-11"
+        "ngay": "2026-11-13"
       },
       {
         "gia": 14148000.0,
-        "ngay": "2026-11-11"
+        "ngay": "2026-11-13"
       },
       {
         "gia": 14148000.0,
-        "ngay": "2026-11-11"
+        "ngay": "2026-11-13"
       },
       {
         "gia": 14148000.0,
-        "ngay": "2026-11-11"
+        "ngay": "2026-11-13"
       },
       {
         "gia": 14148000.0,
-        "ngay": "2026-11-11"
+        "ngay": "2026-11-13"
       },
       {
         "gia": 14148000.0,
-        "ngay": "2026-11-11"
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 14148000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 14148000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 14148000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 14148000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 14148000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 14148000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 14148000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 14148000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 14148000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 14148000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 14148000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 14148000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 14148000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 14148000.0,
+        "ngay": "2026-11-13"
       }
     ],
     "ZSFZ 200-1.6": [
@@ -1976,75 +2585,27 @@
     ],
     "D71X-16Q": [
       {
-        "gia": 587000.0,
-        "ngay": "2026-11-11"
-      },
-      {
-        "gia": 587000.0,
-        "ngay": "2026-11-11"
-      },
-      {
-        "gia": 587000.0,
-        "ngay": "2026-11-11"
-      },
-      {
-        "gia": 587000.0,
-        "ngay": "2026-11-11"
-      },
-      {
-        "gia": 587000.0,
-        "ngay": "2026-11-11"
-      },
-      {
-        "gia": 587000.0,
-        "ngay": "2026-11-11"
-      },
-      {
-        "gia": 587000.0,
-        "ngay": "2026-11-11"
-      },
-      {
-        "gia": 1364000.0,
-        "ngay": "2026-11-11"
-      },
-      {
-        "gia": 3314000.0,
-        "ngay": "2026-11-11"
-      },
-      {
-        "gia": 1364000.0,
-        "ngay": "2026-11-11"
-      },
-      {
-        "gia": 3314000.0,
-        "ngay": "2026-11-11"
-      },
-      {
-        "gia": 1364000.0,
-        "ngay": "2026-11-11"
-      },
-      {
-        "gia": 3314000.0,
-        "ngay": "2026-11-11"
-      },
-      {
-        "gia": 1364000.0,
-        "ngay": "2026-11-11"
-      },
-      {
-        "gia": 3314000.0,
-        "ngay": "2026-11-11"
-      },
-      {
         "gia": 979000.0,
         "ngay": "2026-11-13"
       },
       {
-        "gia": 716000.0,
+        "gia": 1364000.0,
         "ngay": "2026-11-13"
       },
       {
-        "gia": 979000.0,
+        "gia": 810000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 3314000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 3314000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1364000.0,
         "ngay": "2026-11-13"
       },
       {
@@ -2054,71 +2615,123 @@
       {
         "gia": 810000.0,
         "ngay": "2026-11-13"
+      },
+      {
+        "gia": 979000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1364000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 810000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 3314000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1364000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 716000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 979000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 810000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 3314000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1364000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 716000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 979000.0,
+        "ngay": "2026-11-13"
       }
     ],
     "H44X-16Q": [
       {
-        "gia": 2336000.0,
-        "ngay": "2026-11-11"
-      },
-      {
         "gia": 4286000.0,
-        "ngay": "2026-11-11"
+        "ngay": "2026-11-13"
       },
       {
-        "gia": 7337000.0,
-        "ngay": "2026-11-11"
+        "gia": 2336000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1499000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2160000.0,
+        "ngay": "2026-11-13"
       },
       {
         "gia": 11624000.0,
-        "ngay": "2026-11-11"
-      },
-      {
-        "gia": 2336000.0,
-        "ngay": "2026-11-11"
-      },
-      {
-        "gia": 2336000.0,
-        "ngay": "2026-11-11"
-      },
-      {
-        "gia": 4286000.0,
-        "ngay": "2026-11-11"
-      },
-      {
-        "gia": 7337000.0,
-        "ngay": "2026-11-11"
+        "ngay": "2026-11-13"
       },
       {
         "gia": 11624000.0,
-        "ngay": "2026-11-11"
-      },
-      {
-        "gia": 2336000.0,
-        "ngay": "2026-11-11"
-      },
-      {
-        "gia": 2336000.0,
-        "ngay": "2026-11-11"
+        "ngay": "2026-11-13"
       },
       {
         "gia": 4286000.0,
-        "ngay": "2026-11-11"
+        "ngay": "2026-11-13"
       },
       {
-        "gia": 7337000.0,
-        "ngay": "2026-11-11"
+        "gia": 2336000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1499000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2160000.0,
+        "ngay": "2026-11-13"
       },
       {
         "gia": 11624000.0,
-        "ngay": "2026-11-11"
+        "ngay": "2026-11-13"
       },
       {
         "gia": 4286000.0,
         "ngay": "2026-11-13"
       },
       {
-        "gia": 3119000.0,
+        "gia": 2336000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1499000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2160000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 11624000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 4286000.0,
         "ngay": "2026-11-13"
       },
       {
@@ -2126,66 +2739,82 @@
         "ngay": "2026-11-13"
       },
       {
-        "gia": 3119000.0,
+        "gia": 1499000.0,
         "ngay": "2026-11-13"
       },
       {
-        "gia": 2336000.0,
-        "ngay": "2026-11-13"
-      },
-      {
-        "gia": 7337000.0,
+        "gia": 2160000.0,
         "ngay": "2026-11-13"
       }
     ],
     "ZSJZ": [
       {
         "gia": 1050000.0,
-        "ngay": "2026-11-11"
+        "ngay": "2026-11-13"
       },
       {
         "gia": 1050000.0,
-        "ngay": "2026-11-11"
+        "ngay": "2026-11-13"
       },
       {
         "gia": 1050000.0,
-        "ngay": "2026-11-11"
+        "ngay": "2026-11-13"
       },
       {
         "gia": 1050000.0,
-        "ngay": "2026-11-11"
+        "ngay": "2026-11-13"
       },
       {
         "gia": 1050000.0,
-        "ngay": "2026-11-11"
+        "ngay": "2026-11-13"
       },
       {
         "gia": 1050000.0,
-        "ngay": "2026-11-11"
+        "ngay": "2026-11-13"
       },
       {
         "gia": 1050000.0,
-        "ngay": "2026-11-11"
+        "ngay": "2026-11-13"
       },
       {
         "gia": 1050000.0,
-        "ngay": "2026-11-11"
+        "ngay": "2026-11-13"
       },
       {
         "gia": 1050000.0,
-        "ngay": "2026-11-11"
+        "ngay": "2026-11-13"
       },
       {
         "gia": 1050000.0,
-        "ngay": "2026-11-11"
+        "ngay": "2026-11-13"
       },
       {
         "gia": 1050000.0,
-        "ngay": "2026-11-11"
+        "ngay": "2026-11-13"
       },
       {
         "gia": 1050000.0,
-        "ngay": "2026-11-11"
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1050000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1050000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1050000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1050000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1050000.0,
+        "ngay": "2026-11-13"
       },
       {
         "gia": 1050000.0,
@@ -2281,27 +2910,83 @@
     "ZSZF4-Q-200-16-M": [
       {
         "gia": 8181000.0,
-        "ngay": "2026-11-11"
+        "ngay": "2026-11-13"
       },
       {
         "gia": 8181000.0,
-        "ngay": "2026-11-11"
+        "ngay": "2026-11-13"
       },
       {
         "gia": 8181000.0,
-        "ngay": "2026-11-11"
+        "ngay": "2026-11-13"
       },
       {
         "gia": 8181000.0,
-        "ngay": "2026-11-11"
+        "ngay": "2026-11-13"
       },
       {
         "gia": 8181000.0,
-        "ngay": "2026-11-11"
+        "ngay": "2026-11-13"
       },
       {
         "gia": 8181000.0,
-        "ngay": "2026-11-11"
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 8181000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 8181000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 8181000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 8181000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 8181000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 8181000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 8181000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 8181000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 8181000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 8181000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 8181000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 8181000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 8181000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 8181000.0,
+        "ngay": "2026-11-13"
       }
     ],
     "ZSZF4-Q-250-16-M": [
@@ -2494,61 +3179,89 @@
     ],
     "H42X-16Q": [
       {
-        "gia": 1296000.0,
+        "gia": 2160000.0,
         "ngay": "2026-11-13"
       },
       {
-        "gia": 1944000.0,
+        "gia": 2160000.0,
         "ngay": "2026-11-13"
       },
       {
-        "gia": 1944000.0,
+        "gia": 2160000.0,
         "ngay": "2026-11-13"
       },
       {
-        "gia": 2700000.0,
+        "gia": 2160000.0,
         "ngay": "2026-11-13"
       },
       {
-        "gia": 1188000.0,
+        "gia": 2160000.0,
         "ngay": "2026-11-13"
       },
       {
-        "gia": 1296000.0,
+        "gia": 2160000.0,
         "ngay": "2026-11-13"
       },
       {
-        "gia": 1944000.0,
+        "gia": 2160000.0,
         "ngay": "2026-11-13"
       },
       {
-        "gia": 1944000.0,
+        "gia": 2160000.0,
         "ngay": "2026-11-13"
       },
       {
-        "gia": 2700000.0,
+        "gia": 2160000.0,
         "ngay": "2026-11-13"
       },
       {
-        "gia": 1188000.0,
+        "gia": 2160000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2160000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2160000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2160000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2160000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2160000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2160000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2160000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2160000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2160000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2160000.0,
         "ngay": "2026-11-13"
       }
     ],
     "QF11-16T": [
       {
-        "gia": 470000.0,
-        "ngay": "2026-11-13"
-      },
-      {
-        "gia": 675000.0,
-        "ngay": "2026-11-13"
-      },
-      {
-        "gia": 470000.0,
-        "ngay": "2026-11-13"
-      },
-      {
-        "gia": 675000.0,
+        "gia": 178000.0,
         "ngay": "2026-11-13"
       },
       {
@@ -2556,27 +3269,11 @@
         "ngay": "2026-11-13"
       },
       {
-        "gia": 979000.0,
-        "ngay": "2026-11-13"
-      },
-      {
-        "gia": 250000.0,
-        "ngay": "2026-11-13"
-      },
-      {
-        "gia": 979000.0,
-        "ngay": "2026-11-13"
-      },
-      {
-        "gia": 979000.0,
-        "ngay": "2026-11-13"
-      },
-      {
         "gia": 470000.0,
         "ngay": "2026-11-13"
       },
       {
-        "gia": 351000.0,
+        "gia": 675000.0,
         "ngay": "2026-11-13"
       },
       {
@@ -2584,7 +3281,7 @@
         "ngay": "2026-11-13"
       },
       {
-        "gia": 675000.0,
+        "gia": 351000.0,
         "ngay": "2026-11-13"
       },
       {
@@ -2596,11 +3293,7 @@
         "ngay": "2026-11-13"
       },
       {
-        "gia": 470000.0,
-        "ngay": "2026-11-13"
-      },
-      {
-        "gia": 675000.0,
+        "gia": 178000.0,
         "ngay": "2026-11-13"
       },
       {
@@ -2608,29 +3301,125 @@
         "ngay": "2026-11-13"
       },
       {
-        "gia": 979000.0,
+        "gia": 470000.0,
         "ngay": "2026-11-13"
       },
       {
-        "gia": 250000.0,
+        "gia": 675000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 178000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 351000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 470000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 675000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 178000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 351000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 470000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 675000.0,
         "ngay": "2026-11-13"
       }
     ],
     "GL11W-16T": [
       {
-        "gia": 250000.0,
+        "gia": 675000.0,
         "ngay": "2026-11-13"
       },
       {
-        "gia": 979000.0,
+        "gia": 675000.0,
         "ngay": "2026-11-13"
       },
       {
-        "gia": 250000.0,
+        "gia": 675000.0,
         "ngay": "2026-11-13"
       },
       {
-        "gia": 979000.0,
+        "gia": 675000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 675000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 675000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 675000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 675000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 675000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 675000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 675000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 675000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 675000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 675000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 675000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 675000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 675000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 675000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 675000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 675000.0,
         "ngay": "2026-11-13"
       }
     ],
@@ -2640,7 +3429,11 @@
         "ngay": "2026-11-13"
       },
       {
-        "gia": 911000.0,
+        "gia": 178000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 313000.0,
         "ngay": "2026-11-13"
       },
       {
@@ -2649,6 +3442,62 @@
       },
       {
         "gia": 178000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 178000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 178000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 313000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 911000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 178000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 178000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 178000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 313000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 911000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 178000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 313000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 911000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 178000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 313000.0,
         "ngay": "2026-11-13"
       },
       {
@@ -2744,11 +3593,83 @@
     ],
     "500X-16Q": [
       {
-        "gia": 9936000.0,
+        "gia": 23004000.0,
         "ngay": "2026-11-13"
       },
       {
-        "gia": 9936000.0,
+        "gia": 23004000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 23004000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 23004000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 23004000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 23004000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 23004000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 23004000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 23004000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 23004000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 23004000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 23004000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 23004000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 23004000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 23004000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 23004000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 23004000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 23004000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 23004000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 23004000.0,
         "ngay": "2026-11-13"
       }
     ],
@@ -2795,6 +3716,498 @@
     "ZSXZF4-Q-200-16-A": [
       {
         "gia": 7918000.0,
+        "ngay": "2026-11-13"
+      }
+    ],
+    "ZSFZ 65-1.6": [
+      {
+        "gia": 13284000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 13284000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 13284000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 13284000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 13284000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 13284000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 13284000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 13284000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 13284000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 13284000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 13284000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 13284000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 13284000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 13284000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 13284000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 13284000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 13284000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 13284000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 13284000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 13284000.0,
+        "ngay": "2026-11-13"
+      }
+    ],
+    "ZSXDF7-Q-100-16C": [
+      {
+        "gia": 2032000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2032000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2032000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2032000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2032000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2032000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2032000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2032000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2032000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2032000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2032000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2032000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2032000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2032000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2032000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2032000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2032000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2032000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2032000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2032000.0,
+        "ngay": "2026-11-13"
+      }
+    ],
+    "ZSXDF7-Q-150-16C": [
+      {
+        "gia": 2599000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2599000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2599000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2599000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2599000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2599000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2599000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2599000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2599000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2599000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2599000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2599000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2599000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2599000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2599000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2599000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2599000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2599000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2599000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2599000.0,
+        "ngay": "2026-11-13"
+      }
+    ],
+    "ZSXDF7-Q-65-16C": [
+      {
+        "gia": 1431000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1431000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1431000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1431000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1431000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1431000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1431000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1431000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1431000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1431000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1431000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1431000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1431000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1431000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1431000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1431000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1431000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1431000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1431000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1431000.0,
+        "ngay": "2026-11-13"
+      }
+    ],
+    "ZSXDF7-Q-80-16C": [
+      {
+        "gia": 1586000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1586000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1586000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1586000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1586000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1586000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1586000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1586000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1586000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1586000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1586000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1586000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1586000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1586000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1586000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1586000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1586000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1586000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1586000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1586000.0,
+        "ngay": "2026-11-13"
+      }
+    ],
+    "Z15W-16T": [
+      {
+        "gia": 675000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 675000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 675000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 675000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 675000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 675000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 675000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 675000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 675000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 675000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 675000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 675000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 675000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 675000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 675000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 675000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 675000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 675000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 675000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 675000.0,
         "ngay": "2026-11-13"
       }
     ]
@@ -3441,6 +4854,258 @@
       "boq": "van cân bằng áp suất kho lạnh",
       "before": "",
       "after": "Y60 + QF11-16T"
+    },
+    {
+      "time": "2026-11-13T10:29:09",
+      "boq": "van cổng ty nổi dn200 van cổng ty nổi dn200",
+      "before": "",
+      "after": "ZSZF4-Q-200-16-M"
+    },
+    {
+      "time": "2026-11-13T10:29:09",
+      "boq": "van an toàn dn200 - dn250 van an toàn dn200 - dn250",
+      "before": "",
+      "after": "500X-16Q"
+    },
+    {
+      "time": "2026-11-13T10:29:09",
+      "boq": "van báo động dn150, pn16 van báo động dn150, pn16",
+      "before": "",
+      "after": "ZSFZ 150-1.6"
+    },
+    {
+      "time": "2026-11-13T10:29:09",
+      "boq": "van báo động kèm phụ kiện dn65 van báo động kèm phụ kiện dn65",
+      "before": "",
+      "after": "ZSFZ 65-1.6"
+    },
+    {
+      "time": "2026-11-13T10:29:09",
+      "boq": "van bảo vệ vỏ bơm điện (relif valve) van bảo vệ vỏ bơm điện (relif valve)",
+      "before": "",
+      "after": "55L-60"
+    },
+    {
+      "time": "2026-11-13T10:29:09",
+      "boq": "van bi dn15 van bi dn15",
+      "before": "",
+      "after": "QF11-16T"
+    },
+    {
+      "time": "2026-11-13T10:29:09",
+      "boq": "van bi dn25 van bi dn25",
+      "before": "",
+      "after": "QF11-16T"
+    },
+    {
+      "time": "2026-11-13T10:29:09",
+      "boq": "van bướm dn65 van bướm dn65",
+      "before": "",
+      "after": "D71X-16Q"
+    },
+    {
+      "time": "2026-11-13T10:29:09",
+      "boq": "van bướm kèm công tắc giám sát dn100, pn16 van bướm kèm công tắc giám sát dn100, pn16",
+      "before": "",
+      "after": "ZSXDF7-Q-100-16C"
+    },
+    {
+      "time": "2026-11-13T10:29:09",
+      "boq": "van bướm kèm công tắc giám sát dn150, pn16 van bướm kèm công tắc giám sát dn150, pn16",
+      "before": "",
+      "after": "ZSXDF7-Q-150-16C"
+    },
+    {
+      "time": "2026-11-13T10:29:09",
+      "boq": "van bướm kèm công tắc giám sát dn150, pn16 van bướm kèm công tắc giám sát dn150, pn16",
+      "before": "",
+      "after": "ZSXDF7-Q-150-16C"
+    },
+    {
+      "time": "2026-11-13T10:29:09",
+      "boq": "van bướm kèm công tắc giám sát dn65 van bướm kèm công tắc giám sát dn65",
+      "before": "",
+      "after": "ZSXDF7-Q-65-16C"
+    },
+    {
+      "time": "2026-11-13T10:29:09",
+      "boq": "van bướm kèm giám sát d80 van bướm kèm giám sát d80",
+      "before": "",
+      "after": "ZSXDF7-Q-80-16C"
+    },
+    {
+      "time": "2026-11-13T10:29:09",
+      "boq": "van cổng dn40 van cổng dn40",
+      "before": "",
+      "after": "Z15W-16T"
+    },
+    {
+      "time": "2026-11-13T10:29:09",
+      "boq": "van một chiều dn15 van một chiều dn15",
+      "before": "",
+      "after": "H14W-16T"
+    },
+    {
+      "time": "2026-11-13T10:29:10",
+      "boq": "van một chiều dn250 van một chiều dn250",
+      "before": "",
+      "after": "H44X-16Q"
+    },
+    {
+      "time": "2026-11-13T10:29:10",
+      "boq": "van một chiều dn250 van một chiều dn250",
+      "before": "",
+      "after": "H44X-16Q"
+    },
+    {
+      "time": "2026-11-13T10:29:10",
+      "boq": "y lọc ren dn40 y lọc ren dn40",
+      "before": "",
+      "after": "GL11W-16T"
+    },
+    {
+      "time": "2026-11-13T10:29:10",
+      "boq": "công tắc áp suất kèm van bi công tắc áp suất kèm van bi",
+      "before": "",
+      "after": "YLKG + QF11-16T"
+    },
+    {
+      "time": "2026-11-13T10:29:10",
+      "boq": "công tắc dòng chảy công tắc dòng chảy",
+      "before": "",
+      "after": "ZSJZ"
+    },
+    {
+      "time": "2026-11-13T10:29:10",
+      "boq": "đồng hồ đo áp suất + van bi dn15 đồng hồ đo áp suất + van bi dn15",
+      "before": "",
+      "after": "Y60 + QF11-16T"
+    },
+    {
+      "time": "2026-11-13T10:29:10",
+      "boq": "đồng hồ đo lưu lượng dn200 đồng hồ đo lưu lượng dn200",
+      "before": "",
+      "after": "HXLD"
+    },
+    {
+      "time": "2026-11-13T10:29:10",
+      "boq": "đầu phun hướng lên k= 11.2 68*c đầu phun hướng lên k= 11.2 68*c",
+      "before": "",
+      "after": "K-ZSTZ 161-68°C Q3"
+    },
+    {
+      "time": "2026-11-13T10:29:10",
+      "boq": "đầu phun hướng lên k= 11.2 68*c đầu phun hướng lên k= 11.2 68*c",
+      "before": "",
+      "after": "K-ZSTZ 161-68°C Q3"
+    },
+    {
+      "time": "2026-11-13T10:29:10",
+      "boq": "đầu phun hướng lên k= 11.2 68*c đầu phun hướng lên k= 11.2 68*c",
+      "before": "",
+      "after": "K-ZSTZ 161-68°C Q3"
+    },
+    {
+      "time": "2026-11-13T10:29:10",
+      "boq": "đầu phun hướng lên k= 11.2 68*c đầu phun hướng lên k= 11.2 68*c",
+      "before": "",
+      "after": "K-ZSTZ 161-68°C Q3"
+    },
+    {
+      "time": "2026-11-13T10:29:10",
+      "boq": "rọ hút, pn16 dn100, fl rọ hút, pn16 dn100, fl",
+      "before": "",
+      "after": "H42X-16Q"
+    },
+    {
+      "time": "2026-11-13T10:29:10",
+      "boq": "van phao thủy lực dn150, fl van phao thủy lực dn150, fl",
+      "before": "",
+      "after": "100X-16Q"
+    },
+    {
+      "time": "2026-11-13T10:29:10",
+      "boq": "van bướm dn150, fl van bướm dn150, fl",
+      "before": "",
+      "after": "D71X-16Q"
+    },
+    {
+      "time": "2026-11-13T10:29:10",
+      "boq": "van 1 chiều dn150, fl van 1 chiều dn150, fl",
+      "before": "",
+      "after": "H44X-16Q"
+    },
+    {
+      "time": "2026-11-13T10:29:10",
+      "boq": "van 1 chiều dn100, fl van 1 chiều dn100, fl",
+      "before": "",
+      "after": "H44X-16Q"
+    },
+    {
+      "time": "2026-11-13T10:29:10",
+      "boq": "van đồng 1 chiều - d32, nối ren van đồng 1 chiều - d32, nối ren",
+      "before": "",
+      "after": "H14W-16T"
+    },
+    {
+      "time": "2026-11-13T10:29:10",
+      "boq": "van đồng 1 chiều - d40, nối ren van đồng 1 chiều - d40, nối ren",
+      "before": "",
+      "after": "H14W-16T"
+    },
+    {
+      "time": "2026-11-13T10:29:10",
+      "boq": "van đồng 1 chiều - d25, nối ren van đồng 1 chiều - d25, nối ren",
+      "before": "",
+      "after": "H14W-16T"
+    },
+    {
+      "time": "2026-11-13T10:29:10",
+      "boq": "van bướm dn150, fl van bướm dn150, fl",
+      "before": "",
+      "after": "D71X-16Q"
+    },
+    {
+      "time": "2026-11-13T10:29:10",
+      "boq": "van bướm dn100, fl van bướm dn100, fl",
+      "before": "",
+      "after": "D71X-16Q"
+    },
+    {
+      "time": "2026-11-13T10:29:10",
+      "boq": "van 1 chiều dn65, fl van 1 chiều dn65, fl",
+      "before": "",
+      "after": "H44X-16Q"
+    },
+    {
+      "time": "2026-11-13T10:29:10",
+      "boq": "van 1 chiều dn80, fl van 1 chiều dn80, fl",
+      "before": "",
+      "after": "H44X-16Q"
+    },
+    {
+      "time": "2026-11-13T10:29:10",
+      "boq": "van bướm dn50, fl van bướm dn50, fl",
+      "before": "",
+      "after": "D71X-16Q"
+    },
+    {
+      "time": "2026-11-13T10:29:10",
+      "boq": "van bướm dn65, fl van bướm dn65, fl",
+      "before": "",
+      "after": "D71X-16Q"
+    },
+    {
+      "time": "2026-11-13T10:29:10",
+      "boq": "van bướm dn80, fl van bướm dn80, fl",
+      "before": "",
+      "after": "D71X-16Q"
+    },
+    {
+      "time": "2026-11-13T10:29:10",
+      "boq": "van bướm dn100, fl van bướm dn100, fl",
+      "before": "",
+      "after": "D71X-16Q"
     }
   ],
   "layouts": [
@@ -3492,6 +5157,22 @@
         "price": 0
       },
       "updated": "2026-11-13T09:31:08"
+    },
+    {
+      "headers": [
+        "mô tả",
+        "sl",
+        "đvt"
+      ],
+      "header_row": 1,
+      "positions": {
+        "name": 1,
+        "qty": 3,
+        "unit": 2,
+        "spec": 1,
+        "price": null
+      },
+      "updated": "2026-11-13T11:41:17"
     }
   ]
 }

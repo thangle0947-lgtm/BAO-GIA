@@ -7,6 +7,7 @@ from io import BytesIO
 
 import openpyxl
 from openpyxl.styles import PatternFill
+from openpyxl.worksheet.properties import PageSetupProperties
 import pandas as pd
 import streamlit as st
 
@@ -21,7 +22,9 @@ from io import BytesIO
 
 # --- ĐƯỜNG DẪN (luôn tính theo thư mục chứa app.py) ---
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-TEMPLATE_PATH = os.path.join(BASE_DIR, "MauBaoGia.xlsx")
+TEMPLATE_PATH = os.path.join(BASE_DIR, "MauBaoGia_1.xlsx")
+if not os.path.exists(TEMPLATE_PATH):
+    TEMPLATE_PATH = os.path.join(BASE_DIR, "MauBaoGia.xlsx")
 PRICE_LIST_PATH = os.path.join(BASE_DIR, "BangGia.xlsx")
 KNOWLEDGE_PATH = os.path.join(BASE_DIR, "learned_knowledge.json")
 PLACEHOLDER_SHEET = "XXXXXXXXX"
@@ -90,7 +93,7 @@ if not os.path.exists(TEMPLATE_PATH):
     st.stop()
 
 # --- TRẠNG THÁI PHIÊN ---
-for _key, _default in {"df_editable": None, "learned_keys": set(), "last_stats": None, "editor_ver": 0}.items():
+for _key, _default in {"df_editable": None, "learned_keys": set(), "last_stats": None, "editor_ver": 0, "prev_ver": 0, "merge_msg": 0}.items():
     if _key not in st.session_state:
         st.session_state[_key] = _default
 
@@ -119,8 +122,59 @@ def cached_boq_raw(data: bytes, name: str, sheet):
     return pd.read_excel(BytesIO(data), sheet_name=sheet, header=None)
 
 
-def on_editor_change(editor_key, price_items, store):
-    """Chạy ngay khi người dùng sửa bảng: xóa dòng, đồng bộ mã, duyệt. Không cần bấm nút."""
+def merge_duplicate_rows(df):
+    """Gộp các dòng đã có mã mà cùng Mã hàng + Diễn giải + Xuất xứ + ĐVT + Đơn giá thành 1 dòng, cộng dồn SL.
+    Dòng chưa có mã không bị gộp. Trả về (df mới, số dòng đã gộp vào dòng khác, bảng đổi chỉ số cũ -> mới)."""
+    df = df.copy()
+    first_of, keep, merged = {}, [], 0
+    owner = {}  # chỉ số cũ -> chỉ số cũ của dòng giữ lại
+    for idx, r in df.iterrows():
+        code = clean(r["Mã hàng"])
+        if not code:
+            keep.append(idx)
+            owner[idx] = idx
+            continue
+        key = (code, clean(r["Diễn giải"]), clean(r["Xuất xứ"]), clean(r["ĐVT"]), float(r["Đơn giá (VND)"] or 0))
+        if key in first_of:
+            f = first_of[key]
+            df.at[f, "SL"] = float(df.at[f, "SL"] or 0) + float(r["SL"] or 0)
+            note = clean(r["Ghi chú"])
+            old = clean(df.at[f, "Ghi chú"])
+            if note and note not in old.split(" | "):
+                df.at[f, "Ghi chú"] = f"{old} | {note}" if old else note
+            owner[idx] = f
+            merged += 1
+        else:
+            first_of[key] = idx
+            keep.append(idx)
+            owner[idx] = idx
+    pos = {old: i for i, old in enumerate(keep)}
+    mapping = {old: pos[o] for old, o in owner.items()}
+    return df.loc[keep].reset_index(drop=True), merged, mapping
+
+
+def merge_and_remap(df):
+    """Gộp dòng trùng, đổi lại chỉ số trong tập 'đã xử lý' của phiên, và ghi lời nhắn để báo người dùng."""
+    df, merged, mapping = merge_duplicate_rows(df)
+    if merged:
+        seen = st.session_state.learned_keys
+        remapped = set()
+        for k in seen:
+            if isinstance(k, tuple) and k and k[0] == "ma":
+                remapped.add(("ma", mapping.get(k[1], k[1]), k[2]))
+            elif isinstance(k, tuple) and k and isinstance(k[0], int):
+                remapped.add((mapping.get(k[0], k[0]),) + tuple(k[1:]))
+            else:
+                remapped.add(k)
+        st.session_state.learned_keys = remapped
+        st.session_state.merge_msg = st.session_state.get("merge_msg", 0) + merged
+    return df, merged
+
+
+def on_editor_change(editor_key, price_items, store, source="main"):
+    """Chạy ngay khi người dùng sửa bảng: xóa dòng, đồng bộ mã, duyệt. Không cần bấm nút.
+    source='main': bảng chi tiết phía trên; source='preview': bảng sửa ngay trong phần xem trước.
+    Hai bảng dùng chung một df nên bảng còn lại phải được làm mới (đổi key) để không đè lại giá trị cũ."""
     state = st.session_state.get(editor_key)
     if not isinstance(state, dict) or st.session_state.df_editable is None:
         return
@@ -130,15 +184,386 @@ def on_editor_change(editor_key, price_items, store):
     synced = sync_codes(df, edited_rows, price_items, store, st.session_state.learned_keys)
     applied = apply_approved(df, price_items, store, st.session_state.learned_keys)
     df, structural = remove_and_add_rows(df, state)
+    merged = 0
+    if synced or applied:                       # vừa duyệt/chọn mã -> gộp các dòng trùng mã + mô tả
+        df, merged = merge_and_remap(recalc(df))
     st.session_state.df_editable = recalc(df)
-    if structural or synced or applied:
-        st.session_state.editor_ver += 1
+    if source == "main":
+        st.session_state.prev_ver += 1          # làm mới bảng xem trước
+        if structural or synced or applied or merged:
+            st.session_state.editor_ver += 1
+    else:
+        st.session_state.editor_ver += 1        # làm mới bảng chi tiết phía trên
+        if synced or merged:
+            st.session_state.prev_ver += 1      # đổi mã: nạp lại tên/giá/xuất xứ vừa điền
 
 
 def ascii_key(v):
     """Chuỗi không dấu, chữ thường, để so khớp nhãn dù gõ sai dấu (ví dụ 'Thuể' / 'Thanh tóan')."""
     s = unicodedata.normalize("NFD", clean(v)).encode("ascii", "ignore").decode().lower()
     return re.sub(r"\s+", " ", s).strip()
+
+
+VAT_RATE = 0.08
+
+
+def quote_totals(df):
+    """Tính Cộng, Thuế, Tổng cho bản xem trước và PDF (Excel vẫn dùng công thức của mẫu)."""
+    amount = 0.0
+    for _, r in df.iterrows():
+        p = float(r["Đơn giá (VND)"] or 0)
+        if p > 0:
+            amount += float(r["SL"] or 0) * p
+    vat = amount * VAT_RATE
+    return amount, vat, amount + vat
+
+
+def _money(v):
+    return f"{v:,.0f}" if v else ""
+
+
+def render_preview_html(df, h, f, split=False):
+    """Bản xem trước HTML có cùng bố cục với file xuất ra."""
+    import html as _h
+    esc = lambda v: _h.escape(str(v or ""))
+    cong, thue, tong = quote_totals(df)
+    rows = []
+    cell_style = "border:1px solid #6b5a22;padding:5px;color:#ECE7D8;"
+    for i, (_, r) in enumerate(df.iterrows(), start=1):
+        code = code_of(r["Mã hàng"])
+        price = float(r["Đơn giá (VND)"] or 0)
+        name = clean(r["Diễn giải"]) if code else (clean(r["BOQ gốc"]) or clean(r["Diễn giải"]))
+        flag = (not code) or price <= 0
+        bg = "background:#FFF2A8;color:#111;" if flag else ""
+        amount = float(r["SL"] or 0) * price
+        cells = [(str(i), "center"), (code, "center"), (name, "left"), (clean(r["Xuất xứ"]), "center"),
+                 (clean(r["ĐVT"]) or "Cái", "center"), (f"{float(r['SL'] or 0):,.2f}", "center"),
+                 (_money(price), "center"), (_money(amount), "center"), (clean(r["Ghi chú"]), "left")]
+        tds = "".join(f"<td style='{cell_style}{bg}text-align:{al}'>{esc(txt)}</td>" for txt, al in cells)
+        rows.append(f"<tr>{tds}</tr>")
+    th = "border:1px solid #6b5a22;padding:6px;background:#2a2412;color:#C9A227;font-weight:700;"
+    td = "border:1px solid #6b5a22;padding:5px;color:#ECE7D8;text-align:center;"
+    head = (
+        f"<table style='width:100%;border-collapse:collapse;margin-bottom:12px;font-size:14px;color:#ECE7D8'>"
+        f"<tr><td style='padding:3px 8px'><b>To:</b> {esc(h['to'])}</td><td style='padding:3px 8px'><b>No:</b> {esc(h['no'])}</td></tr>"
+        f"<tr><td style='padding:3px 8px'><b>Add:</b> {esc(h['add'])}</td><td style='padding:3px 8px'><b>Date:</b> {esc(h['date'])}</td></tr>"
+        f"<tr><td style='padding:3px 8px'><b>Att:</b> {esc(h['att'])}</td><td style='padding:3px 8px'><b>Validity:</b> {esc(h['validity'])}</td></tr>"
+        f"<tr><td style='padding:3px 8px'><b>Mobile:</b> {esc(h['mobile'])}</td><td style='padding:3px 8px'><b>Project:</b> {esc(h['project'])}</td></tr>"
+        f"<tr><td style='padding:3px 8px'><b>Email:</b> {esc(h['email'])}</td><td></td></tr>"
+        f"<tr><td style='padding:3px 8px'><b>Ref:</b> {esc(h['ref'])}</td><td></td></tr></table>")
+    table = (
+        "<div style='overflow-x:auto'><table style='width:100%;border-collapse:collapse;font-size:13px'>"
+        f"<tr><th style='{th}'>STT</th><th style='{th}'>Mã hàng</th><th style='{th}'>Diễn giải</th>"
+        f"<th style='{th}'>Xuất xứ</th><th style='{th}'>ĐVT</th><th style='{th}'>SL</th>"
+        f"<th style='{th}'>Đơn giá</th><th style='{th}'>Thành tiền</th><th style='{th}'>Ghi chú</th></tr>"
+        + "".join(rows) + "</table></div>")
+    totals = (
+        "<table style='width:100%;margin-top:8px;font-size:14px;color:#ECE7D8'>"
+        f"<tr><td style='text-align:right;padding:4px'><b>Cộng:</b></td><td style='width:200px;text-align:right'>{_money(cong)}</td></tr>"
+        f"<tr><td style='text-align:right;padding:4px'><b>Thuế GTGT (8%):</b></td><td style='text-align:right'>{_money(thue)}</td></tr>"
+        f"<tr><td style='text-align:right;padding:4px;color:#C9A227'><b>Tổng cộng (VND):</b></td>"
+        f"<td style='text-align:right;color:#C9A227;font-weight:700'>{_money(tong)}</td></tr></table>")
+    foot = (
+        "<div style='margin-top:12px;font-size:14px;color:#ECE7D8'>"
+        f"<p><b>Lưu ý:</b> {esc(f['note'])}</p>"
+        f"<p><b>Giao hàng:</b> {esc(f['deliv1'])}<br>{esc(f['deliv2'])}</p>"
+        f"<p><b>Thanh toán:</b><br>{esc(f['payment']).replace(chr(10), '<br>')}</p></div>")
+    if split:
+        return head, totals + foot
+    return head + table + totals + foot
+
+
+def clean_xlsx_for_excel(data: bytes) -> bytes:
+    """Gỡ các phần tàn dư của mẫu (lọc tự động, chế độ xem tùy chỉnh, vùng in cũ) để Excel không báo lỗi sửa file."""
+    import re as _re
+    import zipfile as _zf
+    src = _zf.ZipFile(BytesIO(data))
+    out = BytesIO()
+    with _zf.ZipFile(out, "w", _zf.ZIP_DEFLATED) as dst:
+        for item in src.infolist():
+            content = src.read(item.filename)
+            if item.filename == "xl/workbook.xml":
+                text = content.decode("utf-8")
+                text = _re.sub(r"<definedName[^>]*wvu[^>]*>.*?</definedName>", "", text, flags=_re.S)
+                text = _re.sub(r"<definedName[^>]*_FilterDatabase[^>]*>.*?</definedName>", "", text, flags=_re.S)
+                text = _re.sub(r'\sfirstSheet="\d+"', "", text)  # file xuất chỉ còn 1 sheet
+                content = text.encode("utf-8")
+            elif item.filename.startswith("xl/worksheets/sheet") and item.filename.endswith(".xml"):
+                text = content.decode("utf-8")
+                text = _re.sub(r"<customSheetViews>.*?</customSheetViews>", "", text, flags=_re.S)
+                text = _re.sub(r"<autoFilter\b[^>]*/>", "", text)
+                text = _re.sub(r"<autoFilter\b[^>]*>.*?</autoFilter>", "", text, flags=_re.S)
+                content = text.encode("utf-8")
+            dst.writestr(item, content)
+    return out.getvalue()
+
+def _fix_logo_anchor(xml: bytes) -> bytes:
+    """Đổi neo 2 ô (logo giãn khi cột bị nới rộng) thành neo 1 ô với kích thước cố định."""
+    import re as _re
+    text = xml.decode("utf-8")
+
+    def conv(m):
+        block = m.group(0)
+        frm = _re.search(r"<xdr:from>.*?</xdr:from>", block, _re.S)
+        ext = _re.search(r'<a:ext cx="(\d+)" cy="(\d+)"\s*/>', block)
+        if not frm or not ext:
+            return block
+        body = _re.sub(r"^<xdr:twoCellAnchor[^>]*>", "", block)
+        body = _re.sub(r"</xdr:twoCellAnchor>$", "", body)
+        body = _re.sub(r"<xdr:from>.*?</xdr:from>\s*<xdr:to>.*?</xdr:to>", "", body, flags=_re.S)
+        return (f"<xdr:oneCellAnchor>{frm.group(0)}<xdr:ext cx=\"{ext.group(1)}\" cy=\"{ext.group(2)}\"/>"
+                f"{body}</xdr:oneCellAnchor>")
+
+    text = _re.sub(r"<xdr:twoCellAnchor\b.*?</xdr:twoCellAnchor>", conv, text, flags=_re.S)
+    return text.encode("utf-8")
+
+
+def restore_template_drawing(data: bytes, template_path: str, sheet_name: str) -> bytes:
+    """openpyxl ghi lại ảnh/logo không chuẩn nên Excel báo 'Phần Đã loại bỏ: /xl/drawings/drawing1.xml'.
+    Hàm này bỏ phần ảnh do openpyxl ghi và ghép NGUYÊN BẢN drawing + ảnh gốc của mẫu (do Excel tạo) vào file xuất.
+    File xuất chỉ có 1 sheet (sheet1.xml)."""
+    import posixpath as _pp
+    import re as _re
+    import zipfile as _zf
+    from xml.etree import ElementTree as _ET
+
+    REL = "http://schemas.openxmlformats.org/package/2006/relationships"
+    RID = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+    try:
+        tz = _zf.ZipFile(template_path)
+        wbx = _ET.fromstring(tz.read("xl/workbook.xml"))
+        ns = {"m": "http://schemas.openxmlformats.org/spreadsheetml/2006/main"}
+        rid = None
+        for sh in wbx.find("m:sheets", ns):
+            if sh.get("name") == sheet_name:
+                rid = sh.get(f"{{{RID}}}id")
+        if rid is None:
+            return data
+        wb_rels = _ET.fromstring(tz.read("xl/_rels/workbook.xml.rels"))
+        target = next(r.get("Target") for r in wb_rels if r.get("Id") == rid)
+        sheet_path = target.lstrip("/") if target.startswith("/") else _pp.normpath(_pp.join("xl", target))
+        rels_path = _pp.join(_pp.dirname(sheet_path), "_rels", _pp.basename(sheet_path) + ".rels")
+        if rels_path not in tz.namelist():
+            return data
+        drw_target = next((r.get("Target") for r in _ET.fromstring(tz.read(rels_path))
+                           if r.get("Type", "").endswith("/drawing")), None)
+        if not drw_target:
+            return data
+        drw_path = _pp.normpath(_pp.join(_pp.dirname(sheet_path), drw_target)) if not drw_target.startswith("/") \
+            else drw_target.lstrip("/")
+        drw_xml = tz.read(drw_path)
+        drw_xml = _fix_logo_anchor(drw_xml)
+        drw_rels_path = _pp.join(_pp.dirname(drw_path), "_rels", _pp.basename(drw_path) + ".rels")
+        media = {}      # tên mới trong file xuất -> nội dung
+        rel_items = []  # (Id, Type, Target mới)
+        if drw_rels_path in tz.namelist():
+            for r in _ET.fromstring(tz.read(drw_rels_path)):
+                if r.get("TargetMode") == "External":
+                    rel_items.append((r.get("Id"), r.get("Type"), r.get("Target"), True))
+                    continue
+                src = _pp.normpath(_pp.join(_pp.dirname(drw_path), r.get("Target")))
+                new_name = "xl/media/" + _pp.basename(src)
+                media[new_name] = tz.read(src)
+                rel_items.append((r.get("Id"), r.get("Type"), "/" + new_name, False))
+    except Exception:
+        return data  # mẫu không có ảnh hoặc không đọc được: giữ nguyên file
+
+    src_zip = _zf.ZipFile(BytesIO(data))
+    out = BytesIO()
+    with _zf.ZipFile(out, "w", _zf.ZIP_DEFLATED) as dst:
+        for item in src_zip.infolist():
+            name = item.filename
+            if name.startswith("xl/drawings/") or name.startswith("xl/media/"):
+                continue  # bỏ bản ảnh do openpyxl ghi
+            content = src_zip.read(name)
+            if name == "xl/worksheets/_rels/sheet1.xml.rels":
+                text = content.decode("utf-8")
+                text = _re.sub(r"<Relationship\b[^>]*relationships/drawing\"[^>]*/>", "", text)
+                content = text.encode("utf-8")
+            elif name == "xl/worksheets/sheet1.xml":
+                text = content.decode("utf-8")
+                text = _re.sub(r"<drawing\b[^>]*/>", "", text)
+                tag = f'<drawing xmlns:r="{RID}" r:id="rIdTscDrw"/>'
+                for anchor in ("<legacyDrawing", "<legacyDrawingHF", "<picture", "<oleObjects", "<controls",
+                               "<webPublishItems", "<tableParts", "<extLst", "</worksheet>"):
+                    pos = text.find(anchor)
+                    if pos != -1:
+                        text = text[:pos] + tag + text[pos:]
+                        break
+                content = text.encode("utf-8")
+            elif name == "[Content_Types].xml":
+                text = content.decode("utf-8")
+                text = _re.sub(r"<Override\b[^>]*PartName=\"/xl/drawings/[^>]*/>", "", text)
+                add = '<Override PartName="/xl/drawings/drawing1.xml" ContentType="application/vnd.openxmlformats-officedocument.drawing+xml"/>'
+                exts = {_pp.splitext(n)[1].lstrip(".").lower() for n in media}
+                ctypes = {"png": "image/png", "jpg": "image/jpeg", "jpeg": "image/jpeg", "gif": "image/gif",
+                          "emf": "image/x-emf", "wmf": "image/x-wmf", "bmp": "image/bmp"}
+                for e in exts:
+                    if e in ctypes and f'Extension="{e}"' not in text:
+                        add += f'<Default Extension="{e}" ContentType="{ctypes[e]}"/>'
+                text = text.replace("</Types>", add + "</Types>")
+                content = text.encode("utf-8")
+            dst.writestr(name, content)
+        if "xl/worksheets/_rels/sheet1.xml.rels" not in src_zip.namelist():
+            dst.writestr("xl/worksheets/_rels/sheet1.xml.rels",
+                         f'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="{REL}"></Relationships>')
+        dst.writestr("xl/drawings/drawing1.xml", drw_xml)
+        rels = "".join(
+            f'<Relationship Id="{i}" Type="{t}" Target="{tg}"' + (' TargetMode="External"' if ext else "") + "/>"
+            for i, t, tg, ext in rel_items)
+        dst.writestr("xl/drawings/_rels/drawing1.xml.rels",
+                     f'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="{REL}">{rels}</Relationships>')
+        for n, c in media.items():
+            dst.writestr(n, c)
+    # thêm quan hệ drawing vào sheet1.xml.rels (sau khi đã chắc chắn file rels tồn tại)
+    out2 = BytesIO()
+    zin = _zf.ZipFile(BytesIO(out.getvalue()))
+    with _zf.ZipFile(out2, "w", _zf.ZIP_DEFLATED) as dst:
+        for item in zin.infolist():
+            c = zin.read(item.filename)
+            if item.filename == "xl/worksheets/_rels/sheet1.xml.rels":
+                t = c.decode("utf-8")
+                t = t.replace("</Relationships>",
+                              f'<Relationship Id="rIdTscDrw" Type="{RID}/drawing" Target="/xl/drawings/drawing1.xml"/></Relationships>')
+                c = t.encode("utf-8")
+            dst.writestr(item.filename, c)
+    return out2.getvalue()
+
+
+def find_libreoffice():
+    import shutil as _sh
+    for name in ("soffice", "libreoffice"):
+        p = _sh.which(name)
+        if p:
+            return p
+    for p in [r"C:\Program Files\LibreOffice\program\soffice.exe",
+              r"C:\Program Files (x86)\LibreOffice\program\soffice.exe"]:
+        if os.path.exists(p):
+            return p
+    return None
+
+
+def xlsx_to_pdf(xlsx_bytes: bytes):
+    """Chuyển file Excel đã điền thành PDF đúng mẫu bằng LibreOffice. Trả về None nếu không có LibreOffice."""
+    import subprocess
+    import tempfile
+    exe = find_libreoffice()
+    if not exe:
+        return None
+    with tempfile.TemporaryDirectory() as tmp:
+        src = os.path.join(tmp, "baogia.xlsx")
+        with open(src, "wb") as fh:
+            fh.write(xlsx_bytes)
+        subprocess.run([exe, "--headless", "--convert-to", "pdf", "--outdir", tmp, src],
+                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=180, check=False)
+        out = os.path.join(tmp, "baogia.pdf")
+        if not os.path.exists(out):
+            return None
+        with open(out, "rb") as fh:
+            return fh.read()
+
+
+def build_quote_pdf(df, h, f, customer: bool = False) -> bytes:
+    """Xuất PDF báo giá cùng nội dung với file Excel. Cần thư viện reportlab."""
+    from io import BytesIO as _BIO
+    from reportlab.lib import colors
+    from reportlab.lib.pagesizes import A4
+    from reportlab.lib.styles import ParagraphStyle
+    from reportlab.lib.units import mm
+    from reportlab.pdfbase import pdfmetrics
+    from reportlab.pdfbase.ttfonts import TTFont
+    from reportlab.platypus import Image, Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
+
+    reg, bold = "Helvetica", "Helvetica-Bold"
+    for r_path, b_path in [
+        ("C:/Windows/Fonts/arial.ttf", "C:/Windows/Fonts/arialbd.ttf"),
+        ("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"),
+    ]:
+        if os.path.exists(r_path):
+            pdfmetrics.registerFont(TTFont("QF", r_path))
+            pdfmetrics.registerFont(TTFont("QFB", b_path if os.path.exists(b_path) else r_path))
+            reg, bold = "QF", "QFB"
+            break
+
+    gold = colors.HexColor("#9C7A12")
+    body = ParagraphStyle("body", fontName=reg, fontSize=8.5, leading=11)
+    small = ParagraphStyle("small", fontName=reg, fontSize=7.5, leading=9)
+    title = ParagraphStyle("title", fontName=bold, fontSize=16, leading=20, alignment=1, textColor=gold)
+    cell_bold = ParagraphStyle("cb", fontName=bold, fontSize=8.5, leading=11, alignment=1)
+
+    story = []
+    if os.path.exists(LOGO_PATH):
+        story.append(Image(LOGO_PATH, width=95 * mm, height=95 * mm * 331 / 900))
+    story.append(Spacer(1, 4))
+    story.append(Paragraph("BÁO GIÁ", title))
+    story.append(Spacer(1, 6))
+
+    left = [("To:", h["to"]), ("Add:", h["add"]), ("Att:", h["att"]), ("Mobile:", h["mobile"]),
+            ("Email:", h["email"]), ("Ref:", h["ref"])]
+    right = [("No:", h["no"]), ("Date:", h["date"]), ("Revise:", h["revise"]),
+             ("Validity:", h["validity"]), ("Project:", h["project"])]
+    hdr_rows = []
+    for i in range(max(len(left), len(right))):
+        l = left[i] if i < len(left) else ("", "")
+        rr = right[i] if i < len(right) else ("", "")
+        hdr_rows.append([Paragraph(f"<b>{l[0]}</b> {l[1] or ''}", body), Paragraph(f"<b>{rr[0]}</b> {rr[1] or ''}", body)])
+    ht = Table(hdr_rows, colWidths=[90 * mm, 90 * mm])
+    ht.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "TOP"), ("BOTTOMPADDING", (0, 0), (-1, -1), 2)]))
+    story += [ht, Spacer(1, 8)]
+
+    data = [[Paragraph(t, cell_bold) for t in ["STT", "Mã hàng", "Diễn giải", "Xuất xứ", "ĐVT", "SL",
+                                                "Đơn giá\n(VND)", "Thành tiền\n(VND)", "Ghi chú"]]]
+    flags = []
+    for i, (_, r) in enumerate(df.iterrows(), start=1):
+        code = code_of(r["Mã hàng"])
+        price = float(r["Đơn giá (VND)"] or 0)
+        name = clean(r["Diễn giải"]) if code else (clean(r["BOQ gốc"]) or clean(r["Diễn giải"]))
+        amount = float(r["SL"] or 0) * price
+        if (not customer) and ((not code) or price <= 0):
+            flags.append(len(data))
+        data.append([Paragraph(str(i), body), Paragraph(code, body), Paragraph(name, body),
+                     Paragraph(clean(r["Xuất xứ"]), body), Paragraph(clean(r["ĐVT"]) or "Cái", body),
+                     Paragraph(f"{float(r['SL'] or 0):,.2f}", body),
+                     Paragraph(_money(price), body), Paragraph(_money(amount), body),
+                     Paragraph(clean(r["Ghi chú"]), small)])
+    widths = [9, 22, 36, 21, 10, 18, 20, 26, 18]  # tổng 180 mm = khổ A4 trừ lề
+    tbl = Table(data, colWidths=[w * mm for w in widths], repeatRows=1)
+    st_list = [("GRID", (0, 0), (-1, -1), 0.4, colors.HexColor("#9C7A12")),
+               ("LEFTPADDING", (0, 0), (-1, -1), 2), ("RIGHTPADDING", (0, 0), (-1, -1), 2),
+               ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#F3EBCF")),
+               ("VALIGN", (0, 0), (-1, -1), "MIDDLE")]
+    for ridx in flags:
+        st_list.append(("BACKGROUND", (0, ridx), (-1, ridx), colors.HexColor("#FFF2A8")))
+    tbl.setStyle(TableStyle(st_list))
+    story += [tbl, Spacer(1, 6)]
+
+    cong, thue, tong = quote_totals(df)
+    tot = Table([[Paragraph("<b>Cộng:</b>", body), Paragraph(_money(cong), body)],
+                 [Paragraph("<b>Thuế GTGT (8%):</b>", body), Paragraph(_money(thue), body)],
+                 [Paragraph("<b>Tổng cộng (VND):</b>", body), Paragraph(f"<b>{_money(tong)}</b>", body)]],
+                colWidths=[60 * mm, 40 * mm])
+    tot.setStyle(TableStyle([("ALIGN", (1, 0), (1, -1), "RIGHT"), ("LINEABOVE", (0, 2), (-1, 2), 0.8, gold)]))
+    wrap = Table([[None, tot]], colWidths=[80 * mm, 100 * mm])
+    story += [wrap, Spacer(1, 10)]
+
+    story.append(Paragraph(f"<b>Lưu ý:</b> {f['note']}", body))
+    story.append(Paragraph(f"<b>Giao hàng:</b> {f['deliv1']}", body))
+    if f.get("deliv2"):
+        story.append(Paragraph(f["deliv2"], body))
+    story.append(Paragraph("<b>Thanh toán:</b>", body))
+    for line in (f["payment"] or "").split("\n"):
+        if line.strip():
+            story.append(Paragraph(line.strip(), body))
+    if f.get("bank"):
+        story.append(Spacer(1, 4))
+        story.append(Paragraph(f["bank"].replace("\n", "<br/>"), body))
+    story += [Spacer(1, 14), Paragraph("<b>Người báo giá</b>", body)]
+
+    buf = _BIO()
+    doc = SimpleDocTemplate(buf, pagesize=A4, leftMargin=15 * mm, rightMargin=15 * mm,
+                            topMargin=12 * mm, bottomMargin=12 * mm, title="Báo giá")
+    doc.build(story)
+    return buf.getvalue()
 
 
 def label_item(it):
@@ -322,25 +747,41 @@ if st.session_state.df_editable is not None:
                     if query:
                         store.learn_mapping(query, it)
                         store.log_correction(query, before, item_key(it))
+                    df, _ = merge_and_remap(recalc(df))
                     st.session_state.df_editable = recalc(df)
                     st.session_state.editor_ver += 1
                     st.rerun()
 
     # Điền mã cho các dòng đã tích Duyệt nhưng chưa được điền (kể cả khi bấm Duyệt tất cả)
     if apply_approved(df, price_items, store, st.session_state.learned_keys):
+        df, _ = merge_and_remap(recalc(df))
         st.session_state.df_editable = recalc(df)
         st.session_state.editor_ver += 1
         st.rerun()
 
     # --- Duyệt nhanh ---
-    col_act1, _ = st.columns([1, 3])
+    if st.session_state.merge_msg:
+        st.success(f"🔗 Đã gộp {st.session_state.merge_msg} dòng trùng mã + mô tả vào dòng đầu tiên, số lượng đã cộng dồn.")
+        st.session_state.merge_msg = 0
+    col_act1, col_act2, _ = st.columns([1, 1, 2])
     with col_act1:
         if st.button("✅ DUYỆT TẤT CẢ ĐỀ XUẤT", use_container_width=True):
             df.loc[df["Mã đề xuất"] != "", "Duyệt"] = True
             st.session_state.df_editable = df
             st.session_state.editor_ver += 1
             st.rerun()
-    st.caption("Tích ô 🗑️ Xóa là dòng được xóa ngay. Tích ✅ Duyệt là mã đề xuất được điền vào file.")
+    with col_act2:
+        if st.button("🔗 GỘP DÒNG TRÙNG", use_container_width=True,
+                     help="Các dòng đã có mã, cùng mã + mô tả + giá sẽ gộp thành 1 dòng, SL cộng dồn."):
+            df2, n_merged = merge_and_remap(df)
+            if n_merged:
+                st.session_state.df_editable = recalc(df2)
+                st.session_state.editor_ver += 1
+                st.rerun()
+            else:
+                st.info("Không có dòng nào trùng để gộp.")
+    st.caption("Tích ô 🗑️ Xóa là dòng được xóa ngay. Tích ✅ Duyệt là mã đề xuất được điền vào file. "
+               "Dòng đã có mã mà trùng mã + mô tả sẽ tự gộp thành 1 và cộng SL.")
 
     # --- Bảng chỉnh sửa (mọi thay đổi xử lý trong on_editor_change, không chạy lại cả trang) ---
     code_options = sorted({item_key(p) for p in price_items if p["ma"]})
@@ -410,6 +851,7 @@ if st.session_state.df_editable is not None:
         f_deliv1 = st.text_input("Giao hàng (Dòng 1):", value="Tại địa chỉ dự án bên mua.", key="f_deliv1")
         f_deliv2 = st.text_input("Giao hàng (Dòng 2):",
                                  value="Nhập hàng 04-06 Tuần + giấy lưu thông 04-06 tuần", key="f_deliv2")
+        f_bank = st.text_area("Thông tin tài khoản (in dưới phần thanh toán, nếu cần):", value="", key="f_bank")
         f_payment = st.text_area("Thanh toán:",
                                  value="Tạm ứng 30% khi đặt hàng\nThanh toán 70% còn lại trước khi giao hàng",
                                  key="f_payment")
@@ -417,9 +859,14 @@ if st.session_state.df_editable is not None:
     st.markdown("<br>", unsafe_allow_html=True)
 
     # --- Xuất Excel (tìm dòng theo nhãn, tự thêm/bớt dòng, viết lại công thức tổng) ---
-    def build_excel(data: pd.DataFrame) -> bytes:
+    def build_excel(data: pd.DataFrame, customer: bool = False) -> bytes:
         wb = openpyxl.load_workbook(TEMPLATE_PATH)
         ws = wb[QUOTE_SHEET] if QUOTE_SHEET in wb.sheetnames else wb.active
+        # Chỉ giữ sheet báo giá: bỏ các sheet mẫu/cũ (ví dụ VN_1 chứa báo giá của khách khác)
+        for _name in list(wb.sheetnames):
+            if _name != ws.title:
+                del wb[_name]
+        wb.active = 0
 
         def safe_write(row, col, val):
             cell = ws.cell(row=row, column=col)
@@ -488,6 +935,7 @@ if st.session_state.df_editable is not None:
             raise ValueError("Không tìm thấy dòng 'Cộng' trong mẫu báo giá.")
         available = total_row - start_row
         n = len(data)
+        item_h = ws.row_dimensions[start_row].height or 43.9  # chiều cao dòng hàng hóa của mẫu
         last_item_row = total_row - 1
 
         # 3) Thêm hoặc bớt dòng hàng hóa cho khớp số hàng
@@ -508,8 +956,16 @@ if st.session_state.df_editable is not None:
             fewer = available - n
             shift_rows(start_row + n, -fewer)
 
-        # 4) Ghi hàng hóa
+        # Mọi dòng hàng hóa cao bằng nhau (dòng thêm mới không có chiều cao sẽ bị thấp hơn dòng của mẫu)
+        for r in range(start_row, start_row + n):
+            ws.row_dimensions[r].height = item_h
+
+        # 4) Ghi hàng hóa (nền vùng hàng hóa về trắng như mẫu; chỉ tô vàng dòng cần soát ở bản nội bộ)
         flag_fill = PatternFill("solid", fgColor="FFF2A8")
+        for r in range(start_row, start_row + n):
+            ws.row_dimensions[r].fill = PatternFill(fill_type=None)
+            for c in range(1, 10):
+                ws.cell(row=r, column=c).fill = PatternFill(fill_type=None)
         for i, (_, r) in enumerate(data.iterrows()):
             rr = start_row + i
             code = code_of(r["Mã hàng"])
@@ -518,10 +974,6 @@ if st.session_state.df_editable is not None:
             notes = []
             if clean(r["Ghi chú"]):
                 notes.append(clean(r["Ghi chú"]))
-            if not code:
-                notes.append("CHƯA GHÉP MÃ")
-            if price <= 0:
-                notes.append("CHƯA CÓ GIÁ")
             safe_write(rr, 1, i + 1)
             safe_write(rr, 2, code)
             safe_write(rr, 3, name)
@@ -531,7 +983,7 @@ if st.session_state.df_editable is not None:
             safe_write(rr, 7, price if price > 0 else None)
             safe_write(rr, 8, f"=F{rr}*G{rr}")
             safe_write(rr, 9, " | ".join(notes))
-            if not code or price <= 0:
+            if not customer and (not code or price <= 0):
                 for c in range(1, 10):
                     ws.cell(row=rr, column=c).fill = flag_fill
 
@@ -562,48 +1014,156 @@ if st.session_state.df_editable is not None:
             elif k3.startswith("nhap hang") or "giay luu thong" in k3:
                 safe_write(r, 3, f_deliv2)
             elif k2.startswith("thanh toan"):
+                # Khối thanh toán của mẫu: gom hết các dòng trống phía dưới nhãn, đến dòng "Thanh toán bằng..."
                 lines = [ln.strip() for ln in f_payment.split("\n") if ln.strip()]
                 slots = [r]
                 rr = r + 1
-                while rr <= ws.max_row and len(slots) < max(1, len(lines)):
+                while rr <= ws.max_row:
                     if ascii_key(ws.cell(row=rr, column=3).value).startswith("thanh toan bang") \
                             or clean(ws.cell(row=rr, column=2).value):
                         break
                     slots.append(rr)
                     rr += 1
-                for idx_s, srow in enumerate(slots):
-                    if idx_s < len(lines) - 1:
-                        safe_write(srow, 3, lines[idx_s])
-                    elif idx_s == len(slots) - 1:
-                        safe_write(srow, 3, " / ".join(lines[idx_s:]) if lines else None)
-                    else:
-                        safe_write(srow, 3, None)
+                if len(lines) >= len(slots):
+                    for k_, srow in enumerate(slots[:-1]):
+                        safe_write(srow, 3, lines[k_])
+                    safe_write(slots[-1], 3, " / ".join(lines[len(slots) - 1:]) if lines else None)
+                else:
+                    for k_, srow in enumerate(slots):
+                        safe_write(srow, 3, lines[k_] if k_ < len(lines) else None)
                 break
 
+        # Mẫu có số điện thoại lặp: ô tên người báo giá đã ghi sẵn SĐT, dòng ngay dưới lại ghi thêm lần nữa -> xóa
+        for r in range((tong or cong) + 1, ws.max_row):
+            if "le quoc" in ascii_key(ws.cell(row=r, column=1).value):
+                below = ws.cell(row=r + 1, column=1)
+                if re.fullmatch(r"[\d\s.+-]{8,}", clean(below.value) or "x"):
+                    safe_write(r + 1, 1, None)
+                break
+
+        # Xóa nền tô ở các dòng trống phía dưới chữ ký (tránh ô đen/lạ ở cuối file)
+        last_content = max((r for r in range(1, ws.max_row + 1)
+                            if any(ws.cell(row=r, column=c).value not in (None, "") for c in range(1, 10))),
+                           default=1)
+        for r in range(last_content + 1, ws.max_row + 1):
+            for c in range(1, 10):
+                ws.cell(row=r, column=c).fill = PatternFill(fill_type=None)
+
+        # Nới nhẹ 3 cột số để không hiện "########" trong Excel (chỉ tăng, không thu hẹp)
+        for _col, _min_w in (("F", 9.5), ("G", 14.5), ("H", 16.5)):
+            _cur = ws.column_dimensions[_col].width or 0
+            if _cur < _min_w:
+                ws.column_dimensions[_col].width = _min_w
+
+        # Vùng in phải phủ hết phần chân báo giá sau khi đã thêm/bớt dòng
+        ws.print_area = f"A1:I{last_content}"
+        ws.sheet_properties.pageSetUpPr = PageSetupProperties(fitToPage=True)
+        ws.page_setup.fitToWidth = 1
+        ws.page_setup.fitToHeight = 0
+
+        # Không để openpyxl ghi ảnh (Excel báo lỗi drawing1.xml); ghép lại logo gốc của mẫu sau khi lưu
+        ws._images = []
         buf = BytesIO()
         wb.save(buf)
-        return buf.getvalue()
+        fixed = restore_template_drawing(buf.getvalue(), TEMPLATE_PATH, ws.title)
+        return clean_xlsx_for_excel(fixed)
 
-    output_filename = st.text_input(
-        "Tên file Excel xuất ra:", value=f"BaoGia_TSC_{datetime.now().strftime('%Y%m%d')}.xlsx", key="out_name")
+    # --- Xem trước báo giá (cập nhật ngay khi sửa ở trên) ---
+    st.markdown("<hr>", unsafe_allow_html=True)
+    st.markdown("<h3>👁️ XEM TRƯỚC BÁO GIÁ</h3>", unsafe_allow_html=True)
+    hdr_vals = {"to": h_to, "add": h_add, "att": h_att, "mobile": h_mobile, "email": h_email, "ref": h_ref,
+                "no": h_no, "date": h_date.strftime("%d/%m/%Y"), "revise": h_revise,
+                "validity": h_validity, "project": h_project}
+    ftr_vals = {"note": f_note, "deliv1": f_deliv1, "deliv2": f_deliv2, "payment": f_payment,
+                "bank": f_bank}
+    st.caption("✏️ Có thể sửa trực tiếp ngay trong bảng này: chọn lại **Mã hàng** (tên, giá, xuất xứ tự điền), "
+               "sửa **Đơn giá**, **SL**, **ĐVT**, **Ghi chú**. Cột Diễn giải và Thành tiền tự cập nhật.")
+    head_html, tail_html = render_preview_html(df, hdr_vals, ftr_vals, split=True)
+    pv = pd.DataFrame({
+        "STT": range(1, len(df) + 1),
+        "Mã hàng": df["Mã hàng"],
+        "Diễn giải": [clean(r["Diễn giải"]) if code_of(r["Mã hàng"]) else (clean(r["BOQ gốc"]) or clean(r["Diễn giải"]))
+                      for _, r in df.iterrows()],
+        "Xuất xứ": df["Xuất xứ"], "ĐVT": df["ĐVT"], "SL": df["SL"],
+        "Đơn giá (VND)": df["Đơn giá (VND)"], "Thành tiền (VND)": df["SL"] * df["Đơn giá (VND)"],
+        "Ghi chú": df["Ghi chú"],
+    }, index=df.index)
+    pv_key = f"preview_editor_{st.session_state.editor_ver}_{st.session_state.prev_ver}"
+    with st.container(border=True):
+        st.markdown(head_html, unsafe_allow_html=True)
+        st.data_editor(
+            pv, key=pv_key, num_rows="fixed", use_container_width=True, hide_index=True,
+            height=min(640, 38 + 35 * max(len(pv), 1)),
+            on_change=on_editor_change, args=(pv_key, price_items, store, "preview"),
+            column_order=["STT", "Mã hàng", "Diễn giải", "Xuất xứ", "ĐVT", "SL",
+                          "Đơn giá (VND)", "Thành tiền (VND)", "Ghi chú"],
+            column_config={
+                "STT": st.column_config.NumberColumn("STT", disabled=True, width="small"),
+                "Mã hàng": st.column_config.SelectboxColumn(
+                    "Mã hàng", options=code_options, width="medium",
+                    help="Chọn mã + kích thước từ bảng giá. Tên và giá sẽ tự điền."),
+                "Diễn giải": st.column_config.TextColumn("Diễn giải", disabled=True, width="large"),
+                "Xuất xứ": st.column_config.TextColumn("Xuất xứ", width="small"),
+                "ĐVT": st.column_config.TextColumn("ĐVT", width="small"),
+                "SL": st.column_config.NumberColumn("SL", format="%.2f", min_value=0, width="small"),
+                "Đơn giá (VND)": st.column_config.NumberColumn("Đơn giá", format="%,.0f", min_value=0),
+                "Thành tiền (VND)": st.column_config.NumberColumn("Thành tiền", format="%,.0f", disabled=True),
+                "Ghi chú": st.column_config.TextColumn("Ghi chú"),
+            })
+        n_flag = int(sum(1 for _, r in df.iterrows() if (not code_of(r["Mã hàng"])) or float(r["Đơn giá (VND)"] or 0) <= 0))
+        if n_flag:
+            st.warning(f"⚠️ {n_flag} dòng chưa có mã hoặc chưa có giá (sẽ tô vàng trong file xuất).")
+        st.markdown(tail_html, unsafe_allow_html=True)
 
-    if st.button("📥 XUẤT FILE BÁO GIÁ", use_container_width=True):
-        n_nocode = int(sum(1 for r in audit_rows if not r["ma"]))
-        n_noprice = int(sum(1 for r in audit_rows if not r["don_gia"]))
-        if n_nocode or n_noprice:
-            st.info(f"File vẫn được xuất. {n_nocode} dòng chưa ghép mã (ghi tên BOQ gốc), "
-                    f"{n_noprice} dòng chưa có giá (để trống). Các dòng này được tô vàng và ghi chú để bạn soát lại.")
-        try:
-            with st.spinner("Đang ghi dữ liệu vào mẫu báo giá..."):
-                excel_bytes = build_excel(df)
-            store.record_quote_prices(audit_rows)
-            st.success("🎉 GHI DỮ LIỆU THÀNH CÔNG! Bấm tải xuống bên dưới.")
-            st.download_button(
-                label="⬇️ NHẤN ĐỂ LƯU FILE EXCEL",
-                data=excel_bytes,
-                file_name=output_filename,
-                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                use_container_width=True,
-            )
-        except Exception as e:
-            st.error(f"Đã xảy ra lỗi khi xuất file: {e}")
+    # --- Xuất báo giá: chọn một trong hai ---
+    st.markdown("<hr>", unsafe_allow_html=True)
+    st.markdown("<h3>📤 XUẤT BÁO GIÁ</h3>", unsafe_allow_html=True)
+    n_nocode = int(sum(1 for r in audit_rows if not r["ma"]))
+    n_noprice = int(sum(1 for r in audit_rows if not r["don_gia"]))
+    if n_nocode or n_noprice:
+        st.info(f"Có {n_nocode} dòng chưa ghép mã (ghi tên BOQ gốc) và {n_noprice} dòng chưa có giá (để trống). "
+                "Các dòng này được tô vàng để bạn soát lại.")
+    cust_mode = st.checkbox("📨 Bản gửi khách (không ghi chú nội bộ, không tô vàng)", value=False, key="cust_mode",
+                            help="Dùng khi gửi nhanh cho khách. Bản nội bộ có ghi chú CHƯA GHÉP MÃ / CHƯA CÓ GIÁ để bạn soát.")
+    base_name = st.text_input("Tên file (không kèm đuôi):",
+                              value=f"BaoGia_TSC_{datetime.now().strftime('%Y%m%d')}", key="out_base")
+    sig = int(pd.util.hash_pandas_object(df, index=False).sum()) + hash((hdr_vals.get("no"), ftr_vals.get("note"), cust_mode))
+    c_xl, c_pdf = st.columns(2)
+    with c_xl:
+        if st.button("📊 XUẤT EXCEL (.xlsx)", use_container_width=True, key="btn_xl"):
+            try:
+                with st.spinner("Đang ghi vào mẫu Excel..."):
+                    st.session_state["out_xlsx"] = build_excel(df, customer=cust_mode)
+                    st.session_state["out_xlsx_sig"] = sig
+                store.record_quote_prices(audit_rows)
+            except Exception as e:
+                st.error(f"Lỗi xuất Excel: {e}")
+        if st.session_state.get("out_xlsx") and st.session_state.get("out_xlsx_sig") != sig:
+            st.caption("⚠️ Dữ liệu đã thay đổi sau khi tạo file. Bấm lại 'XUẤT EXCEL' để cập nhật.")
+        elif st.session_state.get("out_xlsx"):
+            st.download_button("⬇️ TẢI FILE EXCEL", data=st.session_state["out_xlsx"],
+                               file_name=f"{base_name}.xlsx",
+                               mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                               use_container_width=True, key="dl_xl")
+    with c_pdf:
+        if st.button("📄 XUẤT PDF", use_container_width=True, key="btn_pdf"):
+            try:
+                with st.spinner("Đang tạo PDF đúng mẫu..."):
+                    pdf_bytes = xlsx_to_pdf(build_excel(df, customer=cust_mode))
+                    if pdf_bytes is None:
+                        st.warning("Chưa tìm thấy LibreOffice nên PDF này là bản đơn giản, chưa đúng mẫu. "
+                                   "Cài LibreOffice (miễn phí) để xuất PDF đúng mẫu.")
+                        pdf_bytes = build_quote_pdf(df, hdr_vals, ftr_vals, customer=cust_mode)
+                    st.session_state["out_pdf"] = pdf_bytes
+                    st.session_state["out_pdf_sig"] = sig
+                store.record_quote_prices(audit_rows)
+            except ImportError:
+                st.error("Chưa cài thư viện PDF. Mở cmd và chạy: py -m pip install reportlab")
+            except Exception as e:
+                st.error(f"Lỗi xuất PDF: {e}")
+        if st.session_state.get("out_pdf") and st.session_state.get("out_pdf_sig") != sig:
+            st.caption("⚠️ Dữ liệu đã thay đổi sau khi tạo file. Bấm lại 'XUẤT PDF' để cập nhật.")
+        elif st.session_state.get("out_pdf"):
+            st.download_button("⬇️ TẢI FILE PDF", data=st.session_state["out_pdf"],
+                               file_name=f"{base_name}.pdf", mime="application/pdf",
+                               use_container_width=True, key="dl_pdf")

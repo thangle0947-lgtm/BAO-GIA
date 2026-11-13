@@ -91,6 +91,63 @@ def extract_specs(text) -> dict:
     }
 
 
+VALVE_FAMILIES = [
+    ("pressure_relief", r"xả áp"),
+    ("pressure_reduce", r"giảm áp"),
+    ("air_release", r"xả khí"),
+    ("safety", r"an toàn|relief valve"),
+    ("casing_relief", r"bảo vệ vỏ bơm|casing relief|relif valve"),
+    ("alarm", r"báo động|alarm"),
+    ("gate", r"van cổng|gate valve|\bcổng\b"),
+    ("butterfly", r"van bướm|butterfly"),
+    ("check", r"1 chiều|một chiều|check valve"),
+    ("float", r"phao|float valve"),
+    ("strainer", r"rọ hút|y lọc|foot valve"),
+    ("flow_switch", r"công tắc dòng chảy|flow switch"),
+    ("pressure_switch", r"công tắc áp suất|pressure switch"),
+    ("gauge", r"đồng hồ|pressure gauge|flow meter"),
+    ("solenoid", r"điện từ"),
+]
+
+
+def families(text) -> set:
+    t = norm(text)
+    return {name for name, pat in VALVE_FAMILIES if re.search(pat, t)}
+
+
+def gate_type(text) -> str:
+    """Van cổng: 'nrs' = ty chìm, 'osy' = ty nổi / OS&Y, '' = không ghi."""
+    t = norm(text)
+    if re.search(r"nrs|ty chìm", t):
+        return "nrs"
+    if re.search(r"os&y|ty nổi", t):
+        return "osy"
+    return ""
+
+
+def is_supervised(text) -> bool:
+    return bool(re.search(r"giám sát|tín hiệu|oyss|bướm điện|supervis", norm(text)))
+
+
+def items_conflict(query, cand) -> bool:
+    """True nếu mục bảng giá không phù hợp với mô tả BOQ, dù tên có vài chữ giống nhau."""
+    if specs_conflict(extract_specs(query), extract_specs(cand)):
+        return True
+    fq, fc = families(query), families(cand)
+    if fq and not (fq & fc):
+        return True  # mô tả nêu loại van cụ thể mà mục bảng giá không có loại đó
+    if "gate" in fq and "gate" in fc:
+        gq, gc = gate_type(query), gate_type(cand)
+        if gq and gc and gq != gc:
+            return True
+        if not gq and gc == "nrs":
+            return True  # không ghi ty chìm thì mặc định OS&Y, không dùng NRS
+    if ("gate" in fq and "gate" in fc) or ("butterfly" in fq and "butterfly" in fc):
+        if is_supervised(query) != is_supervised(cand):
+            return True
+    return False
+
+
 def specs_conflict(a: dict, b: dict) -> bool:
     """Hai bên cùng có một loại thông số nhưng không có giá trị chung -> không khớp."""
     return any(a[k] and b[k] and not (a[k] & b[k]) for k in a)
@@ -321,7 +378,7 @@ class KnowledgeStore:
                 pass
         # Dọn các ghép đã học bị lệch kích thước do lỗi cũ (cùng mã, khác DN)
         bad = [k for k, v in self.data["mappings"].items()
-               if v.get("ten") and specs_conflict(extract_specs(k), extract_specs(v["ten"]))]
+               if v.get("ten") and items_conflict(k, v["ten"])]
         for k in bad:
             del self.data["mappings"][k]
 
@@ -387,13 +444,13 @@ def suggest_matches(boq_text, price_items, store: KnowledgeStore = None, top_k=3
                     best_key, best_r = k, r
             if best_r >= 0.9:
                 learned = store.data["mappings"][best_key]
-                if learned.get("ten") and specs_conflict(extract_specs(boq_text), extract_specs(learned["ten"])):
+                if learned.get("ten") and items_conflict(boq_text, learned["ten"]):
                     learned = None
         if learned and learned.get("ma"):
             match = next((p for p in price_items
                           if p["ma"] == learned["ma"] and p["ten"] == learned.get("ten")), None)
             # Chỉ dùng mục đã học nếu kích thước/thông số không mâu thuẫn với BOQ
-            if match and specs_conflict(extract_specs(boq_text), extract_specs(match["ten"])):
+            if match and items_conflict(boq_text, match["ten"]):
                 match = None
             if match:
                 suggestions.append({"item": match, "score": 1.0, "source": "learned",
@@ -407,7 +464,7 @@ def suggest_matches(boq_text, price_items, store: KnowledgeStore = None, top_k=3
             continue  # dòng tiêu đề nhóm trong bảng giá
         if any(item_key(s["item"]) == item_key(item) for s in suggestions):
             continue
-        if specs_conflict(q_spec, extract_specs(item["ten"])):
+        if items_conflict(boq_text, item["ten"]):
             continue
         p_tok = tokens(item["ten"])
         if not q_tok or not p_tok:
@@ -415,6 +472,8 @@ def suggest_matches(boq_text, price_items, store: KnowledgeStore = None, top_k=3
         jacc = len(q_tok & p_tok) / len(q_tok | p_tok)
         ratio = difflib.SequenceMatcher(None, norm(boq_text), norm(item["ten"])).ratio()
         score = 0.6 * jacc + 0.4 * ratio
+        if is_supervised(boq_text) and re.search(r"tín hiệu|kèm giám sát", norm(item["ten"])):
+            score += 0.25  # van có giám sát: ưu tiên mã tín hiệu / OS&Y kèm giám sát đúng quy định
         if score >= 0.35:
             scored.append((score, item))
 
@@ -502,7 +561,7 @@ def build_quote_rows(df_raw, cols, price_items, store, use_llm=False):
                "Mã hàng": "", "Diễn giải": name, "Xuất xứ": "",
                "ĐVT": boq_unit or default_unit, "SL": qty,
                "Đơn giá (VND)": 0.0, "Thành tiền (VND)": 0.0,
-               "Ghi chú": note,
+               "Ghi chú": "",  # ghi chú nội bộ (đã học/ghép) nằm ở cột Nguồn, không đi vào file
                "Gợi ý": (f"Phương án khác: {alternatives}" if alternatives else
                          ("" if proposal else "⚠ Không có ứng viên, hãy ghép tay"))}
         rows.append(row)
