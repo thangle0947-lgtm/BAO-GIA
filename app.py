@@ -238,7 +238,7 @@ def render_preview_html(df, h, f, split=False):
         amount = float(r["SL"] or 0) * price
         cells = [(str(i), "center"), (code, "center"), (name, "left"), (clean(r["Xuất xứ"]), "center"),
                  (clean(r["ĐVT"]) or "Cái", "center"), (f"{float(r['SL'] or 0):,.2f}", "center"),
-                 (_money(price), "center"), (_money(amount), "center"), (clean(r["Ghi chú"]), "left")]
+                 (_money(price), "center"), (_money(amount), "center"), ("" if _is_internal_note(clean(r["Ghi chú"])) else clean(r["Ghi chú"]), "left")]
         tds = "".join(f"<td style='{cell_style}{bg}text-align:{al}'>{esc(txt)}</td>" for txt, al in cells)
         rows.append(f"<tr>{tds}</tr>")
     th = "border:1px solid #6b5a22;padding:6px;background:#2a2412;color:#C9A227;font-weight:700;"
@@ -273,7 +273,7 @@ def render_preview_html(df, h, f, split=False):
     return head + table + totals + foot
 
 
-def clean_xlsx_for_excel(data: bytes) -> bytes:
+def clean_xlsx_for_excel(data: bytes, cached: dict = None) -> bytes:
     """Gỡ các phần tàn dư của mẫu (lọc tự động, chế độ xem tùy chỉnh, vùng in cũ) để Excel không báo lỗi sửa file."""
     import re as _re
     import zipfile as _zf
@@ -293,6 +293,10 @@ def clean_xlsx_for_excel(data: bytes) -> bytes:
                 text = _re.sub(r"<customSheetViews>.*?</customSheetViews>", "", text, flags=_re.S)
                 text = _re.sub(r"<autoFilter\b[^>]*/>", "", text)
                 text = _re.sub(r"<autoFilter\b[^>]*>.*?</autoFilter>", "", text, flags=_re.S)
+                # Ghi sẵn kết quả công thức: điện thoại / Zalo / iOS Quick Look không tự tính nên sẽ trống nếu thiếu
+                for coord, val in (cached or {}).items():
+                    text = _re.sub(r'(<c r="%s"[^>]*>\s*<f>[^<]*</f>)\s*(?:<v\s*/>|<v></v>)' % coord,
+                                   lambda m, v=val: f"{m.group(1)}<v>{v!r}</v>", text)
                 content = text.encode("utf-8")
             dst.writestr(item, content)
     return out.getvalue()
@@ -533,7 +537,7 @@ def build_quote_pdf(df, h, f, customer: bool = False) -> bytes:
                      Paragraph(clean(r["Xuất xứ"]), body), Paragraph(clean(r["ĐVT"]) or "Cái", body),
                      Paragraph(f"{float(r['SL'] or 0):,.2f}", body),
                      Paragraph(_money(price), body), Paragraph(_money(amount), body),
-                     Paragraph(clean(r["Ghi chú"]), small)])
+                     Paragraph("" if _is_internal_note(clean(r["Ghi chú"])) else clean(r["Ghi chú"]), small)])
     widths = [9, 22, 36, 21, 10, 18, 20, 26, 18]  # tổng 180 mm = khổ A4 trừ lề
     tbl = Table(data, colWidths=[w * mm for w in widths], repeatRows=1)
     st_list = [("GRID", (0, 0), (-1, -1), 0.4, colors.HexColor("#9C7A12")),
@@ -605,6 +609,12 @@ def apply_item(df, idx, it):
     df.at[idx, "Đơn giá (VND)"] = it["don_gia"]
     df.at[idx, "Nguồn"] = "Chọn tay"
     df.at[idx, "Duyệt"] = True
+
+
+def _is_internal_note(t: str) -> bool:
+    """Ghi chú nội bộ do AI sinh (không được đi vào file gửi khách)."""
+    k = t.lower()
+    return any(p in k for p in ("đã ghép tay", "độ khớp", "claude đề xuất", "đã học", "đã duyệt", "lần trước đây"))
 
 
 def build_excel(data: pd.DataFrame, hdr: dict, ftr: dict, customer: bool = False) -> bytes:
@@ -712,6 +722,7 @@ def build_excel(data: pd.DataFrame, hdr: dict, ftr: dict, customer: bool = False
 
     # 4) Ghi hàng hóa (nền vùng hàng hóa về trắng như mẫu; chỉ tô vàng dòng cần soát ở bản nội bộ)
     flag_fill = PatternFill("solid", fgColor="FFF2A8")
+    cached = {}
     for r in range(start_row, start_row + n):
         ws.row_dimensions[r].fill = PatternFill(fill_type=None)
         for c in range(1, 10):
@@ -722,8 +733,9 @@ def build_excel(data: pd.DataFrame, hdr: dict, ftr: dict, customer: bool = False
         price = float(r["Đơn giá (VND)"] or 0)
         name = clean(r["Diễn giải"]) if code else (clean(r["BOQ gốc"]) or clean(r["Diễn giải"]))
         notes = []
-        if clean(r["Ghi chú"]):
+        if clean(r["Ghi chú"]) and not _is_internal_note(clean(r["Ghi chú"])):
             notes.append(clean(r["Ghi chú"]))
+        cached[f"H{rr}"] = float(r["SL"] or 0) * price
         safe_write(rr, 1, i + 1)
         safe_write(rr, 2, code)
         safe_write(rr, 3, name)
@@ -740,6 +752,8 @@ def build_excel(data: pd.DataFrame, hdr: dict, ftr: dict, customer: bool = False
     # 5) Công thức Cộng, Thuế, Tổng cộng: viết lại theo vị trí mới
     cong = start_row + n
     safe_write(cong, 8, f"=SUM(H{start_row}:H{cong - 1})")
+    _sum = sum(v for v in cached.values())
+    cached[f"H{cong}"] = _sum
     thue = find_row(["thue"], cong + 1, cong + 3)
     tong = find_row(["tong cong"], cong + 1, cong + 6)
     if thue is not None:
@@ -749,8 +763,14 @@ def build_excel(data: pd.DataFrame, hdr: dict, ftr: dict, customer: bool = False
         else:
             safe_write(thue, 4, 0.08)
             safe_write(thue, 8, f"=H{cong}*D{thue}")
+    _vat = 0.0
+    if thue is not None:
+        _rate = ws.cell(row=thue, column=4).value
+        _vat = _sum * (_rate if isinstance(_rate, (int, float)) else 0.08)
+        cached[f"H{thue}"] = _vat
     if tong is not None:
         safe_write(tong, 8, f"=H{cong}+H{thue}" if thue is not None else f"=H{cong}")
+        cached[f"H{tong}"] = _sum + _vat
 
     # 6) Điều khoản dưới bảng
     footer_start = (tong or cong) + 1
@@ -816,7 +836,7 @@ def build_excel(data: pd.DataFrame, hdr: dict, ftr: dict, customer: bool = False
     buf = BytesIO()
     wb.save(buf)
     fixed = restore_template_drawing(buf.getvalue(), TEMPLATE_PATH, ws.title)
-    return clean_xlsx_for_excel(fixed)
+    return clean_xlsx_for_excel(fixed, cached)
 
 
 # --- CHỌN THIẾT BỊ: máy tính (giao diện cũ) hoặc điện thoại (giao diện tối ưu) ---
