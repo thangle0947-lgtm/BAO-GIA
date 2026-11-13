@@ -454,8 +454,16 @@ def xlsx_to_pdf(xlsx_bytes: bytes):
         src = os.path.join(tmp, "baogia.xlsx")
         with open(src, "wb") as fh:
             fh.write(xlsx_bytes)
-        subprocess.run([exe, "--headless", "--convert-to", "pdf", "--outdir", tmp, src],
-                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=180, check=False)
+        # Hồ sơ riêng + HOME ghi được: bắt buộc khi chạy trên server (Streamlit Cloud/Linux)
+        profile = "file://" + os.path.join(tmp, "lo_profile").replace("\\", "/")
+        env = dict(os.environ, HOME=tmp)
+        try:
+            subprocess.run([exe, f"-env:UserInstallation={profile}", "--headless", "--norestore",
+                            "--convert-to", "pdf", "--outdir", tmp, src],
+                           stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=180,
+                           check=False, env=env)
+        except (subprocess.TimeoutExpired, OSError):
+            return None
         out = os.path.join(tmp, "baogia.pdf")
         if not os.path.exists(out):
             return None
@@ -1202,8 +1210,8 @@ if st.session_state.df_editable is not None:
                             pdf_bytes = build_quote_pdf(df, hdr_vals, ftr_vals, customer=cust_mode)
                         st.session_state["out_pdf"] = pdf_bytes
                         st.session_state["out_pdf_sig"] = st.session_state["out_xlsx_sig"]
-                except ImportError:
-                    st.error("Chưa cài thư viện PDF. Mở cmd và chạy: py -m pip install reportlab")
+                except ImportError as e:
+                    st.error(f"Thiếu thư viện PDF ({e}). Kiểm tra requirements.txt có reportlab và pillow.")
                 except Exception as e:
                     st.error(f"Lỗi chuyển PDF: {e}")
             if st.session_state.get("out_pdf") and st.session_state.get("out_pdf_sig") == sig:
