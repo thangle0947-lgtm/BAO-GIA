@@ -1165,13 +1165,16 @@ if st.session_state.df_editable is not None:
     base_name = st.text_input("Tên file (không kèm đuôi):",
                               value=f"BaoGia_TSC_{datetime.now().strftime('%Y%m%d')}", key="out_base")
     sig = int(pd.util.hash_pandas_object(df, index=False).sum()) + hash((hdr_vals.get("no"), ftr_vals.get("note"), cust_mode))
+    st.caption("Cách làm: ① bấm XUẤT EXCEL  ②  tải Excel, hoặc bấm CHUYỂN SANG PDF để đổi chính file Excel đó thành PDF rồi tải.")
     c_xl, c_pdf = st.columns(2)
     with c_xl:
-        if st.button("📊 XUẤT EXCEL (.xlsx)", use_container_width=True, key="btn_xl"):
+        if st.button("📊 ① XUẤT EXCEL (.xlsx)", use_container_width=True, key="btn_xl"):
             try:
                 with st.spinner("Đang ghi vào mẫu Excel..."):
                     st.session_state["out_xlsx"] = build_excel(df, hdr_vals, ftr_vals, customer=cust_mode)
                     st.session_state["out_xlsx_sig"] = sig
+                    st.session_state["out_pdf"] = None       # Excel mới thì PDF cũ không còn đúng
+                    st.session_state["out_pdf_sig"] = None
                 store.record_quote_prices(audit_rows)
             except Exception as e:
                 st.error(f"Lỗi xuất Excel: {e}")
@@ -1183,24 +1186,27 @@ if st.session_state.df_editable is not None:
                                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                                use_container_width=True, key="dl_xl")
     with c_pdf:
-        if st.button("📄 XUẤT PDF", use_container_width=True, key="btn_pdf"):
-            try:
-                with st.spinner("Đang tạo PDF đúng mẫu..."):
-                    pdf_bytes = xlsx_to_pdf(build_excel(df, hdr_vals, ftr_vals, customer=cust_mode))
-                    if pdf_bytes is None:
-                        st.warning("Chưa tìm thấy LibreOffice nên PDF này là bản đơn giản, chưa đúng mẫu. "
-                                   "Cài LibreOffice (miễn phí) để xuất PDF đúng mẫu.")
-                        pdf_bytes = build_quote_pdf(df, hdr_vals, ftr_vals, customer=cust_mode)
-                    st.session_state["out_pdf"] = pdf_bytes
-                    st.session_state["out_pdf_sig"] = sig
-                store.record_quote_prices(audit_rows)
-            except ImportError:
-                st.error("Chưa cài thư viện PDF. Mở cmd và chạy: py -m pip install reportlab")
-            except Exception as e:
-                st.error(f"Lỗi xuất PDF: {e}")
-        if st.session_state.get("out_pdf") and st.session_state.get("out_pdf_sig") != sig:
-            st.caption("⚠️ Dữ liệu đã thay đổi sau khi tạo file. Bấm lại 'XUẤT PDF' để cập nhật.")
-        elif st.session_state.get("out_pdf"):
-            st.download_button("⬇️ TẢI FILE PDF", data=st.session_state["out_pdf"],
-                               file_name=f"{base_name}.pdf", mime="application/pdf",
-                               use_container_width=True, key="dl_pdf")
+        excel_ready = bool(st.session_state.get("out_xlsx")) and st.session_state.get("out_xlsx_sig") == sig
+        if not excel_ready:
+            st.button("📄 ② CHUYỂN SANG PDF", use_container_width=True, key="btn_pdf", disabled=True,
+                      help="Hãy xuất Excel trước.")
+            st.caption("Xuất Excel trước, sau đó mới chuyển sang PDF được.")
+        else:
+            if st.button("📄 ② CHUYỂN EXCEL SANG PDF", use_container_width=True, key="btn_pdf"):
+                try:
+                    with st.spinner("Đang chuyển file Excel sang PDF..."):
+                        pdf_bytes = xlsx_to_pdf(st.session_state["out_xlsx"])
+                        if pdf_bytes is None:
+                            st.warning("Chưa tìm thấy LibreOffice nên PDF này là bản đơn giản, chưa đúng mẫu. "
+                                       "Cài LibreOffice (miễn phí) để chuyển PDF đúng như file Excel.")
+                            pdf_bytes = build_quote_pdf(df, hdr_vals, ftr_vals, customer=cust_mode)
+                        st.session_state["out_pdf"] = pdf_bytes
+                        st.session_state["out_pdf_sig"] = st.session_state["out_xlsx_sig"]
+                except ImportError:
+                    st.error("Chưa cài thư viện PDF. Mở cmd và chạy: py -m pip install reportlab")
+                except Exception as e:
+                    st.error(f"Lỗi chuyển PDF: {e}")
+            if st.session_state.get("out_pdf") and st.session_state.get("out_pdf_sig") == sig:
+                st.download_button("⬇️ TẢI FILE PDF", data=st.session_state["out_pdf"],
+                                   file_name=f"{base_name}.pdf", mime="application/pdf",
+                                   use_container_width=True, key="dl_pdf")
