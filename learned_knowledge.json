@@ -8,6 +8,1875 @@
       "don_gia": 0.0,
       "count": 1,
       "updated": "2026-11-10T12:30:05"
+    },
+    "van báo động 1 chiều dn100 van báo động 1 chiều dn100": {
+      "ma": "ZSFZ 100-1.6",
+      "ten": "Van báo động DN100",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 13500000.0,
+      "count": 1,
+      "updated": "2026-11-11T11:32:04"
+    },
+    "van báo động 1 chiều dn150 van báo động 1 chiều dn150": {
+      "ma": "ZSFZ 150-1.6",
+      "ten": "Van báo động DN150",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 14148000.0,
+      "count": 1,
+      "updated": "2026-11-11T11:32:04"
+    },
+    "van báo động 1 chiều dn200 van báo động 1 chiều dn200": {
+      "ma": "ZSFZ 200-1.6",
+      "ten": "Van báo động DN200",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 19765000.0,
+      "count": 1,
+      "updated": "2026-11-11T11:32:04"
+    },
+    "van deluge dn100 van deluge dn100": {
+      "ma": "ZSFM 100-1.6",
+      "ten": "Van tràn ngập DN100",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 21816000.0,
+      "count": 1,
+      "updated": "2026-11-11T12:03:05"
+    },
+    "van deluge dn200 van deluge dn200": {
+      "ma": "ZSFM 200-1.6",
+      "ten": "Van tràn ngập DN200",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 36396000.0,
+      "count": 1,
+      "updated": "2026-11-11T12:03:53"
+    },
+    "van cổng os&y dn100 van cổng os&y dn100": {
+      "ma": "ZSZF4-Q-100-16-M",
+      "ten": "Van Cổng OS&Y DN100",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 3247000.0,
+      "count": 1,
+      "updated": "2026-11-11T11:32:04"
+    },
+    "van cổng os&y dn150 van cổng os&y dn150": {
+      "ma": "ZSZF4-Q-150-16-M",
+      "ten": "Van Cổng OS&Y DN150",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 5191000.0,
+      "count": 1,
+      "updated": "2026-11-11T11:32:04"
+    },
+    "van bướm kèm công tắc giám sát dn65 van bướm kèm công tắc giám sát dn65": {
+      "ma": "ZSXZF4-Q-65-16-A",
+      "ten": "Van cổng NRS DN65 kèm công tắc giám sát",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 2079000.0,
+      "count": 1,
+      "updated": "2026-11-11T11:32:04"
+    },
+    "van cổng os&y dn200 van cổng os&y dn200": {
+      "ma": "ZSZF4-Q-200-16-M",
+      "ten": "Van Cổng OS&Y DN200",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 8181000.0,
+      "count": 1,
+      "updated": "2026-11-11T11:32:04"
+    },
+    "van cổng os&y dn250 van cổng os&y dn250": {
+      "ma": "ZSZF4-Q-250-16-M",
+      "ten": "Van Cổng OS&Y DN250",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 12332000.0,
+      "count": 1,
+      "updated": "2026-11-11T11:32:04"
+    },
+    "công tắc giám sát công tắc giám sát": {
+      "ma": "ZSXZF4-Q-50-16-A",
+      "ten": "Van cổng NRS DN50 kèm công tắc giám sát",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1883000.0,
+      "count": 1,
+      "updated": "2026-11-11T11:32:04"
+    },
+    "van deluge dn150 van deluge dn150": {
+      "ma": "ZSFM 150-1.6",
+      "ten": "Van tràn ngập DN150",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 24948000.0,
+      "count": 1,
+      "updated": "2026-11-11T12:08:22"
+    },
+    "van 1 chiều dn100 van 1 chiều dn100": {
+      "ma": "H44X-16Q",
+      "ten": "Van 1 chiều DN100",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 2336000.0,
+      "count": 2,
+      "updated": "2026-11-11T12:07:38"
+    },
+    "van 1 chiều dn150 van 1 chiều dn150": {
+      "ma": "H44X-16Q",
+      "ten": "Van 1 chiều DN150",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 4286000.0,
+      "count": 1,
+      "updated": "2026-11-11T12:07:38"
+    },
+    "van 1 chiều dn200 van 1 chiều dn200": {
+      "ma": "H44X-16Q",
+      "ten": "Van 1 chiều DN200",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 7337000.0,
+      "count": 1,
+      "updated": "2026-11-11T12:07:38"
+    },
+    "van 1 chiều dn250 van 1 chiều dn250": {
+      "ma": "H44X-16Q",
+      "ten": "Van 1 chiều DN250",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 11624000.0,
+      "count": 1,
+      "updated": "2026-11-11T12:07:38"
+    },
+    "công tắc dòng chảy dn100 công tắc dòng chảy dn100": {
+      "ma": "ZSJZ",
+      "ten": "Công tắc dòng chảy DN100",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1050000.0,
+      "count": 1,
+      "updated": "2026-11-11T12:07:38"
+    },
+    "công tắc dòng chảy dn150 công tắc dòng chảy dn150": {
+      "ma": "ZSJZ",
+      "ten": "Công tắc dòng chảy DN150",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1050000.0,
+      "count": 1,
+      "updated": "2026-11-11T12:07:38"
+    },
+    "van bướm dn100 van bướm dn100": {
+      "ma": "D71X-16Q",
+      "ten": "Van bướm DN100",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1364000.0,
+      "count": 1,
+      "updated": "2026-11-11T12:07:38"
+    },
+    "van bướm dn150 van bướm dn150": {
+      "ma": "D71X-16Q",
+      "ten": "Van bướm DN150",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 3314000.0,
+      "count": 1,
+      "updated": "2026-11-11T12:07:38"
+    },
+    "van giảm áp dn100 van giảm áp dn100": {
+      "ma": "200X-16Q",
+      "ten": "Van Giảm Áp DN100",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 9072000.0,
+      "count": 2,
+      "updated": "2026-11-11T12:09:19"
+    },
+    "van giảm áp dn150 van giảm áp dn150": {
+      "ma": "200X-16Q",
+      "ten": "Van Giảm Áp DN150",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 13068000.0,
+      "count": 2,
+      "updated": "2026-11-11T12:09:19"
+    },
+    "van giảm áp dn200 van giảm áp dn200": {
+      "ma": "200X-16Q",
+      "ten": "Van Giảm Áp DN200",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 22140000.0,
+      "count": 2,
+      "updated": "2026-11-11T12:09:19"
+    },
+    "đầu phun sprinkler hướng lên, loại phản ứng nhanh k = 11.2, t = 68°c": {
+      "ma": "K-ZSTZ 161-68°C Q3",
+      "ten": "Đầu phun chữa cháy hướng lên phản ứng nhanh, K=11.2, DN20, 68°C",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu người dùng"
+    },
+    "upright sprinkler, quick response k = 11.2, t = 68°c": {
+      "ma": "K-ZSTZ 161-68°C Q3",
+      "ten": "Đầu phun chữa cháy hướng lên phản ứng nhanh, K=11.2, DN20, 68°C",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu người dùng"
+    },
+    "đầu phun sprinkler hướng lên, loại phản ứng nhanh k = 11.2, t = 68°c upright sprinkler, quick response k = 11.2, t = 68°c": {
+      "ma": "K-ZSTZ 161-68°C Q3",
+      "ten": "Đầu phun chữa cháy hướng lên phản ứng nhanh, K=11.2, DN20, 68°C",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu người dùng"
+    },
+    "đầu phun hướng lên dưới ống gió và dầm k = 11.2, t = 68°c, quick response": {
+      "ma": "K-ZSTZ 161-68°C Q3",
+      "ten": "Đầu phun chữa cháy hướng lên phản ứng nhanh, K=11.2, DN20, 68°C",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu người dùng"
+    },
+    "upright under duct and beam sprinkler k = 11.2,t = 68°c, quick response": {
+      "ma": "K-ZSTZ 161-68°C Q3",
+      "ten": "Đầu phun chữa cháy hướng lên phản ứng nhanh, K=11.2, DN20, 68°C",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu người dùng"
+    },
+    "đầu phun hướng lên dưới ống gió và dầm k = 11.2, t = 68°c, quick response upright under duct and beam sprinkler k = 11.2,t = 68°c, quick response": {
+      "ma": "K-ZSTZ 161-68°C Q3",
+      "ten": "Đầu phun chữa cháy hướng lên phản ứng nhanh, K=11.2, DN20, 68°C",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu người dùng"
+    },
+    "đầu phun sprinkler hướng lên, loại tiêu chuẩn k = 5.6, t = 68°c": {
+      "ma": "T-ZSTZ 80-68°C Q5",
+      "ten": "Đầu phun chữa cháy hướng lên phản ứng tiêu chuẩn, K=5.6, DN15, 68°C",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu người dùng"
+    },
+    "upright sprinkler, standard k = 5.6, t = 68°c": {
+      "ma": "T-ZSTZ 80-68°C Q5",
+      "ten": "Đầu phun chữa cháy hướng lên phản ứng tiêu chuẩn, K=5.6, DN15, 68°C",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu người dùng"
+    },
+    "đầu phun sprinkler hướng lên, loại tiêu chuẩn k = 5.6, t = 68°c upright sprinkler, standard k = 5.6, t = 68°c": {
+      "ma": "T-ZSTZ 80-68°C Q5",
+      "ten": "Đầu phun chữa cháy hướng lên phản ứng tiêu chuẩn, K=5.6, DN15, 68°C",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu người dùng"
+    },
+    "đầu phun sprinkler hướng xuống, loại tiêu chuẩn k = 5.6, t = 68°c": {
+      "ma": "T-ZSTX 80-68°C Q5",
+      "ten": "Đầu phun chữa cháy xuống lên phản ứng tiêu chuẩn, K=5.6, DN15, 68°C",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu người dùng"
+    },
+    "pendant sprinkler, standard k = 5.6, t = 68°c": {
+      "ma": "T-ZSTX 80-68°C Q5",
+      "ten": "Đầu phun chữa cháy xuống lên phản ứng tiêu chuẩn, K=5.6, DN15, 68°C",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu người dùng"
+    },
+    "đầu phun sprinkler hướng xuống, loại tiêu chuẩn k = 5.6, t = 68°c pendant sprinkler, standard k = 5.6, t = 68°c": {
+      "ma": "T-ZSTX 80-68°C Q5",
+      "ten": "Đầu phun chữa cháy xuống lên phản ứng tiêu chuẩn, K=5.6, DN15, 68°C",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu người dùng"
+    },
+    "rọ hút dn50": {
+      "ma": "H42X-16Q",
+      "ten": "Rọ hút  DN50",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1188000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "foot valve dn50": {
+      "ma": "H42X-16Q",
+      "ten": "Rọ hút  DN50",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1188000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "rọ hút dn50 foot valve dn50": {
+      "ma": "H42X-16Q",
+      "ten": "Rọ hút  DN50",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1188000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "rọ hút dn250": {
+      "ma": "H42X-16Q",
+      "ten": "Rọ hút  DN250",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 8964000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "foot valve dn250": {
+      "ma": "H42X-16Q",
+      "ten": "Rọ hút  DN250",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 8964000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "rọ hút dn250 foot valve dn250": {
+      "ma": "H42X-16Q",
+      "ten": "Rọ hút  DN250",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 8964000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "công tắc áp suất": {
+      "ma": "YLKG",
+      "ten": "Công tắc áp suất",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1450000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "pressure switch": {
+      "ma": "YLKG",
+      "ten": "Công tắc áp suất",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1450000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "công tắc áp suất pressure switch": {
+      "ma": "YLKG",
+      "ten": "Công tắc áp suất",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1450000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "khớp nối mềm dn50": {
+      "ma": "KXT",
+      "ten": "Khớp nối mềm DN50",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 400000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "flexible joint dn50": {
+      "ma": "KXT",
+      "ten": "Khớp nối mềm DN50",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 400000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "khớp nối mềm dn50 flexible joint dn50": {
+      "ma": "KXT",
+      "ten": "Khớp nối mềm DN50",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 400000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "khớp nối mềm dn250": {
+      "ma": "KXT",
+      "ten": "Khớp nối mềm DN250",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 2500000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "flexible joint dn250": {
+      "ma": "KXT",
+      "ten": "Khớp nối mềm DN250",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 2500000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "khớp nối mềm dn250 flexible joint dn250": {
+      "ma": "KXT",
+      "ten": "Khớp nối mềm DN250",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 2500000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "van 1 chiều dn15": {
+      "ma": "H14W-16T",
+      "ten": "Van 1 chiều DN15",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 178000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "check valve dn15": {
+      "ma": "H14W-16T",
+      "ten": "Van 1 chiều DN15",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 178000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "van 1 chiều dn15 check valve dn15": {
+      "ma": "H14W-16T",
+      "ten": "Van 1 chiều DN15",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 178000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "van 1 chiều dn50": {
+      "ma": "H44X-16Q",
+      "ten": "Van 1 chiều DN50",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1168000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "check valve dn50": {
+      "ma": "H44X-16Q",
+      "ten": "Van 1 chiều DN50",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1168000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "van 1 chiều dn50 check valve dn50": {
+      "ma": "H44X-16Q",
+      "ten": "Van 1 chiều DN50",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1168000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "van 1 chiều dn250": {
+      "ma": "H44X-16Q",
+      "ten": "Van 1 chiều DN250",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 11624000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "check valve dn250": {
+      "ma": "H44X-16Q",
+      "ten": "Van 1 chiều DN250",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 11624000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "van 1 chiều dn250 check valve dn250": {
+      "ma": "H44X-16Q",
+      "ten": "Van 1 chiều DN250",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 11624000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "van phao dn80": {
+      "ma": "100X-16Q",
+      "ten": "Van Phao DN80",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "float valve dn80": {
+      "ma": "100X-16Q",
+      "ten": "Van Phao DN80",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "van phao dn80 float valve dn80": {
+      "ma": "100X-16Q",
+      "ten": "Van Phao DN80",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "van bướm tay gạt dn50": {
+      "ma": "D71X-16Q",
+      "ten": "Van bướm DN50",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 716000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "butterfly valve with lever handle dn50": {
+      "ma": "D71X-16Q",
+      "ten": "Van bướm DN50",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 716000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "van bướm tay gạt dn50 butterfly valve with lever handle dn50": {
+      "ma": "D71X-16Q",
+      "ten": "Van bướm DN50",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 716000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "van bướm dn80": {
+      "ma": "D71X-16Q",
+      "ten": "Van bướm DN80",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 979000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "butterfly valve dn80": {
+      "ma": "D71X-16Q",
+      "ten": "Van bướm DN80",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 979000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "van bướm dn80 butterfly valve dn80": {
+      "ma": "D71X-16Q",
+      "ten": "Van bướm DN80",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 979000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "van cổng dn15": {
+      "ma": "Z15W-16T",
+      "ten": "Van cổng DN15",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 178000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "gate valve dn15": {
+      "ma": "Z15W-16T",
+      "ten": "Van cổng DN15",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 178000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "van cổng dn15 gate valve dn15": {
+      "ma": "Z15W-16T",
+      "ten": "Van cổng DN15",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 178000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "van cổng dn100": {
+      "ma": "ZSZF4-Q-100-16-M",
+      "ten": "Van Cổng OS&Y DN100",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 3247000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "gate valve dn100": {
+      "ma": "ZSZF4-Q-100-16-M",
+      "ten": "Van Cổng OS&Y DN100",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 3247000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "van cổng dn100 gate valve dn100": {
+      "ma": "ZSZF4-Q-100-16-M",
+      "ten": "Van Cổng OS&Y DN100",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 3247000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "van bướm kèm công tắc giám sát dn50": {
+      "ma": "ZSXDF7-Q-50-16C",
+      "ten": "Van bướm tín hiệu DN50",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1364000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "butterfly valve with supervisor switch dn50": {
+      "ma": "ZSXDF7-Q-50-16C",
+      "ten": "Van bướm tín hiệu DN50",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1364000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "van bướm kèm công tắc giám sát dn50 butterfly valve with supervisor switch dn50": {
+      "ma": "ZSXDF7-Q-50-16C",
+      "ten": "Van bướm tín hiệu DN50",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1364000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "van bướm kèm công tắc giám sát dn250": {
+      "ma": "ZSXDF7-Q-250-16C",
+      "ten": "Van bướm tín hiệu DN250",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 5846000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "butterfly valve with supervisor switch dn250": {
+      "ma": "ZSXDF7-Q-250-16C",
+      "ten": "Van bướm tín hiệu DN250",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 5846000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "van bướm kèm công tắc giám sát dn250 butterfly valve with supervisor switch dn250": {
+      "ma": "ZSXDF7-Q-250-16C",
+      "ten": "Van bướm tín hiệu DN250",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 5846000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "công tắc dòng chảy dn150": {
+      "ma": "ZSJZ",
+      "ten": "Công tắc dòng chảy DN150",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1050000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "flow switch dn150": {
+      "ma": "ZSJZ",
+      "ten": "Công tắc dòng chảy DN150",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1050000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "công tắc dòng chảy dn150 flow switch dn150": {
+      "ma": "ZSJZ",
+      "ten": "Công tắc dòng chảy DN150",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1050000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "van cổng kèm công tắc giám sát dn200": {
+      "ma": "ZSZF4-Q-200-16-M + OYSS - 1",
+      "ten": "Van Cổng OS&Y  Kèm Giám Sát DN200",
+      "xuat_xu": "Jilong + APC/China",
+      "dvt": "Cái",
+      "don_gia": 9831000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "gate valve with supervisor switch dn200": {
+      "ma": "ZSZF4-Q-200-16-M + OYSS - 1",
+      "ten": "Van Cổng OS&Y  Kèm Giám Sát DN200",
+      "xuat_xu": "Jilong + APC/China",
+      "dvt": "Cái",
+      "don_gia": 9831000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "van cổng kèm công tắc giám sát dn200 gate valve with supervisor switch dn200": {
+      "ma": "ZSZF4-Q-200-16-M + OYSS - 1",
+      "ten": "Van Cổng OS&Y  Kèm Giám Sát DN200",
+      "xuat_xu": "Jilong + APC/China",
+      "dvt": "Cái",
+      "don_gia": 9831000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "van an toàn dn200": {
+      "ma": "500X-16Q",
+      "ten": "Van an toàn DN200",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 23004000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "relief valve dn200": {
+      "ma": "500X-16Q",
+      "ten": "Van an toàn DN200",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 23004000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "van an toàn dn200 relief valve dn200": {
+      "ma": "500X-16Q",
+      "ten": "Van an toàn DN200",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 23004000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "van cổng dn150": {
+      "ma": "ZSZF4-Q-150-16-M",
+      "ten": "Van Cổng OS&Y DN150",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 5191000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "gate valve dn150": {
+      "ma": "ZSZF4-Q-150-16-M",
+      "ten": "Van Cổng OS&Y DN150",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 5191000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "van cổng dn150 gate valve dn150": {
+      "ma": "ZSZF4-Q-150-16-M",
+      "ten": "Van Cổng OS&Y DN150",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 5191000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "van cổng dn250": {
+      "ma": "ZSZF4-Q-250-16-M",
+      "ten": "Van Cổng OS&Y DN250",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 12332000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "gate valve dn250": {
+      "ma": "ZSZF4-Q-250-16-M",
+      "ten": "Van Cổng OS&Y DN250",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 12332000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "van cổng dn250 gate valve dn250": {
+      "ma": "ZSZF4-Q-250-16-M",
+      "ten": "Van Cổng OS&Y DN250",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 12332000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "van bướm dn150": {
+      "ma": "D71X-16Q",
+      "ten": "Van bướm DN150",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 3314000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "butterfly valve dn150": {
+      "ma": "D71X-16Q",
+      "ten": "Van bướm DN150",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 3314000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "van bướm dn150 butterfly valve dn150": {
+      "ma": "D71X-16Q",
+      "ten": "Van bướm DN150",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 3314000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "van 1 chiều dn65": {
+      "ma": "H44X-16Q",
+      "ten": "Van 1 chiều DN65",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1499000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "check valve dn65": {
+      "ma": "H44X-16Q",
+      "ten": "Van 1 chiều DN65",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1499000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "van 1 chiều dn65 check valve dn65": {
+      "ma": "H44X-16Q",
+      "ten": "Van 1 chiều DN65",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1499000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "van bướm dn65": {
+      "ma": "D71X-16Q",
+      "ten": "Van bướm DN65",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 810000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "butterfly valve dn65": {
+      "ma": "D71X-16Q",
+      "ten": "Van bướm DN65",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 810000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "van bướm dn65 butterfly valve dn65": {
+      "ma": "D71X-16Q",
+      "ten": "Van bướm DN65",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 810000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "khớp nối mềm dn150": {
+      "ma": "KXT",
+      "ten": "Khớp nối mềm DN150",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1250000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "flexible joint dn150": {
+      "ma": "KXT",
+      "ten": "Khớp nối mềm DN150",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1250000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "khớp nối mềm dn150 flexible joint dn150": {
+      "ma": "KXT",
+      "ten": "Khớp nối mềm DN150",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1250000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "van cổng kèm công tắc giám sát dn150": {
+      "ma": "ZSZF4-Q-150-16-M + OYSS - 1",
+      "ten": "Van Cổng OS&Y Kèm Giám Sát  DN150",
+      "xuat_xu": "Jilong + APC/China",
+      "dvt": "Cái",
+      "don_gia": 6841000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "gate valve with supervisor switch dn150": {
+      "ma": "ZSZF4-Q-150-16-M + OYSS - 1",
+      "ten": "Van Cổng OS&Y Kèm Giám Sát  DN150",
+      "xuat_xu": "Jilong + APC/China",
+      "dvt": "Cái",
+      "don_gia": 6841000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "van cổng kèm công tắc giám sát dn150 gate valve with supervisor switch dn150": {
+      "ma": "ZSZF4-Q-150-16-M + OYSS - 1",
+      "ten": "Van Cổng OS&Y Kèm Giám Sát  DN150",
+      "xuat_xu": "Jilong + APC/China",
+      "dvt": "Cái",
+      "don_gia": 6841000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "van báo động 1 chiều dn150": {
+      "ma": "ZSFZ 150-1.6",
+      "ten": "Van báo động DN150",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 14148000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "alarm check valve dn150": {
+      "ma": "ZSFZ 150-1.6",
+      "ten": "Van báo động DN150",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 14148000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "van báo động 1 chiều dn150 alarm check valve dn150": {
+      "ma": "ZSFZ 150-1.6",
+      "ten": "Van báo động DN150",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 14148000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "công tắc dòng chảy dn100": {
+      "ma": "ZSJZ",
+      "ten": "Công tắc dòng chảy DN100",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1050000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "flow switch dn100": {
+      "ma": "ZSJZ",
+      "ten": "Công tắc dòng chảy DN100",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1050000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "công tắc dòng chảy dn100 flow switch dn100": {
+      "ma": "ZSJZ",
+      "ten": "Công tắc dòng chảy DN100",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1050000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "van báo động 1 chiều dn100": {
+      "ma": "ZSFZ 100-1.6",
+      "ten": "Van báo động DN100",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 13500000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "alarm check valve dn100": {
+      "ma": "ZSFZ 100-1.6",
+      "ten": "Van báo động DN100",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 13500000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "van báo động 1 chiều dn100 alarm check valve dn100": {
+      "ma": "ZSFZ 100-1.6",
+      "ten": "Van báo động DN100",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 13500000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "van cổng kèm công tắc giám sát dn100": {
+      "ma": "ZSZF4-Q-100-16-M + OYSS - 1",
+      "ten": "Van Cổng OS&Y  Kèm Giám Sát DN100",
+      "xuat_xu": "Jilong + APC/China",
+      "dvt": "Cái",
+      "don_gia": 4897000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "gate valve with supervisor switch dn100": {
+      "ma": "ZSZF4-Q-100-16-M + OYSS - 1",
+      "ten": "Van Cổng OS&Y  Kèm Giám Sát DN100",
+      "xuat_xu": "Jilong + APC/China",
+      "dvt": "Cái",
+      "don_gia": 4897000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "van cổng kèm công tắc giám sát dn100 gate valve with supervisor switch dn100": {
+      "ma": "ZSZF4-Q-100-16-M + OYSS - 1",
+      "ten": "Van Cổng OS&Y  Kèm Giám Sát DN100",
+      "xuat_xu": "Jilong + APC/China",
+      "dvt": "Cái",
+      "don_gia": 4897000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "khớp nối mềm dn100": {
+      "ma": "KXT",
+      "ten": "Khớp nối mềm DN100",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 720000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "flexible joint dn100": {
+      "ma": "KXT",
+      "ten": "Khớp nối mềm DN100",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 720000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "khớp nối mềm dn100 flexible joint dn100": {
+      "ma": "KXT",
+      "ten": "Khớp nối mềm DN100",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 720000.0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2"
+    },
+    "đồng hồ đo áp suất kèm van": {
+      "ma": "Y60 + QF11-16T",
+      "ten": "Đồng hồ áp suất kèm van bi",
+      "xuat_xu": "",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2 (bổ sung)"
+    },
+    "pressure gauge with valve": {
+      "ma": "Y60 + QF11-16T",
+      "ten": "Đồng hồ áp suất kèm van bi",
+      "xuat_xu": "",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2 (bổ sung)"
+    },
+    "đồng hồ đo áp suất kèm van pressure gauge with valve": {
+      "ma": "Y60 + QF11-16T",
+      "ten": "Đồng hồ áp suất kèm van bi",
+      "xuat_xu": "",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2 (bổ sung)"
+    },
+    "đồng hồ đo lưu lượng dn200": {
+      "ma": "HXLD",
+      "ten": "Đồng hồ lưu lượng DN200",
+      "xuat_xu": "",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2 (bổ sung)"
+    },
+    "flow meter dn200": {
+      "ma": "HXLD",
+      "ten": "Đồng hồ lưu lượng DN200",
+      "xuat_xu": "",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2 (bổ sung)"
+    },
+    "đồng hồ đo lưu lượng dn200 flow meter dn200": {
+      "ma": "HXLD",
+      "ten": "Đồng hồ lưu lượng DN200",
+      "xuat_xu": "",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2 (bổ sung)"
+    },
+    "van bảo vệ vỏ bơm dn25": {
+      "ma": "PRV",
+      "ten": "Van bảo vệ vỏ bơm DN25",
+      "xuat_xu": "",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2 (bổ sung)"
+    },
+    "casing relief valve dn25": {
+      "ma": "PRV",
+      "ten": "Van bảo vệ vỏ bơm DN25",
+      "xuat_xu": "",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2 (bổ sung)"
+    },
+    "van bảo vệ vỏ bơm dn25 casing relief valve dn25": {
+      "ma": "PRV",
+      "ten": "Van bảo vệ vỏ bơm DN25",
+      "xuat_xu": "",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2 (bổ sung)"
+    },
+    "van xả khí tự động kèm van bi dn25": {
+      "ma": "P11X-16T+ QF11-16T",
+      "ten": "Van xả khí tự động kèm van bi DN25",
+      "xuat_xu": "",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2 (bổ sung)"
+    },
+    "automatic air release valve with ball valve dn25": {
+      "ma": "P11X-16T+ QF11-16T",
+      "ten": "Van xả khí tự động kèm van bi DN25",
+      "xuat_xu": "",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2 (bổ sung)"
+    },
+    "van xả khí tự động kèm van bi dn25 automatic air release valve with ball valve dn25": {
+      "ma": "P11X-16T+ QF11-16T",
+      "ten": "Van xả khí tự động kèm van bi DN25",
+      "xuat_xu": "",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "mẫu khách 2 (bổ sung)"
+    },
+    "luper d76 luper d76": {
+      "ma": "H42X-16Q",
+      "ten": "Rọ hút  DN65",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1296000.0,
+      "count": 1,
+      "updated": "2026-11-13T09:09:10"
+    },
+    "van bướm tay gạt d60mm van bướm tay gạt d60mm": {
+      "ma": "D71X-16Q",
+      "ten": "Van bướm DN50",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 716000.0,
+      "count": 1,
+      "updated": "2026-11-13T09:10:02"
+    },
+    "van bướm tay gạt d90mm van bướm tay gạt d90mm": {
+      "ma": "D71X-16Q",
+      "ten": "Van bướm DN80",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 979000.0,
+      "count": 1,
+      "updated": "2026-11-13T09:10:20"
+    },
+    "khớp nối mềm d90 khớp nối mềm d90": {
+      "ma": "H42X-16Q",
+      "ten": "Rọ hút  DN80",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1944000.0,
+      "count": 1,
+      "updated": "2026-11-13T09:10:41"
+    },
+    "luper d90 luper d90": {
+      "ma": "H42X-16Q",
+      "ten": "Rọ hút  DN80",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1944000.0,
+      "count": 1,
+      "updated": "2026-11-13T09:11:34"
+    },
+    "luppe dn125 luppe dn125": {
+      "ma": "H42X-16Q",
+      "ten": "Rọ hút  DN125",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 2700000.0,
+      "count": 1,
+      "updated": "2026-11-13T09:12:18"
+    },
+    "luppe dn50 luppe dn50": {
+      "ma": "H42X-16Q",
+      "ten": "Rọ hút  DN50",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1188000.0,
+      "count": 1,
+      "updated": "2026-11-13T09:12:53"
+    },
+    "van phao thuỷ lực dn80 van phao thuỷ lực dn80": {
+      "ma": "100X-16Q",
+      "ten": "Van Phao DN80",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0.0,
+      "count": 1,
+      "updated": "2026-11-13T09:24:04"
+    },
+    "lắp đặt đồng hồ đo áp lực lắp đặt đồng hồ đo áp lực": {
+      "ma": "Y60",
+      "ten": "Đồng hồ áp suất",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0.0,
+      "count": 1,
+      "updated": "2026-11-13T09:24:04"
+    },
+    "phao điện dn50 phao điện dn50": {
+      "ma": "100X-16Q",
+      "ten": "Van Phao DN50",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0.0,
+      "count": 1,
+      "updated": "2026-11-13T09:24:04"
+    },
+    "van điện dn50 van điện dn50": {
+      "ma": "QF11-16T",
+      "ten": "Van bi DN50",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 979000.0,
+      "count": 1,
+      "updated": "2026-11-13T09:24:04"
+    },
+    "van bi tay gạt dn50 van bi tay gạt dn50": {
+      "ma": "QF11-16T",
+      "ten": "Van bi DN50",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 979000.0,
+      "count": 1,
+      "updated": "2026-11-13T09:24:04"
+    },
+    "van bi tay gạt d32 van bi tay gạt d32": {
+      "ma": "QF11-16T",
+      "ten": "Van bi DN32",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 470000.0,
+      "count": 1,
+      "updated": "2026-11-13T09:24:04"
+    },
+    "van bi tay gạt d25 van bi tay gạt d25": {
+      "ma": "QF11-16T",
+      "ten": "Van bi DN25",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 351000.0,
+      "count": 1,
+      "updated": "2026-11-13T09:24:04"
+    },
+    "van bi tay gạt d21 van bi tay gạt d21": {
+      "ma": "QF11-16T",
+      "ten": "Van bi DN15",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 178000.0,
+      "count": 1,
+      "updated": "2026-11-13T09:24:04"
+    },
+    "van bi tay gạt d40 van bi tay gạt d40": {
+      "ma": "QF11-16T",
+      "ten": "Van bi DN40",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 675000.0,
+      "count": 1,
+      "updated": "2026-11-13T09:24:04"
+    },
+    "y lọc rác d90 y lọc rác d90": {
+      "ma": "GL11W-16T",
+      "ten": "Van Y Lọc DN20",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 250000.0,
+      "count": 1,
+      "updated": "2026-11-13T09:24:04"
+    },
+    "van 1 chiều d90 van 1 chiều d90": {
+      "ma": "H14W-16T",
+      "ten": "Van 1 chiều DN15",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 178000.0,
+      "count": 1,
+      "updated": "2026-11-13T09:24:04"
+    },
+    "van bi dn32 van bi dn32": {
+      "ma": "QF11-16T",
+      "ten": "Van bi DN32",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 470000.0,
+      "count": 1,
+      "updated": "2026-11-13T09:24:04"
+    },
+    "van bi dn40 van bi dn40": {
+      "ma": "QF11-16T",
+      "ten": "Van bi DN40",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 675000.0,
+      "count": 1,
+      "updated": "2026-11-13T09:24:04"
+    },
+    "khớp nối mềm dn40 khớp nối mềm dn40": {
+      "ma": "KXT",
+      "ten": "Khớp nối mềm DN40",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0.0,
+      "count": 1,
+      "updated": "2026-11-13T09:24:04"
+    },
+    "van bi d32 van bi d32": {
+      "ma": "QF11-16T",
+      "ten": "Van bi DN32",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 470000.0,
+      "count": 1,
+      "updated": "2026-11-13T09:24:04"
+    },
+    "khớp nối mềm dn125 khớp nối mềm dn125": {
+      "ma": "KXT",
+      "ten": "Khớp nối mềm DN125",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 980000.0,
+      "count": 1,
+      "updated": "2026-11-13T09:24:05"
+    },
+    "khớp nối mềm dn50 khớp nối mềm dn50": {
+      "ma": "KXT",
+      "ten": "Khớp nối mềm DN50",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 400000.0,
+      "count": 1,
+      "updated": "2026-11-13T09:24:05"
+    },
+    "y lọc dn125 y lọc dn125": {
+      "ma": "GL41H-16Q",
+      "ten": "Van Y lọc DN125",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 2531000.0,
+      "count": 1,
+      "updated": "2026-11-13T09:24:05"
+    },
+    "y lọc dn50 y lọc dn50": {
+      "ma": "GL11W-16T",
+      "ten": "Van Y Lọc DN50",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 979000.0,
+      "count": 1,
+      "updated": "2026-11-13T09:24:05"
+    },
+    "van cổng kèm công tắc giám sát dn125 van cổng kèm công tắc giám sát dn125": {
+      "ma": "ZSXZF4-Q-120-16-A",
+      "ten": "Van cổng NRS DN125 kèm công tắc giám sát",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 3767000.0,
+      "count": 1,
+      "updated": "2026-11-13T09:24:05"
+    },
+    "van cổng dn100 van cổng dn100": {
+      "ma": "ZSZF4-Q-100-16-A",
+      "ten": "Van cổng NRS DN100",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 2599000.0,
+      "count": 1,
+      "updated": "2026-11-13T09:24:05"
+    },
+    "van cổng kèm công tắc giám sát dn50 van cổng kèm công tắc giám sát dn50": {
+      "ma": "ZSXZF4-Q-50-16-A",
+      "ten": "Van cổng NRS DN50 kèm công tắc giám sát",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1883000.0,
+      "count": 1,
+      "updated": "2026-11-13T09:24:05"
+    },
+    "van 1 chiều dn125 van 1 chiều dn125": {
+      "ma": "H44X-16Q",
+      "ten": "Van 1 chiều DN125",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 3119000.0,
+      "count": 1,
+      "updated": "2026-11-13T09:24:05"
+    },
+    "van 1 chiều dn50 van 1 chiều dn50": {
+      "ma": "H14W-16T",
+      "ten": "Van 1 chiều DN50",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 911000.0,
+      "count": 1,
+      "updated": "2026-11-13T09:24:05"
+    },
+    "van bi dn40 - pn16 van bi dn40 - pn16": {
+      "ma": "QF11-16T",
+      "ten": "Van bi DN40",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 675000.0,
+      "count": 1,
+      "updated": "2026-11-13T09:24:05"
+    },
+    "van bi dn25 - pn16 van bi dn25 - pn16": {
+      "ma": "QF11-16T",
+      "ten": "Van bi DN25",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 351000.0,
+      "count": 1,
+      "updated": "2026-11-13T09:24:05"
+    },
+    "công tắc áp suất nước + shipong + van khóa dn15 công tắc áp suất nước + shipong + van khóa dn15": {
+      "ma": "YLKG",
+      "ten": "Công tắc áp suất",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1450000.0,
+      "count": 1,
+      "updated": "2026-11-13T09:24:05"
+    },
+    "đồng hồ đo áp suất nước + shiphong + van khóa dn15 đồng hồ đo áp suất nước + shiphong + van khóa dn15": {
+      "ma": "Y60 + QF11-16T",
+      "ten": "Đồng hồ áp suất kèm van bi",
+      "xuat_xu": "",
+      "dvt": "Cái",
+      "don_gia": 0.0,
+      "count": 1,
+      "updated": "2026-11-13T09:24:05"
+    },
+    "van xả áp an toàn dn100 van xả áp an toàn dn100": {
+      "ma": "500X-16Q",
+      "ten": "Van an toàn DN100",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 9936000.0,
+      "count": 1,
+      "updated": "2026-11-13T09:24:05"
+    },
+    "van xả khí dn20 van xả khí dn20": {
+      "ma": "P11X-16T",
+      "ten": "Van xả khí tự động DN20",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 199000.0,
+      "count": 1,
+      "updated": "2026-11-13T09:24:05"
+    },
+    "van cổng có công tắc giám sát dn125 van cổng có công tắc giám sát dn125": {
+      "ma": "ZSXZF4-Q-120-16-A",
+      "ten": "Van cổng NRS DN125 kèm công tắc giám sát",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 3767000.0,
+      "count": 1,
+      "updated": "2026-11-13T09:24:05"
+    },
+    "van cổng có công tắc giám sát dn100 van cổng có công tắc giám sát dn100": {
+      "ma": "ZSXZF4-Q-100-16-A",
+      "ten": "Van cổng NRS DN100 kèm công tắc giám sát",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 2990000.0,
+      "count": 1,
+      "updated": "2026-11-13T09:24:05"
+    },
+    "van báo động dn125 van báo động dn125": {
+      "ma": "ZSFZ 125-1.6",
+      "ten": "Van báo động DN125",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 13932000.0,
+      "count": 1,
+      "updated": "2026-11-13T09:24:05"
+    },
+    "công tắc dòng chảy dn125 công tắc dòng chảy dn125": {
+      "ma": "ZSJZ",
+      "ten": "Công tắc dòng chảy DN125",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1050000.0,
+      "count": 1,
+      "updated": "2026-11-13T09:24:05"
+    },
+    "van bi tay gạt dn50 - pn16 van bi tay gạt dn50 - pn16": {
+      "ma": "QF11-16T",
+      "ten": "Van bi DN50",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 979000.0,
+      "count": 1,
+      "updated": "2026-11-13T09:24:05"
+    },
+    "van bi dn20 - pn16 van bi dn20 - pn16": {
+      "ma": "QF11-16T",
+      "ten": "Van bi DN20",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 250000.0,
+      "count": 1,
+      "updated": "2026-11-13T09:24:05"
+    },
+    "đồng hồ đo áp suất + shiphong + van khóa dn15 đồng hồ đo áp suất + shiphong + van khóa dn15": {
+      "ma": "Y60 + QF11-16T",
+      "ten": "Đồng hồ áp suất kèm van bi",
+      "xuat_xu": "",
+      "dvt": "Cái",
+      "don_gia": 0.0,
+      "count": 1,
+      "updated": "2026-11-13T09:24:05"
+    },
+    "van cổng dn80 van cổng dn80": {
+      "ma": "ZSZF4-Q-80-16-A",
+      "ten": "Van cổng NRS DN80",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1958000.0,
+      "count": 1,
+      "updated": "2026-11-13T09:24:05"
+    },
+    "van bướm điều khiển điện dn200, on/off 220v, kèm công tắc hành trình": {
+      "ma": "ZSXZF4-Q-200-16-A",
+      "ten": "Van cổng NRS DN200 kèm công tắc giám sát",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 7918000.0,
+      "count": 1,
+      "updated": "2026-11-13T09:31:17"
+    },
+    "van bướm / van bi dn65, pn16": {
+      "ma": "D71X-16Q",
+      "ten": "Van bướm DN65",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 810000.0,
+      "count": 1,
+      "updated": "2026-11-13T09:31:17"
+    },
+    "van một chiều dn200, kiểu wafer, pn16": {
+      "ma": "H44X-16Q",
+      "ten": "Van 1 chiều DN200",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 7337000.0,
+      "count": 1,
+      "updated": "2026-11-13T09:31:17"
+    },
+    "lọc y dn200, pn16, lưới inox 304": {
+      "ma": "GL41H-16Q",
+      "ten": "Van Y lọc DN200",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 5063000.0,
+      "count": 1,
+      "updated": "2026-11-13T09:31:17"
+    },
+    "lọc y dn100, pn16, lưới inox 304": {
+      "ma": "GL41H-16Q",
+      "ten": "Van Y lọc DN100",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1883000.0,
+      "count": 1,
+      "updated": "2026-11-13T09:31:17"
+    },
+    "lọc y dn65, pn16, lưới inox 304": {
+      "ma": "GL41H-16Q",
+      "ten": "Van Y lọc DN65",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1168000.0,
+      "count": 1,
+      "updated": "2026-11-13T09:31:17"
+    },
+    "khớp nối mềm dn200, cao su epdm, pn16, nối bích": {
+      "ma": "KXT",
+      "ten": "Khớp nối mềm DN200",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1800000.0,
+      "count": 1,
+      "updated": "2026-11-13T09:31:17"
+    },
+    "khớp nối mềm dn65 – dn100, cao su epdm, pn16": {
+      "ma": "KXT",
+      "ten": "Khớp nối mềm DN100",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 720000.0,
+      "count": 1,
+      "updated": "2026-11-13T09:31:17"
+    },
+    "đồng hồ áp suất 0–10 bar, mặt d100, kèm van khóa 3 ngã": {
+      "ma": "Y60 + QF11-16T",
+      "ten": "Đồng hồ áp suất kèm van bi",
+      "xuat_xu": "",
+      "dvt": "Cái",
+      "don_gia": 0.0,
+      "count": 1,
+      "updated": "2026-11-13T09:31:17"
+    },
+    "van xả khí tự động dn25 kèm van khóa": {
+      "ma": "P11X-16T+ QF11-16T",
+      "ten": "Van xả khí tự động kèm van bi DN25",
+      "xuat_xu": "",
+      "dvt": "Cái",
+      "don_gia": 0.0,
+      "count": 1,
+      "updated": "2026-11-13T09:31:17"
+    },
+    "công tắc dòng chảy": {
+      "ma": "ZSJZ",
+      "ten": "Công tắc dòng chảy DN50",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 1050000.0,
+      "count": 1,
+      "updated": "2026-11-13T09:31:17"
+    },
+    "đồng hồ đo lưu lượng điện từ dn200": {
+      "ma": "HXLD",
+      "ten": "Đồng hồ lưu lượng DN200",
+      "xuat_xu": "",
+      "dvt": "Cái",
+      "don_gia": 0.0,
+      "count": 1,
+      "updated": "2026-11-13T09:31:17"
+    },
+    "van cân bằng áp suất kho lạnh": {
+      "ma": "Y60 + QF11-16T",
+      "ten": "Đồng hồ áp suất kèm van bi",
+      "xuat_xu": "",
+      "dvt": "Cái",
+      "don_gia": 0.0,
+      "count": 1,
+      "updated": "2026-11-13T09:31:17"
     }
   },
   "price_history": {
@@ -21,6 +1890,912 @@
       {
         "gia": 115000.0,
         "ngay": "2026-11-10"
+      },
+      {
+        "gia": 115000.0,
+        "ngay": "2026-11-10"
+      }
+    ],
+    "ZSFZ 100-1.6": [
+      {
+        "gia": 13500000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 13500000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 13500000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 13500000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 13500000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 13500000.0,
+        "ngay": "2026-11-11"
+      }
+    ],
+    "ZSFZ 150-1.6": [
+      {
+        "gia": 14148000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 14148000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 14148000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 14148000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 14148000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 14148000.0,
+        "ngay": "2026-11-11"
+      }
+    ],
+    "ZSFZ 200-1.6": [
+      {
+        "gia": 19765000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 19765000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 19765000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 19765000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 19765000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 19765000.0,
+        "ngay": "2026-11-11"
+      }
+    ],
+    "D71X-16Q": [
+      {
+        "gia": 587000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 587000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 587000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 587000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 587000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 587000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 587000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 1364000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 3314000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 1364000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 3314000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 1364000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 3314000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 1364000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 3314000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 979000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 716000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 979000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 716000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 810000.0,
+        "ngay": "2026-11-13"
+      }
+    ],
+    "H44X-16Q": [
+      {
+        "gia": 2336000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 4286000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 7337000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 11624000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 2336000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 2336000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 4286000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 7337000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 11624000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 2336000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 2336000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 4286000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 7337000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 11624000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 4286000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 3119000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2336000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 3119000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2336000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 7337000.0,
+        "ngay": "2026-11-13"
+      }
+    ],
+    "ZSJZ": [
+      {
+        "gia": 1050000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 1050000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 1050000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 1050000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 1050000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 1050000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 1050000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 1050000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 1050000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 1050000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 1050000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 1050000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 1050000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1050000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1050000.0,
+        "ngay": "2026-11-13"
+      }
+    ],
+    "ZSZF4-Q-100-16-M": [
+      {
+        "gia": 3247000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 3247000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 3247000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 3247000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 3247000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 3247000.0,
+        "ngay": "2026-11-11"
+      }
+    ],
+    "ZSZF4-Q-150-16-M": [
+      {
+        "gia": 5191000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 5191000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 5191000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 5191000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 5191000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 5191000.0,
+        "ngay": "2026-11-11"
+      }
+    ],
+    "ZSXZF4-Q-65-16-A": [
+      {
+        "gia": 2079000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 2079000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 2079000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 2079000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 2079000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 2079000.0,
+        "ngay": "2026-11-11"
+      }
+    ],
+    "ZSZF4-Q-200-16-M": [
+      {
+        "gia": 8181000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 8181000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 8181000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 8181000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 8181000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 8181000.0,
+        "ngay": "2026-11-11"
+      }
+    ],
+    "ZSZF4-Q-250-16-M": [
+      {
+        "gia": 12332000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 12332000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 12332000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 12332000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 12332000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 12332000.0,
+        "ngay": "2026-11-11"
+      }
+    ],
+    "ZSXZF4-Q-50-16-A": [
+      {
+        "gia": 1883000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 1883000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 1883000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 1883000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 1883000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 1883000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 1883000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1883000.0,
+        "ngay": "2026-11-13"
+      }
+    ],
+    "200X-16Q": [
+      {
+        "gia": 6696000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 6696000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 6696000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 6696000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 6696000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 6696000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 9072000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 13068000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 22140000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 9072000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 13068000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 22140000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 9072000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 13068000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 22140000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 9072000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 13068000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 22140000.0,
+        "ngay": "2026-11-11"
+      }
+    ],
+    "ZSFM 100-1.6": [
+      {
+        "gia": 21816000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 21816000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 21816000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 21816000.0,
+        "ngay": "2026-11-11"
+      }
+    ],
+    "ZSFM 150-1.6": [
+      {
+        "gia": 24948000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 24948000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 24948000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 24948000.0,
+        "ngay": "2026-11-11"
+      }
+    ],
+    "ZSFM 200-1.6": [
+      {
+        "gia": 36396000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 36396000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 36396000.0,
+        "ngay": "2026-11-11"
+      },
+      {
+        "gia": 36396000.0,
+        "ngay": "2026-11-11"
+      }
+    ],
+    "H42X-16Q": [
+      {
+        "gia": 1296000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1944000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1944000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2700000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1188000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1296000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1944000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1944000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2700000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1188000.0,
+        "ngay": "2026-11-13"
+      }
+    ],
+    "QF11-16T": [
+      {
+        "gia": 470000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 675000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 470000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 675000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 351000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 979000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 250000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 979000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 979000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 470000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 351000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 178000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 675000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 470000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 675000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 470000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 675000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 351000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 979000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 250000.0,
+        "ngay": "2026-11-13"
+      }
+    ],
+    "GL11W-16T": [
+      {
+        "gia": 250000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 979000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 250000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 979000.0,
+        "ngay": "2026-11-13"
+      }
+    ],
+    "H14W-16T": [
+      {
+        "gia": 178000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 911000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 911000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 178000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 911000.0,
+        "ngay": "2026-11-13"
+      }
+    ],
+    "KXT": [
+      {
+        "gia": 980000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 400000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 980000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 400000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1800000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 720000.0,
+        "ngay": "2026-11-13"
+      }
+    ],
+    "GL41H-16Q": [
+      {
+        "gia": 2531000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2531000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 5063000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1883000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1168000.0,
+        "ngay": "2026-11-13"
+      }
+    ],
+    "ZSXZF4-Q-120-16-A": [
+      {
+        "gia": 3767000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 3767000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 3767000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 3767000.0,
+        "ngay": "2026-11-13"
+      }
+    ],
+    "ZSZF4-Q-100-16-A": [
+      {
+        "gia": 2599000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2599000.0,
+        "ngay": "2026-11-13"
+      }
+    ],
+    "YLKG": [
+      {
+        "gia": 1450000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1450000.0,
+        "ngay": "2026-11-13"
+      }
+    ],
+    "500X-16Q": [
+      {
+        "gia": 9936000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 9936000.0,
+        "ngay": "2026-11-13"
+      }
+    ],
+    "P11X-16T": [
+      {
+        "gia": 199000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 199000.0,
+        "ngay": "2026-11-13"
+      }
+    ],
+    "ZSXZF4-Q-100-16-A": [
+      {
+        "gia": 2990000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 2990000.0,
+        "ngay": "2026-11-13"
+      }
+    ],
+    "ZSFZ 125-1.6": [
+      {
+        "gia": 13932000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 13932000.0,
+        "ngay": "2026-11-13"
+      }
+    ],
+    "ZSZF4-Q-80-16-A": [
+      {
+        "gia": 1958000.0,
+        "ngay": "2026-11-13"
+      },
+      {
+        "gia": 1958000.0,
+        "ngay": "2026-11-13"
+      }
+    ],
+    "ZSXZF4-Q-200-16-A": [
+      {
+        "gia": 7918000.0,
+        "ngay": "2026-11-13"
       }
     ]
   },
@@ -42,6 +2817,681 @@
       "boq": "đầu phun sprinkler dn20, k=8, 68°c, hướng xuống",
       "before": "",
       "after": "T-ZSTX 115-68°C Q5"
+    },
+    {
+      "time": "2026-11-11T11:32:04",
+      "boq": "van báo động 1 chiều dn100 van báo động 1 chiều dn100",
+      "before": "",
+      "after": "ZSFZ 100-1.6"
+    },
+    {
+      "time": "2026-11-11T11:32:04",
+      "boq": "van báo động 1 chiều dn150 van báo động 1 chiều dn150",
+      "before": "",
+      "after": "ZSFZ 150-1.6"
+    },
+    {
+      "time": "2026-11-11T11:32:04",
+      "boq": "van báo động 1 chiều dn200 van báo động 1 chiều dn200",
+      "before": "",
+      "after": "ZSFZ 200-1.6"
+    },
+    {
+      "time": "2026-11-11T11:32:04",
+      "boq": "van deluge dn100 van deluge dn100",
+      "before": "",
+      "after": "D71X-16Q"
+    },
+    {
+      "time": "2026-11-11T11:32:04",
+      "boq": "van deluge dn150 van deluge dn150",
+      "before": "",
+      "after": "D71X-16Q"
+    },
+    {
+      "time": "2026-11-11T11:32:04",
+      "boq": "van deluge dn200 van deluge dn200",
+      "before": "",
+      "after": "D71X-16Q"
+    },
+    {
+      "time": "2026-11-11T11:32:04",
+      "boq": "van 1 chiều dn100 van 1 chiều dn100",
+      "before": "",
+      "after": "H44X-16Q"
+    },
+    {
+      "time": "2026-11-11T11:32:04",
+      "boq": "van 1 chiều dn100 van 1 chiều dn100",
+      "before": "",
+      "after": "H44X-16Q"
+    },
+    {
+      "time": "2026-11-11T11:32:04",
+      "boq": "van 1 chiều dn150 van 1 chiều dn150",
+      "before": "",
+      "after": "H44X-16Q"
+    },
+    {
+      "time": "2026-11-11T11:32:04",
+      "boq": "van 1 chiều dn200 van 1 chiều dn200",
+      "before": "",
+      "after": "H44X-16Q"
+    },
+    {
+      "time": "2026-11-11T11:32:04",
+      "boq": "van 1 chiều dn250 van 1 chiều dn250",
+      "before": "",
+      "after": "H44X-16Q"
+    },
+    {
+      "time": "2026-11-11T11:32:04",
+      "boq": "công tắc dòng chảy dn100 công tắc dòng chảy dn100",
+      "before": "",
+      "after": "ZSJZ"
+    },
+    {
+      "time": "2026-11-11T11:32:04",
+      "boq": "công tắc dòng chảy dn150 công tắc dòng chảy dn150",
+      "before": "",
+      "after": "ZSJZ"
+    },
+    {
+      "time": "2026-11-11T11:32:04",
+      "boq": "van bướm dn100 van bướm dn100",
+      "before": "",
+      "after": "D71X-16Q"
+    },
+    {
+      "time": "2026-11-11T11:32:04",
+      "boq": "van bướm dn150 van bướm dn150",
+      "before": "",
+      "after": "D71X-16Q"
+    },
+    {
+      "time": "2026-11-11T11:32:04",
+      "boq": "van cổng os&y dn100 van cổng os&y dn100",
+      "before": "",
+      "after": "ZSZF4-Q-100-16-M"
+    },
+    {
+      "time": "2026-11-11T11:32:04",
+      "boq": "van cổng os&y dn150 van cổng os&y dn150",
+      "before": "",
+      "after": "ZSZF4-Q-150-16-M"
+    },
+    {
+      "time": "2026-11-11T11:32:04",
+      "boq": "van bướm kèm công tắc giám sát dn65 van bướm kèm công tắc giám sát dn65",
+      "before": "",
+      "after": "ZSXZF4-Q-65-16-A"
+    },
+    {
+      "time": "2026-11-11T11:32:04",
+      "boq": "van cổng os&y dn200 van cổng os&y dn200",
+      "before": "",
+      "after": "ZSZF4-Q-200-16-M"
+    },
+    {
+      "time": "2026-11-11T11:32:04",
+      "boq": "van cổng os&y dn250 van cổng os&y dn250",
+      "before": "",
+      "after": "ZSZF4-Q-250-16-M"
+    },
+    {
+      "time": "2026-11-11T11:32:04",
+      "boq": "công tắc giám sát công tắc giám sát",
+      "before": "",
+      "after": "ZSXZF4-Q-50-16-A"
+    },
+    {
+      "time": "2026-11-11T11:32:04",
+      "boq": "van giảm áp dn100 van giảm áp dn100",
+      "before": "",
+      "after": "200X-16Q"
+    },
+    {
+      "time": "2026-11-11T11:32:04",
+      "boq": "van giảm áp dn150 van giảm áp dn150",
+      "before": "",
+      "after": "200X-16Q"
+    },
+    {
+      "time": "2026-11-11T11:32:04",
+      "boq": "van giảm áp dn200 van giảm áp dn200",
+      "before": "",
+      "after": "200X-16Q"
+    },
+    {
+      "time": "2026-11-11T12:03:05",
+      "boq": "van deluge dn100 van deluge dn100",
+      "before": "",
+      "after": "ZSFM 100-1.6"
+    },
+    {
+      "time": "2026-11-11T12:03:46",
+      "boq": "van deluge dn150 van deluge dn150",
+      "before": "",
+      "after": "ZSFM 150-1.6"
+    },
+    {
+      "time": "2026-11-11T12:03:53",
+      "boq": "van deluge dn200 van deluge dn200",
+      "before": "",
+      "after": "ZSFM 200-1.6"
+    },
+    {
+      "time": "2026-11-11T12:07:38",
+      "boq": "van deluge dn150 van deluge dn150",
+      "before": "",
+      "after": "D71X-16Q"
+    },
+    {
+      "time": "2026-11-11T12:07:38",
+      "boq": "van 1 chiều dn100 van 1 chiều dn100",
+      "before": "",
+      "after": "H44X-16Q"
+    },
+    {
+      "time": "2026-11-11T12:07:38",
+      "boq": "van 1 chiều dn100 van 1 chiều dn100",
+      "before": "",
+      "after": "H44X-16Q"
+    },
+    {
+      "time": "2026-11-11T12:07:38",
+      "boq": "van 1 chiều dn150 van 1 chiều dn150",
+      "before": "",
+      "after": "H44X-16Q"
+    },
+    {
+      "time": "2026-11-11T12:07:38",
+      "boq": "van 1 chiều dn200 van 1 chiều dn200",
+      "before": "",
+      "after": "H44X-16Q"
+    },
+    {
+      "time": "2026-11-11T12:07:38",
+      "boq": "van 1 chiều dn250 van 1 chiều dn250",
+      "before": "",
+      "after": "H44X-16Q"
+    },
+    {
+      "time": "2026-11-11T12:07:38",
+      "boq": "công tắc dòng chảy dn100 công tắc dòng chảy dn100",
+      "before": "",
+      "after": "ZSJZ"
+    },
+    {
+      "time": "2026-11-11T12:07:38",
+      "boq": "công tắc dòng chảy dn150 công tắc dòng chảy dn150",
+      "before": "",
+      "after": "ZSJZ"
+    },
+    {
+      "time": "2026-11-11T12:07:38",
+      "boq": "van bướm dn100 van bướm dn100",
+      "before": "",
+      "after": "D71X-16Q"
+    },
+    {
+      "time": "2026-11-11T12:07:38",
+      "boq": "van bướm dn150 van bướm dn150",
+      "before": "",
+      "after": "D71X-16Q"
+    },
+    {
+      "time": "2026-11-11T12:07:38",
+      "boq": "van giảm áp dn100 van giảm áp dn100",
+      "before": "",
+      "after": "200X-16Q"
+    },
+    {
+      "time": "2026-11-11T12:07:38",
+      "boq": "van giảm áp dn150 van giảm áp dn150",
+      "before": "",
+      "after": "200X-16Q"
+    },
+    {
+      "time": "2026-11-11T12:07:38",
+      "boq": "van giảm áp dn200 van giảm áp dn200",
+      "before": "",
+      "after": "200X-16Q"
+    },
+    {
+      "time": "2026-11-11T12:08:22",
+      "boq": "van deluge dn150 van deluge dn150",
+      "before": "",
+      "after": "ZSFM 150-1.6 | Van tràn ngập DN150"
+    },
+    {
+      "time": "2026-11-11T12:09:19",
+      "boq": "van giảm áp dn100 van giảm áp dn100",
+      "before": "",
+      "after": "200X-16Q"
+    },
+    {
+      "time": "2026-11-11T12:09:19",
+      "boq": "van giảm áp dn150 van giảm áp dn150",
+      "before": "",
+      "after": "200X-16Q"
+    },
+    {
+      "time": "2026-11-11T12:09:19",
+      "boq": "van giảm áp dn200 van giảm áp dn200",
+      "before": "",
+      "after": "200X-16Q"
+    },
+    {
+      "time": "2026-11-13T09:07:23",
+      "boq": "van phao thuỷ lực dn40 van phao thuỷ lực dn40",
+      "before": "",
+      "after": "100X-16Q | Van Phao DN50"
+    },
+    {
+      "time": "2026-11-13T09:09:10",
+      "boq": "luper d76 luper d76",
+      "before": "",
+      "after": "H42X-16Q | Rọ hút  DN65"
+    },
+    {
+      "time": "2026-11-13T09:10:02",
+      "boq": "van bướm tay gạt d60mm van bướm tay gạt d60mm",
+      "before": "",
+      "after": "D71X-16Q | Van bướm DN50"
+    },
+    {
+      "time": "2026-11-13T09:10:20",
+      "boq": "van bướm tay gạt d90mm van bướm tay gạt d90mm",
+      "before": "",
+      "after": "D71X-16Q | Van bướm DN80"
+    },
+    {
+      "time": "2026-11-13T09:10:41",
+      "boq": "khớp nối mềm d90 khớp nối mềm d90",
+      "before": "",
+      "after": "H42X-16Q | Rọ hút  DN80"
+    },
+    {
+      "time": "2026-11-13T09:11:34",
+      "boq": "luper d90 luper d90",
+      "before": "",
+      "after": "H42X-16Q | Rọ hút  DN80"
+    },
+    {
+      "time": "2026-11-13T09:12:18",
+      "boq": "luppe dn125 luppe dn125",
+      "before": "",
+      "after": "H42X-16Q | Rọ hút  DN125"
+    },
+    {
+      "time": "2026-11-13T09:12:30",
+      "boq": "luppe dn50 luppe dn50",
+      "before": "",
+      "after": "200X-16Q | Van Giảm Áp DN50"
+    },
+    {
+      "time": "2026-11-13T09:12:53",
+      "boq": "luppe dn50 luppe dn50",
+      "before": "",
+      "after": "H42X-16Q | Rọ hút  DN50"
+    },
+    {
+      "time": "2026-11-13T09:24:04",
+      "boq": "van phao thuỷ lực dn80 van phao thuỷ lực dn80",
+      "before": "",
+      "after": "100X-16Q"
+    },
+    {
+      "time": "2026-11-13T09:24:04",
+      "boq": "lắp đặt đồng hồ đo áp lực lắp đặt đồng hồ đo áp lực",
+      "before": "",
+      "after": "Y60"
+    },
+    {
+      "time": "2026-11-13T09:24:04",
+      "boq": "phao điện dn50 phao điện dn50",
+      "before": "",
+      "after": "100X-16Q"
+    },
+    {
+      "time": "2026-11-13T09:24:04",
+      "boq": "van điện dn50 van điện dn50",
+      "before": "",
+      "after": "QF11-16T"
+    },
+    {
+      "time": "2026-11-13T09:24:04",
+      "boq": "van bi tay gạt dn50 van bi tay gạt dn50",
+      "before": "",
+      "after": "QF11-16T"
+    },
+    {
+      "time": "2026-11-13T09:24:04",
+      "boq": "van bi tay gạt d32 van bi tay gạt d32",
+      "before": "",
+      "after": "QF11-16T"
+    },
+    {
+      "time": "2026-11-13T09:24:04",
+      "boq": "van bi tay gạt d25 van bi tay gạt d25",
+      "before": "",
+      "after": "QF11-16T"
+    },
+    {
+      "time": "2026-11-13T09:24:04",
+      "boq": "van bi tay gạt d21 van bi tay gạt d21",
+      "before": "",
+      "after": "QF11-16T"
+    },
+    {
+      "time": "2026-11-13T09:24:04",
+      "boq": "van bi tay gạt d40 van bi tay gạt d40",
+      "before": "",
+      "after": "QF11-16T"
+    },
+    {
+      "time": "2026-11-13T09:24:04",
+      "boq": "y lọc rác d90 y lọc rác d90",
+      "before": "",
+      "after": "GL11W-16T"
+    },
+    {
+      "time": "2026-11-13T09:24:04",
+      "boq": "van 1 chiều d90 van 1 chiều d90",
+      "before": "",
+      "after": "H14W-16T"
+    },
+    {
+      "time": "2026-11-13T09:24:04",
+      "boq": "van bi dn32 van bi dn32",
+      "before": "",
+      "after": "QF11-16T"
+    },
+    {
+      "time": "2026-11-13T09:24:04",
+      "boq": "van bi dn40 van bi dn40",
+      "before": "",
+      "after": "QF11-16T"
+    },
+    {
+      "time": "2026-11-13T09:24:04",
+      "boq": "khớp nối mềm dn40 khớp nối mềm dn40",
+      "before": "",
+      "after": "KXT"
+    },
+    {
+      "time": "2026-11-13T09:24:05",
+      "boq": "van bi d32 van bi d32",
+      "before": "",
+      "after": "QF11-16T"
+    },
+    {
+      "time": "2026-11-13T09:24:05",
+      "boq": "khớp nối mềm dn125 khớp nối mềm dn125",
+      "before": "",
+      "after": "KXT"
+    },
+    {
+      "time": "2026-11-13T09:24:05",
+      "boq": "khớp nối mềm dn50 khớp nối mềm dn50",
+      "before": "",
+      "after": "KXT"
+    },
+    {
+      "time": "2026-11-13T09:24:05",
+      "boq": "y lọc dn125 y lọc dn125",
+      "before": "",
+      "after": "GL41H-16Q"
+    },
+    {
+      "time": "2026-11-13T09:24:05",
+      "boq": "y lọc dn50 y lọc dn50",
+      "before": "",
+      "after": "GL11W-16T"
+    },
+    {
+      "time": "2026-11-13T09:24:05",
+      "boq": "van cổng kèm công tắc giám sát dn125 van cổng kèm công tắc giám sát dn125",
+      "before": "",
+      "after": "ZSXZF4-Q-120-16-A"
+    },
+    {
+      "time": "2026-11-13T09:24:05",
+      "boq": "van cổng dn100 van cổng dn100",
+      "before": "",
+      "after": "ZSZF4-Q-100-16-A"
+    },
+    {
+      "time": "2026-11-13T09:24:05",
+      "boq": "van cổng kèm công tắc giám sát dn50 van cổng kèm công tắc giám sát dn50",
+      "before": "",
+      "after": "ZSXZF4-Q-50-16-A"
+    },
+    {
+      "time": "2026-11-13T09:24:05",
+      "boq": "van 1 chiều dn125 van 1 chiều dn125",
+      "before": "",
+      "after": "H44X-16Q"
+    },
+    {
+      "time": "2026-11-13T09:24:05",
+      "boq": "van 1 chiều dn50 van 1 chiều dn50",
+      "before": "",
+      "after": "H14W-16T"
+    },
+    {
+      "time": "2026-11-13T09:24:05",
+      "boq": "van bi dn40 - pn16 van bi dn40 - pn16",
+      "before": "",
+      "after": "QF11-16T"
+    },
+    {
+      "time": "2026-11-13T09:24:05",
+      "boq": "van bi dn25 - pn16 van bi dn25 - pn16",
+      "before": "",
+      "after": "QF11-16T"
+    },
+    {
+      "time": "2026-11-13T09:24:05",
+      "boq": "công tắc áp suất nước + shipong + van khóa dn15 công tắc áp suất nước + shipong + van khóa dn15",
+      "before": "",
+      "after": "YLKG"
+    },
+    {
+      "time": "2026-11-13T09:24:05",
+      "boq": "đồng hồ đo áp suất nước + shiphong + van khóa dn15 đồng hồ đo áp suất nước + shiphong + van khóa dn15",
+      "before": "",
+      "after": "Y60 + QF11-16T"
+    },
+    {
+      "time": "2026-11-13T09:24:05",
+      "boq": "van xả áp an toàn dn100 van xả áp an toàn dn100",
+      "before": "",
+      "after": "500X-16Q"
+    },
+    {
+      "time": "2026-11-13T09:24:05",
+      "boq": "van xả khí dn20 van xả khí dn20",
+      "before": "",
+      "after": "P11X-16T"
+    },
+    {
+      "time": "2026-11-13T09:24:05",
+      "boq": "van cổng có công tắc giám sát dn125 van cổng có công tắc giám sát dn125",
+      "before": "",
+      "after": "ZSXZF4-Q-120-16-A"
+    },
+    {
+      "time": "2026-11-13T09:24:05",
+      "boq": "van cổng có công tắc giám sát dn100 van cổng có công tắc giám sát dn100",
+      "before": "",
+      "after": "ZSXZF4-Q-100-16-A"
+    },
+    {
+      "time": "2026-11-13T09:24:05",
+      "boq": "van báo động dn125 van báo động dn125",
+      "before": "",
+      "after": "ZSFZ 125-1.6"
+    },
+    {
+      "time": "2026-11-13T09:24:05",
+      "boq": "công tắc dòng chảy dn125 công tắc dòng chảy dn125",
+      "before": "",
+      "after": "ZSJZ"
+    },
+    {
+      "time": "2026-11-13T09:24:05",
+      "boq": "van bi tay gạt dn50 - pn16 van bi tay gạt dn50 - pn16",
+      "before": "",
+      "after": "QF11-16T"
+    },
+    {
+      "time": "2026-11-13T09:24:05",
+      "boq": "van bi dn20 - pn16 van bi dn20 - pn16",
+      "before": "",
+      "after": "QF11-16T"
+    },
+    {
+      "time": "2026-11-13T09:24:05",
+      "boq": "đồng hồ đo áp suất + shiphong + van khóa dn15 đồng hồ đo áp suất + shiphong + van khóa dn15",
+      "before": "",
+      "after": "Y60 + QF11-16T"
+    },
+    {
+      "time": "2026-11-13T09:24:05",
+      "boq": "van cổng dn80 van cổng dn80",
+      "before": "",
+      "after": "ZSZF4-Q-80-16-A"
+    },
+    {
+      "time": "2026-11-13T09:31:17",
+      "boq": "van bướm điều khiển điện dn200, on/off 220v, kèm công tắc hành trình",
+      "before": "",
+      "after": "ZSXZF4-Q-200-16-A"
+    },
+    {
+      "time": "2026-11-13T09:31:17",
+      "boq": "van bướm / van bi dn65, pn16",
+      "before": "",
+      "after": "D71X-16Q"
+    },
+    {
+      "time": "2026-11-13T09:31:17",
+      "boq": "van một chiều dn200, kiểu wafer, pn16",
+      "before": "",
+      "after": "H44X-16Q"
+    },
+    {
+      "time": "2026-11-13T09:31:17",
+      "boq": "lọc y dn200, pn16, lưới inox 304",
+      "before": "",
+      "after": "GL41H-16Q"
+    },
+    {
+      "time": "2026-11-13T09:31:17",
+      "boq": "lọc y dn100, pn16, lưới inox 304",
+      "before": "",
+      "after": "GL41H-16Q"
+    },
+    {
+      "time": "2026-11-13T09:31:17",
+      "boq": "lọc y dn65, pn16, lưới inox 304",
+      "before": "",
+      "after": "GL41H-16Q"
+    },
+    {
+      "time": "2026-11-13T09:31:17",
+      "boq": "khớp nối mềm dn200, cao su epdm, pn16, nối bích",
+      "before": "",
+      "after": "KXT"
+    },
+    {
+      "time": "2026-11-13T09:31:17",
+      "boq": "khớp nối mềm dn65 – dn100, cao su epdm, pn16",
+      "before": "",
+      "after": "KXT"
+    },
+    {
+      "time": "2026-11-13T09:31:17",
+      "boq": "đồng hồ áp suất 0–10 bar, mặt d100, kèm van khóa 3 ngã",
+      "before": "",
+      "after": "Y60 + QF11-16T"
+    },
+    {
+      "time": "2026-11-13T09:31:17",
+      "boq": "van xả khí tự động dn25 kèm van khóa",
+      "before": "",
+      "after": "P11X-16T+ QF11-16T"
+    },
+    {
+      "time": "2026-11-13T09:31:17",
+      "boq": "công tắc dòng chảy",
+      "before": "",
+      "after": "ZSJZ"
+    },
+    {
+      "time": "2026-11-13T09:31:17",
+      "boq": "đồng hồ đo lưu lượng điện từ dn200",
+      "before": "",
+      "after": "HXLD"
+    },
+    {
+      "time": "2026-11-13T09:31:17",
+      "boq": "van cân bằng áp suất kho lạnh",
+      "before": "",
+      "after": "Y60 + QF11-16T"
+    }
+  ],
+  "layouts": [
+    {
+      "headers": [
+        "stt",
+        "số lượng",
+        "tên hàng",
+        "đvt"
+      ],
+      "header_row": 0,
+      "positions": {
+        "name": 1,
+        "qty": 3,
+        "unit": 2,
+        "spec": 1,
+        "price": null
+      },
+      "updated": "2026-11-11T12:18:54"
+    },
+    {
+      "headers": [
+        "stt",
+        "số lượng",
+        "thông số kỹ thuật",
+        "tên vật tư - thiết bị",
+        "đơn vị"
+      ],
+      "header_row": 0,
+      "positions": {
+        "name": 1,
+        "qty": 4,
+        "unit": 3,
+        "spec": 1,
+        "price": null
+      },
+      "updated": "2026-11-13T09:30:09"
+    },
+    {
+      "headers": [
+        "bảng đề nghị báo giá"
+      ],
+      "header_row": 0,
+      "positions": {
+        "name": 1,
+        "qty": 4,
+        "unit": 3,
+        "spec": null,
+        "price": 0
+      },
+      "updated": "2026-11-13T09:31:08"
     }
   ]
 }

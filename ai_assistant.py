@@ -36,6 +36,16 @@ def clean(v) -> str:
     return "" if s.lower() == "nan" else s
 
 
+def item_key(item) -> str:
+    """Khóa duy nhất của một mục bảng giá: mã + tên (vì một mã có thể dùng cho nhiều kích thước)."""
+    return f"{item['ma']} | {item['ten']}"
+
+
+def code_of(v) -> str:
+    """Lấy phần mã từ khóa 'mã | tên'."""
+    return clean(v).split(" | ")[0].strip()
+
+
 def clean_unit(v) -> str:
     """BOQ có ĐVT song ngữ dạng '项\nGói' -> lấy phần tiếng Việt (dòng cuối)."""
     s = clean(v)
@@ -98,6 +108,25 @@ def has_llm() -> bool:
 
 # ----------------------------------------------------------- Đọc bảng giá
 def load_price_items(path, sheets=None) -> list:
+    items = _load_price_items_from_excel(path, sheets)
+    # Mục bổ sung (mã chưa có trong bảng giá), luôn được thêm vào
+    extra_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "extra_items.json")
+    if os.path.exists(extra_path):
+        try:
+            with open(extra_path, "r", encoding="utf-8") as f:
+                existing = {item_key(i) for i in items}
+                for e in json.load(f):
+                    item = {"sheet": e.get("sheet", "BỔ SUNG"), "ten": e["ten"], "ma": e["ma"],
+                            "xuat_xu": e.get("xuat_xu", ""), "dvt": e.get("dvt", "Cái"),
+                            "don_gia": float(e.get("don_gia", 0))}
+                    if item_key(item) not in existing:
+                        items.append(item)
+        except (json.JSONDecodeError, OSError, KeyError):
+            pass
+    return items
+
+
+def _load_price_items_from_excel(path, sheets=None) -> list:
     items = []
     if not path or not os.path.exists(path):
         return items
@@ -150,9 +179,34 @@ def find_header_row(raw: pd.DataFrame, max_scan=15) -> int:
     return 0
 
 
-def promote_header(raw: pd.DataFrame):
-    """Dùng dòng tiêu đề tìm được làm tên cột. Trả về (df dữ liệu, chỉ số dòng tiêu đề)."""
-    h = find_header_row(raw)
+def find_layout(raw, layouts, min_sim=0.8):
+    """Tìm cách đọc đã nhớ khớp với file này. Trả về (entry, chỉ số dòng tiêu đề) hoặc (None, None)."""
+    best, best_row, best_sim = None, None, 0.0
+    for entry in layouts:
+        ref = set(entry["headers"])
+        if not ref:
+            continue
+        for i in range(min(15, len(raw))):
+            sig = {norm(v) for v in raw.iloc[i].tolist() if clean(v)}
+            if not sig:
+                continue
+            sim = len(sig & ref) / len(sig | ref)
+            if sim > best_sim:
+                best, best_row, best_sim = entry, i, sim
+    if best_sim >= min_sim:
+        return best, best_row
+    return None, None
+
+
+def layout_columns(df, entry):
+    cols = list(df.columns)
+    return {k: (cols[p] if p is not None and p < len(cols) else None)
+            for k, p in entry["positions"].items()}
+
+
+def promote_header(raw: pd.DataFrame, header_row=None):
+    """Dùng dòng tiêu đề làm tên cột. Trả về (df dữ liệu, chỉ số dòng tiêu đề)."""
+    h = find_header_row(raw) if header_row is None else header_row
     names, seen = [], {}
     for j, v in enumerate(raw.iloc[h].tolist()):
         name = clean(v) or f"cot_{j}"
@@ -243,13 +297,43 @@ def detect_boq_columns(df: pd.DataFrame) -> dict:
 class KnowledgeStore:
     def __init__(self, path="learned_knowledge.json"):
         self.path = path
-        self.data = {"mappings": {}, "price_history": {}, "corrections": []}
+        self.data = {"mappings": {}, "price_history": {}, "corrections": [], "layouts": []}
         if os.path.exists(path):
             try:
                 with open(path, "r", encoding="utf-8") as f:
                     self.data.update(json.load(f))
             except (json.JSONDecodeError, OSError):
                 pass  # file hỏng: bắt đầu lại, không làm sập app
+        self.data.setdefault("layouts", [])
+        # Nạp mẫu ban đầu (seed_mappings.json cạnh module), không ghi đè cái đã học
+        seed_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "seed_mappings.json")
+        if os.path.exists(seed_path):
+            try:
+                with open(seed_path, "r", encoding="utf-8") as f:
+                    for e in json.load(f):
+                        key = norm(e["boq"])
+                        if key and key not in self.data["mappings"]:
+                            self.data["mappings"][key] = {
+                                "ma": e["ma"], "ten": e["ten"], "xuat_xu": e.get("xuat_xu", ""),
+                                "dvt": e.get("dvt", ""), "don_gia": e.get("don_gia", 0),
+                                "count": 1, "updated": "seed", "nguon": e.get("nguon", "seed")}
+            except (json.JSONDecodeError, OSError, KeyError):
+                pass
+        # Dọn các ghép đã học bị lệch kích thước do lỗi cũ (cùng mã, khác DN)
+        bad = [k for k, v in self.data["mappings"].items()
+               if v.get("ten") and specs_conflict(extract_specs(k), extract_specs(v["ten"]))]
+        for k in bad:
+            del self.data["mappings"][k]
+
+    def save_layout(self, raw, header_row, df_columns, cols):
+        """Ghi nhớ cách chọn cột cho cấu trúc tiêu đề này (lưu theo vị trí cột)."""
+        headers = sorted({norm(v) for v in raw.iloc[header_row].tolist() if clean(v)})
+        cols_list = list(df_columns)
+        positions = {k: (cols_list.index(v) if v in cols_list else None) for k, v in cols.items()}
+        entry = {"headers": headers, "header_row": header_row, "positions": positions,
+                 "updated": datetime.now().isoformat(timespec="seconds")}
+        self.data["layouts"] = [l for l in self.data["layouts"] if l["headers"] != headers] + [entry]
+        self.save()
 
     def save(self):
         with open(self.path, "w", encoding="utf-8") as f:
@@ -294,8 +378,23 @@ def suggest_matches(boq_text, price_items, store: KnowledgeStore = None, top_k=3
     suggestions = []
     if store:
         learned = store.get_mapping(boq_text)
+        if not learned and store.data["mappings"]:
+            key = norm(boq_text)
+            best_key, best_r = None, 0.0
+            for k in store.data["mappings"]:
+                r = difflib.SequenceMatcher(None, key, k).ratio()
+                if r > best_r:
+                    best_key, best_r = k, r
+            if best_r >= 0.9:
+                learned = store.data["mappings"][best_key]
+                if learned.get("ten") and specs_conflict(extract_specs(boq_text), extract_specs(learned["ten"])):
+                    learned = None
         if learned and learned.get("ma"):
-            match = next((p for p in price_items if p["ma"] == learned["ma"]), None)
+            match = next((p for p in price_items
+                          if p["ma"] == learned["ma"] and p["ten"] == learned.get("ten")), None)
+            # Chỉ dùng mục đã học nếu kích thước/thông số không mâu thuẫn với BOQ
+            if match and specs_conflict(extract_specs(boq_text), extract_specs(match["ten"])):
+                match = None
             if match:
                 suggestions.append({"item": match, "score": 1.0, "source": "learned",
                                     "reason": f"Đã ghép tay {learned['count']} lần trước đây"})
@@ -306,7 +405,7 @@ def suggest_matches(boq_text, price_items, store: KnowledgeStore = None, top_k=3
     for item in price_items:
         if not item["ma"]:
             continue  # dòng tiêu đề nhóm trong bảng giá
-        if any(s["item"]["ma"] == item["ma"] for s in suggestions):
+        if any(item_key(s["item"]) == item_key(item) for s in suggestions):
             continue
         if specs_conflict(q_spec, extract_specs(item["ten"])):
             continue
@@ -388,7 +487,7 @@ def build_quote_rows(df_raw, cols, price_items, store, use_llm=False):
 
         alternatives = ""
         if sugg:
-            alt = [x for x in sugg[:3] if proposal is None or x["item"]["ma"] != proposal["item"]["ma"]]
+            alt = [x for x in sugg[:3] if proposal is None or item_key(x["item"]) != item_key(proposal["item"])]
             alternatives = " | ".join(f"[{x['item']['ma']}] {x['item']['ten'][:40]}" for x in alt[:2])
         if proposal is not None and proposal["score"] < AUTO_FILL and source == "AI":
             stats["review"] += 1
@@ -397,7 +496,7 @@ def build_quote_rows(df_raw, cols, price_items, store, use_llm=False):
         row = {"Xóa": False,
                "Duyệt": source == "Đã học",
                "BOQ gốc": full_text,
-               "Mã đề xuất": proposal["item"]["ma"] if proposal else "",
+               "Mã đề xuất": item_key(proposal["item"]) if proposal else "",
                "Độ khớp": proposal["score"] if proposal else 0.0,
                "Nguồn": source,
                "Mã hàng": "", "Diễn giải": name, "Xuất xứ": "",
@@ -411,7 +510,7 @@ def build_quote_rows(df_raw, cols, price_items, store, use_llm=False):
 
 
 def fill_item(df, idx, item):
-    df.at[idx, "Mã hàng"] = item["ma"]
+    df.at[idx, "Mã hàng"] = item_key(item)
     df.at[idx, "Diễn giải"] = item["ten"]
     df.at[idx, "Xuất xứ"] = item["xuat_xu"]
     df.at[idx, "ĐVT"] = item["dvt"] or df.at[idx, "ĐVT"]
@@ -420,10 +519,7 @@ def fill_item(df, idx, item):
 
 def sync_codes(df, edited_rows, price_items, store, seen: set) -> int:
     """Người dùng chọn mã trong danh sách: điền tên, giá, xuất xứ và ghi nhớ cặp BOQ -> mã."""
-    by_code = {}
-    for p in price_items:
-        if p["ma"]:
-            by_code.setdefault(p["ma"], p)
+    by_key = {item_key(p): p for p in price_items if p["ma"]}
     n = 0
     for ridx, changes in (edited_rows or {}).items():
         if "Mã hàng" not in changes:
@@ -435,7 +531,7 @@ def sync_codes(df, edited_rows, price_items, store, seen: set) -> int:
         if ridx not in df.index:
             continue
         code = clean(df.at[ridx, "Mã hàng"])
-        item = by_code.get(code)
+        item = by_key.get(code)
         if not item:
             continue
         key = ("ma", ridx, code)
@@ -452,19 +548,45 @@ def sync_codes(df, edited_rows, price_items, store, seen: set) -> int:
     return n
 
 
+def apply_cell_edits(df, edited_rows):
+    """Áp các ô người dùng vừa sửa trong bảng vào df (giữ nguyên chỉ số dòng)."""
+    df = df.copy()
+    for ridx, changes in (edited_rows or {}).items():
+        try:
+            ridx = int(ridx)
+        except (TypeError, ValueError):
+            continue
+        if ridx not in df.index:
+            continue
+        for col, val in changes.items():
+            if col in df.columns:
+                df.at[ridx, col] = val
+    return df
+
+
+def remove_and_add_rows(df, state):
+    """Xóa dòng đã tick 'Xóa' hoặc bị xóa trong bảng; thêm dòng mới. Trả về (df, có đổi cấu trúc)."""
+    edited_rows = state.get("edited_rows") or {}
+    to_drop = {int(r) for r, ch in edited_rows.items() if ch.get("Xóa") is True}
+    to_drop |= {int(i) for i in (state.get("deleted_rows") or [])}
+    added = state.get("added_rows") or []
+    structural = bool(to_drop or added)
+    df = df.drop(index=[i for i in to_drop if i in df.index])
+    if added:
+        df = pd.concat([df, pd.DataFrame(added)], ignore_index=True)
+    return df.reset_index(drop=True), structural
+
+
 def apply_approved(df, price_items, store, seen: set) -> int:
     """Điền mã đề xuất vào Mã hàng cho các dòng người dùng đã tích Duyệt.
     Khi duyệt ghép mới (không phải 'Đã học'), ghi nhớ để lần sau tự đề xuất đúng hơn."""
-    by_code = {}
-    for p in price_items:
-        if p["ma"]:
-            by_code.setdefault(p["ma"], p)
+    by_key = {item_key(p): p for p in price_items if p["ma"]}
     applied = 0
     for idx in df.index:
         if not bool(df.at[idx, "Duyệt"]):
             continue
         code = clean(df.at[idx, "Mã đề xuất"])
-        item = by_code.get(code)
+        item = by_key.get(code)
         if not item:
             continue
         key = (int(idx), code)
@@ -526,7 +648,7 @@ def audit_quote(rows, store: KnowledgeStore = None) -> list:
                        "message": "Cột SL trùng gần như hoàn toàn số thứ tự, có thể đọc nhầm cột khối lượng"})
     for i, r in enumerate(rows, start=1):
         label = f"Dòng {i}"
-        sl, gia, ma = r.get("sl") or 0, r.get("don_gia") or 0, clean(r.get("ma"))
+        sl, gia, ma = r.get("sl") or 0, r.get("don_gia") or 0, code_of(r.get("ma"))
         if not ma:
             issues.append({"level": "warn", "row": i, "message": f"{label}: chưa ghép mã hàng"})
         if not gia:
