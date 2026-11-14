@@ -12,6 +12,7 @@ from datetime import datetime
 import pandas as pd
 import streamlit as st
 
+from group_export import GROUPS, effective_group, render as render_group_export
 from ai_assistant import (
     COLUMNS, apply_approved, audit_quote, build_quote_rows, clean, code_of, detect_boq_columns,
     fill_item, find_header_row, find_layout, has_llm, item_key, layout_columns, promote_header,
@@ -84,6 +85,8 @@ def _cb_code(c, idx, widget_key, price_key, by_key):
     fill_item(df, idx, item)
     df.at[idx, "Nguồn"] = "Chọn tay"
     df.at[idx, "Duyệt"] = True
+    df.at[idx, "Nhóm"] = ""                         # để nhóm tự theo mã mới
+    st.session_state[widget_key.replace("m_code_", "m_grp_", 1)] = effective_group(df.loc[idx], by_key)
     boq = clean(df.at[idx, "BOQ gốc"])
     if boq:
         c.store.learn_mapping(boq, item)
@@ -94,6 +97,12 @@ def _cb_code(c, idx, widget_key, price_key, by_key):
         st.session_state.m_ver += 1               # chỉ số dòng đã đổi: dựng lại các thẻ
     else:
         st.session_state[price_key] = float(item["don_gia"])  # cập nhật ô giá của thẻ này
+
+
+def _cb_group(idx, widget_key):
+    df = st.session_state.df_editable
+    if df is not None and idx in df.index:
+        df.at[idx, "Nhóm"] = st.session_state.get(widget_key, "")
 
 
 def _cb_accept(idx):
@@ -175,8 +184,22 @@ def _step_boq(c, price_items, all_price_sheets):
         st.warning("Chưa thấy file BangGia.xlsx cạnh app.py.")
     st.caption(f"🧠 Đã học: {len(c.store.data['mappings'])} ghép mã")
 
+    with st.expander("📷 Không có file Excel? Tải ẢNH BOQ hoặc dán chữ", expanded=up is None):
+        import boq_input
+        res = boq_input.render("m_txt", price_items, c.store, use_llm=False)
+        if res is not None:
+            rows, stats = res
+            st.session_state.df_editable = pd.DataFrame(rows, columns=COLUMNS)
+            st.session_state.learned_keys = set()
+            st.session_state.last_stats = stats
+            st.session_state.m_ver += 1
+            st.session_state.m_page = 0
+            st.session_state.m_filter = FILTERS[0]
+            st.session_state.m_goto = 1
+            st.rerun()
+
     if up is None:
-        st.info("Chọn file BOQ khối lượng để bắt đầu.")
+        st.info("Hoặc chọn file BOQ khối lượng (Excel/CSV) để bắt đầu.")
         if st.session_state.get("df_editable") is not None:
             st.button("➡️ Về danh sách hàng đang làm", on_click=_goto, args=(1,), use_container_width=True)
         return
@@ -256,6 +279,7 @@ def _step_boq(c, price_items, all_price_sheets):
 
 # ----------------------------------------------------------- bước 2: hàng hóa
 def _card(c, df, idx, code_pos, code_opts, by_key, ver):
+    by_key_all = by_key
     row = df.loc[idx]
     code = clean(row["Mã hàng"])
     price = float(row["Đơn giá (VND)"] or 0)
@@ -284,6 +308,10 @@ def _card(c, df, idx, code_pos, code_opts, by_key, ver):
                      on_change=_cb_code, args=(c, idx, ck, pk, by_key))
         if code:
             st.caption(f"{clean(row['Diễn giải'])} · {clean(row['Xuất xứ'])} · {clean(row['ĐVT'])}")
+        gk = f"m_grp_{ver}_{idx}"
+        if gk not in st.session_state:
+            st.session_state[gk] = effective_group(row, by_key_all)
+        st.selectbox("Nhóm xuất file", GROUPS, key=gk, on_change=_cb_group, args=(idx, gk))
 
         c1, c2 = st.columns(2)
         with c1:
@@ -428,10 +456,8 @@ def _step_export(c):
     n_nocode = int(sum(1 for r in audit_rows if not r["ma"]))
     n_noprice = int(sum(1 for r in audit_rows if not r["don_gia"]))
 
-    cong, thue, tong = c.quote_totals(df)
     st.markdown("### 📤 Xuất báo giá")
-    st.markdown(f"Cộng: **{_money(cong)} đ**  \nThuế GTGT (8%): **{_money(thue)} đ**  \n"
-                f"Tổng cộng: **{_money(tong)} đ**")
+    st.markdown(c.render_kpi_html(df), unsafe_allow_html=True)
     if n_nocode or n_noprice:
         st.info(f"Có {n_nocode} dòng chưa ghép mã và {n_noprice} dòng chưa có giá. "
                 "Các dòng này được tô vàng để bạn soát lại.")
@@ -445,21 +471,21 @@ def _step_export(c):
         if len(issues) > 30:
             st.caption(f"... và {len(issues) - 30} mục khác.")
 
-    with st.expander("👁️ Xem nhanh báo giá"):
-        view = pd.DataFrame({
-            "STT": range(1, len(df) + 1),
-            "Mã": [code_of(v) for v in df["Mã hàng"]],
-            "Diễn giải": [clean(r["Diễn giải"]) if code_of(r["Mã hàng"]) else (clean(r["BOQ gốc"]) or clean(r["Diễn giải"]))
-                          for _, r in df.iterrows()],
-            "SL": df["SL"], "Đơn giá": df["Đơn giá (VND)"], "Thành tiền": df["SL"] * df["Đơn giá (VND)"],
-        })
-        st.dataframe(view, use_container_width=True, hide_index=True, height=300)
+    with st.expander("👁️ Xem trước báo giá", expanded=True):
+        st.markdown(c.render_header_html(hdr), unsafe_allow_html=True)
+        st.markdown(c.render_cards_html(df), unsafe_allow_html=True)
+        st.markdown(c.render_totals_html(df, ftr), unsafe_allow_html=True)
 
     cust = st.checkbox("📨 Bản gửi khách (không tô vàng)", value=False, key="m_cust")
     base = st.text_input("Tên file (không kèm đuôi)", value=f"BaoGia_TSC_{datetime.now().strftime('%Y%m%d')}",
                          key="m_out_base")
     sig = int(pd.util.hash_pandas_object(df, index=False).sum()) + hash(
         tuple(sorted((k, str(v)) for k, v in info.items())) + (cust,))
+
+    with st.expander("📦 Xuất tách theo nhóm (Van / Đầu phun / Báo cháy)"):
+        render_group_export("g_m", df, st.session_state.get("m_price_items_cache", []), hdr, ftr, cust, base, sig,
+                            c.recalc, c.build_excel, c.xlsx_to_pdf, c.build_quote_pdf,
+                            record_prices=lambda: c.store.record_quote_prices(audit_rows))
 
     st.caption("① Xuất Excel  →  ② tải Excel, hoặc chuyển chính file Excel đó sang PDF rồi tải.")
     if st.button("📊 ① XUẤT EXCEL (.xlsx)", use_container_width=True, key="m_btn_xl"):
@@ -493,8 +519,8 @@ def _step_export(c):
                     pdf_bytes = c.build_quote_pdf(df, hdr, ftr, customer=cust)
                 st.session_state["out_pdf"] = pdf_bytes
                 st.session_state["out_pdf_sig"] = st.session_state["out_xlsx_sig"]
-        except ImportError:
-            st.error("Chưa cài thư viện PDF. Chạy: py -m pip install reportlab")
+        except ImportError as e:
+            st.error(f"Thiếu thư viện PDF ({e}). Kiểm tra requirements.txt có reportlab và pillow.")
         except Exception as e:  # noqa: BLE001
             st.error(f"Lỗi chuyển PDF: {e}")
     if st.session_state.get("out_pdf") and st.session_state.get("out_pdf_sig") == sig:
@@ -521,6 +547,7 @@ def run(c):
             all_sheets = [s for s in names if s.upper() != c.PLACEHOLDER_SHEET]
             chosen = [s for s in st.session_state.get("m_price_sel", all_sheets) if s in all_sheets] or all_sheets
             price_items = c.cached_price_items(c.PRICE_LIST_PATH, mtime, tuple(chosen))
+            st.session_state["m_price_items_cache"] = price_items
         except Exception as e:  # noqa: BLE001
             st.error(f"Lỗi đọc Bảng Giá: {e}")
 

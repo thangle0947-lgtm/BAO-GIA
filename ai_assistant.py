@@ -20,7 +20,7 @@ AUTO_FILL = 0.55  # điểm tối thiểu để tự điền mã mà không cầ
 
 COLUMNS = ["Xóa", "Duyệt", "BOQ gốc", "Mã đề xuất", "Độ khớp", "Nguồn",
            "Mã hàng", "Diễn giải", "Xuất xứ", "ĐVT", "SL",
-           "Đơn giá (VND)", "Thành tiền (VND)", "Ghi chú", "Gợi ý"]
+           "Đơn giá (VND)", "Thành tiền (VND)", "Ghi chú", "Gợi ý", "Nhóm"]
 
 
 # ----------------------------------------------------------------- Tiện ích
@@ -55,6 +55,15 @@ def clean_unit(v) -> str:
 def norm(text) -> str:
     s = clean(text).lower().replace("\n", " ")
     return re.sub(r"\s+", " ", s).strip()
+
+
+def collapse(text) -> str:
+    """Khóa tra cứu: BOQ song ngữ hay lặp cả câu hai lần ('van bi dn15 van bi dn15') -> 'van bi dn15'."""
+    words = norm(text).split()
+    n = len(words)
+    if n >= 2 and n % 2 == 0 and words[:n // 2] == words[n // 2:]:
+        words = words[:n // 2]
+    return " ".join(words)
 
 
 def tokens(text) -> set:
@@ -100,6 +109,7 @@ VALVE_FAMILIES = [
     ("alarm", r"báo động|alarm"),
     ("gate", r"van cổng|gate valve|\bcổng\b"),
     ("butterfly", r"van bướm|butterfly"),
+    ("ball", r"van bi\b|ball valve"),
     ("check", r"1 chiều|một chiều|check valve"),
     ("float", r"phao|float valve"),
     ("strainer", r"rọ hút|y lọc|foot valve"),
@@ -153,14 +163,155 @@ def specs_conflict(a: dict, b: dict) -> bool:
     return any(a[k] and b[k] and not (a[k] & b[k]) for k in a)
 
 
+def get_api_key() -> str:
+    """Lấy ANTHROPIC_API_KEY từ biến môi trường hoặc Streamlit Secrets (khi chạy trên Streamlit Cloud)."""
+    key = os.environ.get("ANTHROPIC_API_KEY", "")
+    if key:
+        return key
+    try:
+        import streamlit as st
+        return str(st.secrets.get("ANTHROPIC_API_KEY", "") or "")
+    except Exception:  # noqa: BLE001  (không có file secrets cũng không sao)
+        return ""
+
+
 def has_llm() -> bool:
-    if not os.environ.get("ANTHROPIC_API_KEY"):
+    if not get_api_key():
         return False
     try:
         import anthropic  # noqa: F401
         return True
     except ImportError:
         return False
+
+
+# ------------------------------------------- BOQ dạng ảnh / dán chữ
+ITEM_COLS = ["Tên hàng", "ĐVT", "SL", "Thông số"]
+
+
+def _prepare_image(data: bytes):
+    """Thu nhỏ ảnh chụp từ điện thoại (tối đa 1800px) và đổi sang JPEG để gửi nhanh, rẻ."""
+    from io import BytesIO
+    try:
+        from PIL import Image, ImageOps
+        img = ImageOps.exif_transpose(Image.open(BytesIO(data))).convert("RGB")
+        img.thumbnail((1800, 1800))
+        buf = BytesIO()
+        img.save(buf, "JPEG", quality=88)
+        return buf.getvalue(), "image/jpeg"
+    except Exception:  # noqa: BLE001
+        return data, "image/png"
+
+
+def to_qty(v) -> float:
+    """'2,278' và '2.278' (hàng nghìn) -> 2278; '1,5' -> 1.5; số thật giữ nguyên."""
+    if isinstance(v, (int, float)):
+        return float(v)
+    t = clean(v).replace(" ", "")
+    if not t:
+        return 0.0
+    if re.fullmatch(r"\d{1,3}([.,]\d{3})+", t):
+        return float(re.sub(r"[.,]", "", t))
+    try:
+        return float(t.replace(",", "."))
+    except ValueError:
+        return 0.0
+
+
+def _json_list(text: str) -> list:
+    a, b = text.find("["), text.rfind("]")
+    if a < 0 or b <= a:
+        return []
+    try:
+        data = json.loads(text[a:b + 1])
+    except json.JSONDecodeError:
+        return []
+    return data if isinstance(data, list) else []
+
+
+def extract_boq_from_image(image_bytes: bytes):
+    """Đọc ảnh bảng BOQ bằng Claude. Trả về (danh sách dòng, thông báo lỗi hoặc '')."""
+    if not has_llm():
+        return [], "Chưa có ANTHROPIC_API_KEY nên chưa đọc được ảnh."
+    import base64
+    data, media = _prepare_image(image_bytes)
+    prompt = (
+        "Đây là ảnh bảng BOQ (bảng khối lượng vật tư). Hãy trích MỌI dòng hàng hóa thành một mảng JSON, "
+        'mỗi phần tử có dạng {"ten": "...", "dvt": "...", "sl": 0, "thong_so": ""}. '
+        "Quy tắc: giữ nguyên chữ gốc (cả tiếng Việt lẫn tiếng Anh/Trung nếu có trong cùng ô), "
+        "không tự sửa DN, K, nhiệt độ, kích thước. 'sl' là số khối lượng (bỏ dấu phân cách hàng nghìn); "
+        "không đọc được thì để 0. Bỏ qua dòng tiêu đề cột, dòng tiêu đề mục (như 'I. Đầu phun') và dòng tổng. "
+        "Nếu có cột thông số/mô tả riêng thì đưa vào 'thong_so'. Chỉ trả về mảng JSON, không giải thích.")
+    try:
+        import anthropic
+        client = anthropic.Anthropic(api_key=get_api_key())
+        resp = client.messages.create(
+            model=LLM_MODEL, max_tokens=8000,
+            messages=[{"role": "user", "content": [
+                {"type": "image", "source": {"type": "base64", "media_type": media,
+                                              "data": base64.b64encode(data).decode()}},
+                {"type": "text", "text": prompt}]}])
+        items = _json_list(resp.content[0].text)
+    except Exception as e:  # noqa: BLE001
+        return [], f"Lỗi gọi Claude: {e}"
+    rows = []
+    for it in items:
+        if not isinstance(it, dict) or not clean(it.get("ten")):
+            continue
+        sl = to_qty(it.get("sl"))
+        rows.append({"Tên hàng": clean(it.get("ten")), "ĐVT": clean(it.get("dvt")), "SL": sl,
+                     "Thông số": clean(it.get("thong_so"))})
+    if not rows:
+        return [], "Không đọc được dòng hàng hóa nào từ ảnh. Thử chụp rõ và thẳng hơn."
+    return rows, ""
+
+
+_UNIT_WORDS = r"(?:cái|chiếc|bộ|mét|m|md|cuộn|cây|thanh|kg|tấm|hộp|gói|bình|cặp|pcs|pc|set|nos|ea|lot)"
+
+
+_HEADER_WORDS = {"stt", "tt", "mô tả", "mo ta", "tên", "ten", "tên hàng", "tên vật tư", "hạng mục", "đvt", "dvt",
+                 "đơn vị", "sl", "số lượng", "khối lượng", "kl", "qty", "description", "unit", "no", "no."}
+
+
+def _cell(p: str) -> str:
+    return p.strip().strip(",;.").strip()
+
+
+def parse_boq_text(text: str) -> list:
+    """Biến chữ dán vào (mỗi dòng một hàng; ngăn cột bằng Tab, |, ; hoặc 2 dấu cách) thành danh sách dòng.
+    Chịu được số lượng kiểu '3,' hoặc '2.278', bỏ dòng tiêu đề (MÔ TẢ / ĐVT / SL) và cột STT.
+    Dòng không có cột thì lấy số ở cuối làm số lượng; không thấy số thì để 1 để người dùng sửa."""
+    rows = []
+    for line in (text or "").splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        parts = [_cell(p) for p in re.split(r"\t+|\s*\|\s*|;|\s{2,}", line)]
+        parts = [p for p in parts if p]
+        if parts and all(norm(p) in _HEADER_WORDS for p in parts):
+            continue  # dòng tiêu đề cột
+        name, unit, qty = None, "", None
+        if len(parts) >= 2:
+            if len(parts) >= 4 and re.fullmatch(r"\d{1,3}", parts[0]):
+                parts = parts[1:]  # cột STT
+            qi = next((i for i in range(len(parts) - 1, 0, -1)
+                       if re.fullmatch(r"\d+(?:[.,]\d+)*", parts[i])), None)
+            if qi is not None:
+                qty = to_qty(parts[qi])
+                rest = parts[:qi] + parts[qi + 1:]
+                if len(rest) >= 2 and len(rest[-1]) <= 8 and not re.search(r"\d", rest[-1]):
+                    unit, rest = rest[-1], rest[:-1]
+                name = " ".join(rest)
+            else:
+                name = " ".join(parts)
+        if name is None:
+            one = re.sub(r"^\s*\d{1,3}\s*[.)\-:]\s+", "", parts[0] if parts else line)
+            name = one
+            m = re.search(r"^(.*?\S)[\s,:x×-]+(\d+(?:[.,]\d+)*)[,;.]?\s*(" + _UNIT_WORDS + r")?\s*$", one, re.I)
+            if m and not re.search(r"(?:dn|phi|ø|ф|k|d|pn)\s*$", m.group(1), re.I):
+                name, qty, unit = m.group(1), to_qty(m.group(2)), m.group(3) or ""
+        rows.append({"Tên hàng": name, "ĐVT": unit, "SL": 1.0 if qty is None else qty, "Thông số": ""})
+    return rows
 
 
 # ----------------------------------------------------------- Đọc bảng giá
@@ -362,21 +513,35 @@ class KnowledgeStore:
             except (json.JSONDecodeError, OSError):
                 pass  # file hỏng: bắt đầu lại, không làm sập app
         self.data.setdefault("layouts", [])
-        # Nạp mẫu ban đầu (seed_mappings.json cạnh module), không ghi đè cái đã học
+        # Gộp khóa bị lặp câu (BOQ song ngữ) về dạng ngắn để chữ dán vào cũng khớp; ưu tiên cái bạn tự dạy
+        merged = {}
+        for k, v in self.data["mappings"].items():
+            nk = collapse(k)
+            old = merged.get(nk)
+            is_seed = v.get("updated") == "seed"
+            if old is not None:
+                old_seed = old.get("updated") == "seed"
+                if (old_seed and not is_seed) or (old_seed == is_seed and v.get("updated", "") > old.get("updated", "")):
+                    merged[nk] = v
+            else:
+                merged[nk] = v
+        self.data["mappings"] = merged
+        # Nạp mẫu ban đầu (seed_mappings.json cạnh module): làm mới các mẫu seed cũ, không đè cái người dùng đã dạy
         seed_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "seed_mappings.json")
         if os.path.exists(seed_path):
             try:
                 with open(seed_path, "r", encoding="utf-8") as f:
                     for e in json.load(f):
-                        key = norm(e["boq"])
-                        if key and key not in self.data["mappings"]:
+                        key = collapse(e["boq"])
+                        cur = self.data["mappings"].get(key)
+                        if key and (cur is None or cur.get("updated") == "seed"):
                             self.data["mappings"][key] = {
                                 "ma": e["ma"], "ten": e["ten"], "xuat_xu": e.get("xuat_xu", ""),
                                 "dvt": e.get("dvt", ""), "don_gia": e.get("don_gia", 0),
                                 "count": 1, "updated": "seed", "nguon": e.get("nguon", "seed")}
             except (json.JSONDecodeError, OSError, KeyError):
                 pass
-        # Dọn các ghép đã học bị lệch kích thước do lỗi cũ (cùng mã, khác DN)
+        # Dọn các ghép đã học bị lệch loại van / kích thước (vd: 'van bi' bị ghép sang 'van 1 chiều')
         bad = [k for k, v in self.data["mappings"].items()
                if v.get("ten") and items_conflict(k, v["ten"])]
         for k in bad:
@@ -397,10 +562,10 @@ class KnowledgeStore:
             json.dump(self.data, f, ensure_ascii=False, indent=2)
 
     def get_mapping(self, boq_text):
-        return self.data["mappings"].get(norm(boq_text))
+        return self.data["mappings"].get(collapse(boq_text))
 
     def learn_mapping(self, boq_text, item: dict):
-        key = norm(boq_text)
+        key = collapse(boq_text)
         if not key:
             return
         prev = self.data["mappings"].get(key)
@@ -436,7 +601,7 @@ def suggest_matches(boq_text, price_items, store: KnowledgeStore = None, top_k=3
     if store:
         learned = store.get_mapping(boq_text)
         if not learned and store.data["mappings"]:
-            key = norm(boq_text)
+            key = collapse(boq_text)
             best_key, best_r = None, 0.0
             for k in store.data["mappings"]:
                 r = difflib.SequenceMatcher(None, key, k).ratio()
@@ -496,7 +661,7 @@ def ask_llm_for_match(boq_text, candidates):
         prompt = (f"Hạng mục BOQ: \"{boq_text}\"\nCác mã ứng viên:\n{options}\n"
                   "Chọn ứng viên đúng nhất về loại thiết bị, DN, K, nhiệt độ, phản ứng. "
                   "Chỉ trả về một số thứ tự, hoặc -1 nếu không cái nào phù hợp.")
-        client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
+        client = anthropic.Anthropic(api_key=get_api_key())
         resp = client.messages.create(model=LLM_MODEL, max_tokens=10,
                                       messages=[{"role": "user", "content": prompt}])
         m = re.search(r"-?\d+", resp.content[0].text)
@@ -562,6 +727,7 @@ def build_quote_rows(df_raw, cols, price_items, store, use_llm=False):
                "ĐVT": boq_unit or default_unit, "SL": qty,
                "Đơn giá (VND)": 0.0, "Thành tiền (VND)": 0.0,
                "Ghi chú": "",  # ghi chú nội bộ (đã học/ghép) nằm ở cột Nguồn, không đi vào file
+               "Nhóm": "",  # trống = tự phân nhóm theo bảng giá / mô tả
                "Gợi ý": (f"Phương án khác: {alternatives}" if alternatives else
                          ("" if proposal else "⚠ Không có ứng viên, hãy ghép tay"))}
         rows.append(row)

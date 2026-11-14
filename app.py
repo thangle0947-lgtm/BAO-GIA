@@ -18,6 +18,7 @@ from ai_assistant import (
     layout_columns, load_price_items, promote_header, suggest_matches, apply_approved,
     apply_cell_edits, remove_and_add_rows,
 )
+from group_export import GROUPS, effective_group, render as render_group_export
 from io import BytesIO
 
 # --- ĐƯỜNG DẪN (luôn tính theo thư mục chứa app.py) ---
@@ -273,6 +274,120 @@ def render_preview_html(df, h, f, split=False):
     return head + table + totals + foot
 
 
+
+# ---------------------------------------------------------------- Giao diện xem trước (thẻ màu)
+PV_CSS = """<style>
+.pv-wrap{--g:#C9A227;--gd:#9C7A12;--ok:#3DBE7A;--warn:#F0B429;--bad:#E5604D;--card:#1B1E26;--line:#2E2A1E;--tx:#ECE7D8;--mut:#9A9484;color:var(--tx)}
+.pv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:6px 0 12px}
+.pv-kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;border-top:3px solid var(--g)}
+.pv-kpi .l{font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:.4px}
+.pv-kpi .v{font-size:22px;font-weight:700;margin-top:2px}
+.pv-kpi.ok{border-top-color:var(--ok)}.pv-kpi.ok .v{color:var(--ok)}
+.pv-kpi.warn{border-top-color:var(--warn)}.pv-kpi.warn .v{color:var(--warn)}
+.pv-box{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:8px 0}
+.pv-box h4{margin:0 0 8px;color:var(--g);font-size:15px;letter-spacing:.4px}
+.pv-info{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:4px 24px}
+.pv-info div{display:flex;gap:8px;font-size:14px;padding:3px 0;border-bottom:1px dashed #2a2a2a}
+.pv-info b{color:var(--g);min-width:70px;font-weight:600}
+.pv-info span{word-break:break-word}
+.pv-tot{display:grid;gap:6px}
+.pv-tot div{display:flex;justify-content:space-between;font-size:15px;padding:4px 0}
+.pv-tot .big{border-top:2px solid var(--g);margin-top:4px;padding-top:8px;font-size:19px;font-weight:700;color:var(--g)}
+.pv-list{max-height:560px;overflow:auto;padding-right:2px}
+.pv-item{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--ok);border-radius:10px;padding:9px 12px;margin:7px 0}
+.pv-item.warn{border-left-color:var(--warn);background:#251f10}
+.pv-item.bad{border-left-color:var(--bad);background:#2a1618}
+.pv-top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.pv-no{color:var(--mut);font-size:12px}
+.pv-code{color:var(--g);font-weight:700;font-size:14px;word-break:break-word}
+.pv-name{font-size:14px;margin:3px 0 6px;word-break:break-word}
+.pv-badge{font-size:11px;padding:2px 8px;border-radius:99px;white-space:nowrap;font-weight:600}
+.pv-badge.ok{background:#12301f;color:var(--ok)}.pv-badge.warn{background:#3a2f0c;color:var(--warn)}.pv-badge.bad{background:#3a1a16;color:var(--bad)}
+.pv-calc{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:13px;color:var(--mut);flex-wrap:wrap}
+.pv-calc .sum{font-size:16px;font-weight:700;color:var(--tx)}
+.pv-sub{font-size:12px;color:var(--mut)}
+@media (max-width:600px){.pv-kpi .v{font-size:18px}.pv-info{grid-template-columns:1fr}}
+</style>"""
+
+
+def _pv_status(code, price):
+    if not code:
+        return "bad", "Chưa có mã"
+    if price <= 0:
+        return "warn", "Chưa có giá"
+    return "ok", "Đã đủ"
+
+
+def render_kpi_html(df):
+    n = len(df)
+    ok = warn = 0
+    for _, r in df.iterrows():
+        if code_of(r["Mã hàng"]) and float(r["Đơn giá (VND)"] or 0) > 0:
+            ok += 1
+        else:
+            warn += 1
+    cong, thue, tong = quote_totals(df)
+    return (PV_CSS + "<div class='pv-wrap'><div class='pv-grid'>"
+            f"<div class='pv-kpi'><div class='l'>Tổng số dòng</div><div class='v'>{n}</div></div>"
+            f"<div class='pv-kpi ok'><div class='l'>✅ Đã đủ mã + giá</div><div class='v'>{ok}</div></div>"
+            f"<div class='pv-kpi warn'><div class='l'>⚠️ Cần soát</div><div class='v'>{warn}</div></div>"
+            f"<div class='pv-kpi'><div class='l'>Tổng cộng (VND)</div><div class='v'>{_money(tong) or '0'}</div></div>"
+            "</div></div>")
+
+
+def render_header_html(h):
+    import html as _h
+    e = lambda v: _h.escape(str(v or "")) or "<i style='color:#6f6a5c'>—</i>"
+    left = [("To", h["to"]), ("Add", h["add"]), ("Att", h["att"]), ("Mobile", h["mobile"]),
+            ("Email", h["email"]), ("Ref", h["ref"])]
+    right = [("No", h["no"]), ("Date", h["date"]), ("Revise", h.get("revise", "")),
+             ("Validity", h["validity"]), ("Project", h["project"])]
+    cells = "".join(f"<div><b>{k}</b><span>{e(v)}</span></div>" for k, v in left + right)
+    return (PV_CSS + "<div class='pv-wrap'><div class='pv-box'><h4>👤 THÔNG TIN BÁO GIÁ</h4>"
+            f"<div class='pv-info'>{cells}</div></div></div>")
+
+
+def render_totals_html(df, f=None):
+    import html as _h
+    cong, thue, tong = quote_totals(df)
+    out = (PV_CSS + "<div class='pv-wrap'><div class='pv-box'><h4>💰 TỔNG KẾT</h4><div class='pv-tot'>"
+           f"<div><span>Cộng</span><span>{_money(cong) or '0'}</span></div>"
+           f"<div><span>Thuế GTGT (8%)</span><span>{_money(thue) or '0'}</span></div>"
+           f"<div class='big'><span>Tổng cộng (VND)</span><span>{_money(tong) or '0'}</span></div></div></div>")
+    if f:
+        e = lambda v: _h.escape(str(v or ""))
+        pay = e(f["payment"]).replace(chr(10), "<br>")
+        out += ("<div class='pv-box'><h4>🤝 ĐIỀU KHOẢN</h4><div class='pv-info'>"
+                f"<div><b>Lưu ý</b><span>{e(f['note'])}</span></div>"
+                f"<div><b>Giao hàng</b><span>{e(f['deliv1'])}<br>{e(f['deliv2'])}</span></div>"
+                f"<div><b>Thanh toán</b><span>{pay}</span></div></div></div>")
+    return out + "</div>"
+
+
+def render_cards_html(df):
+    """Danh sách thẻ: xanh = đủ, vàng = thiếu giá, đỏ = thiếu mã. Dùng cho điện thoại."""
+    import html as _h
+    e = lambda v: _h.escape(str(v or ""))
+    items = []
+    for i, (_, r) in enumerate(df.iterrows(), start=1):
+        code = code_of(r["Mã hàng"])
+        price = float(r["Đơn giá (VND)"] or 0)
+        sl = float(r["SL"] or 0)
+        name = clean(r["Diễn giải"]) if code else (clean(r["BOQ gốc"]) or clean(r["Diễn giải"]))
+        lv, label = _pv_status(code, price)
+        origin = clean(r["Xuất xứ"])
+        sub = " · ".join(x for x in [origin, clean(r["ĐVT"]) or "Cái"] if x)
+        items.append(
+            f"<div class='pv-item {lv if lv != 'ok' else ''}'>"
+            f"<div class='pv-top'><div><span class='pv-no'>#{i}</span> <span class='pv-code'>{e(code) or '—'}</span></div>"
+            f"<span class='pv-badge {lv}'>{label}</span></div>"
+            f"<div class='pv-name'>{e(name)}</div>"
+            f"<div class='pv-calc'><span>{sl:g} × {_money(price) or '0'}</span>"
+            f"<span class='sum'>{_money(sl * price) or '0'} đ</span></div>"
+            f"<div class='pv-sub'>{e(sub)}</div></div>")
+    return PV_CSS + "<div class='pv-wrap'><div class='pv-list'>" + "".join(items) + "</div></div>"
+
+
 def clean_xlsx_for_excel(data: bytes, cached: dict = None) -> bytes:
     """Gỡ các phần tàn dư của mẫu (lọc tự động, chế độ xem tùy chỉnh, vùng in cũ) để Excel không báo lỗi sửa file."""
     import re as _re
@@ -459,7 +574,8 @@ def xlsx_to_pdf(xlsx_bytes: bytes):
         with open(src, "wb") as fh:
             fh.write(xlsx_bytes)
         # Hồ sơ riêng + HOME ghi được: bắt buộc khi chạy trên server (Streamlit Cloud/Linux)
-        profile = "file://" + os.path.join(tmp, "lo_profile").replace("\\", "/")
+        from pathlib import Path as _P
+        profile = _P(os.path.join(tmp, "lo_profile")).resolve().as_uri()  # file:///C:/... hoặc file:///tmp/...
         env = dict(os.environ, HOME=tmp)
         try:
             subprocess.run([exe, f"-env:UserInstallation={profile}", "--headless", "--norestore",
@@ -596,7 +712,7 @@ def recalc(df):
     df["Đơn giá (VND)"] = pd.to_numeric(df["Đơn giá (VND)"], errors="coerce").fillna(0)
     df["Thành tiền (VND)"] = df["SL"] * df["Đơn giá (VND)"]
     for c in ["Mã hàng", "Diễn giải", "Xuất xứ", "ĐVT", "Ghi chú", "BOQ gốc", "Gợi ý",
-              "Mã đề xuất", "Nguồn"]:
+              "Mã đề xuất", "Nguồn", "Nhóm"]:
         df[c] = df[c].fillna("")
     return df
 
@@ -866,7 +982,9 @@ if st.session_state.device == "mobile":
         cached_price_items=cached_price_items, cached_price_sheet_names=cached_price_sheet_names,
         cached_boq_sheet_names=cached_boq_sheet_names, cached_boq_raw=cached_boq_raw,
         recalc=recalc, build_excel=build_excel, xlsx_to_pdf=xlsx_to_pdf, build_quote_pdf=build_quote_pdf,
-        quote_totals=quote_totals, merge_and_remap=merge_and_remap, GOLD=GOLD))
+        quote_totals=quote_totals, merge_and_remap=merge_and_remap, GOLD=GOLD,
+        render_kpi_html=render_kpi_html, render_header_html=render_header_html,
+        render_totals_html=render_totals_html, render_cards_html=render_cards_html))
     st.stop()
 
 # --- SIDEBAR: TẢI DỮ LIỆU ---
@@ -906,13 +1024,26 @@ st.sidebar.markdown(f"<h3 style='color: {GOLD};'>🧠 TRỢ LÝ AI</h3>", unsafe
 st.sidebar.caption(f"Bảng giá: {len(price_items)} mục · Đã học: {len(store.data['mappings'])} ghép mã")
 use_llm = st.sidebar.checkbox(
     "Dùng Claude cho dòng khó", value=False, disabled=not has_llm(),
-    help="Cần biến môi trường ANTHROPIC_API_KEY. Chỉ gọi cho các dòng hệ thống không chắc.")
+    help="Cần ANTHROPIC_API_KEY (biến môi trường hoặc Streamlit Secrets). Chỉ gọi cho các dòng hệ thống không chắc.")
 if not has_llm():
     st.sidebar.caption("Chưa bật Claude (thiếu ANTHROPIC_API_KEY). Vẫn dùng gợi ý nội bộ.")
 
+# --- NHẬP BOQ BẰNG ẢNH / DÁN CHỮ ---
+import boq_input
+from group_export import GROUPS, effective_group, render as render_group_export
+with st.expander("📷 Không có file Excel? Tải ẢNH BOQ lên cho AI đọc, hoặc dán chữ", expanded=uploaded_boq is None):
+    _res = boq_input.render("d_txt", price_items, store, use_llm=use_llm)
+    if _res is not None:
+        _rows, _stats = _res
+        st.session_state.df_editable = pd.DataFrame(_rows, columns=COLUMNS)
+        st.session_state.learned_keys = set()
+        st.session_state.last_stats = _stats
+        st.session_state.editor_ver += 1
+        st.rerun()
+
 # --- ĐỌC FILE BOQ & NHẬN DIỆN CỘT ---
 if uploaded_boq is None:
-    st.info("👈 Vui lòng tải lên file Khối Lượng (BOQ) ở menu bên trái để bắt đầu lập báo giá.")
+    st.info("👈 Hoặc tải file Khối Lượng (BOQ) Excel ở menu bên trái để bắt đầu lập báo giá.")
 else:
     df_raw = None
     raw = None
@@ -1143,15 +1274,20 @@ if st.session_state.df_editable is not None:
                 "bank": f_bank}
     st.caption("✏️ Có thể sửa trực tiếp ngay trong bảng này: chọn lại **Mã hàng** (tên, giá, xuất xứ tự điền), "
                "sửa **Đơn giá**, **SL**, **ĐVT**, **Ghi chú**. Cột Diễn giải và Thành tiền tự cập nhật.")
-    head_html, tail_html = render_preview_html(df, hdr_vals, ftr_vals, split=True)
+    head_html = render_kpi_html(df) + render_header_html(hdr_vals)
+    tail_html = render_totals_html(df, ftr_vals)
+    _by_key_pv = {item_key(p): p for p in price_items if p["ma"]}
     pv = pd.DataFrame({
         "STT": range(1, len(df) + 1),
+        "Trạng thái": [{"ok": "✅ Đủ", "warn": "🟡 Thiếu giá", "bad": "🔴 Thiếu mã"}[
+            _pv_status(code_of(r["Mã hàng"]), float(r["Đơn giá (VND)"] or 0))[0]] for _, r in df.iterrows()],
         "Mã hàng": df["Mã hàng"],
         "Diễn giải": [clean(r["Diễn giải"]) if code_of(r["Mã hàng"]) else (clean(r["BOQ gốc"]) or clean(r["Diễn giải"]))
                       for _, r in df.iterrows()],
         "Xuất xứ": df["Xuất xứ"], "ĐVT": df["ĐVT"], "SL": df["SL"],
         "Đơn giá (VND)": df["Đơn giá (VND)"], "Thành tiền (VND)": df["SL"] * df["Đơn giá (VND)"],
-        "Ghi chú": df["Ghi chú"],
+        "Ghi chú": [("" if _is_internal_note(clean(v)) else clean(v)) for v in df["Ghi chú"]],
+        "Nhóm": [effective_group(r, _by_key_pv) for _, r in df.iterrows()],
     }, index=df.index)
     pv_key = f"preview_editor_{st.session_state.editor_ver}_{st.session_state.prev_ver}"
     with st.container(border=True):
@@ -1160,10 +1296,11 @@ if st.session_state.df_editable is not None:
             pv, key=pv_key, num_rows="fixed", use_container_width=True, hide_index=True,
             height=min(640, 38 + 35 * max(len(pv), 1)),
             on_change=on_editor_change, args=(pv_key, price_items, store, "preview"),
-            column_order=["STT", "Mã hàng", "Diễn giải", "Xuất xứ", "ĐVT", "SL",
-                          "Đơn giá (VND)", "Thành tiền (VND)", "Ghi chú"],
+            column_order=["STT", "Trạng thái", "Mã hàng", "Diễn giải", "Xuất xứ", "ĐVT", "SL",
+                          "Đơn giá (VND)", "Thành tiền (VND)", "Ghi chú", "Nhóm"],
             column_config={
                 "STT": st.column_config.NumberColumn("STT", disabled=True, width="small"),
+                "Trạng thái": st.column_config.TextColumn("Trạng thái", disabled=True, width="small"),
                 "Mã hàng": st.column_config.SelectboxColumn(
                     "Mã hàng", options=code_options, width="medium",
                     help="Chọn mã + kích thước từ bảng giá. Tên và giá sẽ tự điền."),
@@ -1174,6 +1311,8 @@ if st.session_state.df_editable is not None:
                 "Đơn giá (VND)": st.column_config.NumberColumn("Đơn giá", format="%,.0f", min_value=0),
                 "Thành tiền (VND)": st.column_config.NumberColumn("Thành tiền", format="%,.0f", disabled=True),
                 "Ghi chú": st.column_config.TextColumn("Ghi chú"),
+                "Nhóm": st.column_config.SelectboxColumn("Nhóm", options=GROUPS, width="small",
+                                                         help="Nhóm dùng khi xuất tách nhiều file"),
             })
         n_flag = int(sum(1 for _, r in df.iterrows() if (not code_of(r["Mã hàng"])) or float(r["Đơn giá (VND)"] or 0) <= 0))
         if n_flag:
@@ -1238,3 +1377,9 @@ if st.session_state.df_editable is not None:
                 st.download_button("⬇️ TẢI FILE PDF", data=st.session_state["out_pdf"],
                                    file_name=f"{base_name}.pdf", mime="application/pdf",
                                    use_container_width=True, key="dl_pdf")
+
+    st.markdown("<br>", unsafe_allow_html=True)
+    with st.expander("📦 XUẤT TÁCH THEO NHÓM (Van / Đầu phun / Báo cháy → mỗi nhóm một file)", expanded=False):
+        render_group_export("g_d", df, price_items, hdr_vals, ftr_vals, cust_mode, base_name, sig, recalc,
+                            build_excel, xlsx_to_pdf, build_quote_pdf,
+                            record_prices=lambda: store.record_quote_prices(audit_rows))

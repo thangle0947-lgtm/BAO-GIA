@@ -2,3 +2,6 @@ streamlit>=1.39
 pandas>=2.2
 openpyxl>=3.1
 xlrd>=2.0.1
+reportlab>=4.0
+pillow>=10.0
+anthropic>=0.40
