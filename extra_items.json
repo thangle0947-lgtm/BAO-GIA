@@ -38,5 +38,21 @@
     "dvt": "Cái",
     "don_gia": 0,
     "sheet": "BỔ SUNG"
+  },
+  {
+    "ma": "ESFR-363/74°C P Y",
+    "ten": "Đầu phun chữa cháy hướng xuống phản ứng nhanh, K=25.2, DN25, 74°C",
+    "xuat_xu": "Jilong/China",
+    "dvt": "Cái",
+    "don_gia": 275000,
+    "sheet": "BỔ SUNG"
+  },
+  {
+    "ma": "T-ZSTX 80-68°C Q5",
+    "ten": "Đầu phun chữa cháy xuống lên phản ứng tiêu chuẩn, K=5.6, DN15, 68°C",
+    "xuat_xu": "Jilong/China",
+    "dvt": "Cái",
+    "don_gia": 62000,
+    "sheet": "GIÁ HÃNG"
   }
 ]

@@ -1063,39 +1063,39 @@
   },
   {
     "boq": "Van bi DN15",
-    "ma": "QF11-16T",
-    "ten": "Van bi DN15",
+    "ma": "H14W-16T",
+    "ten": "Van 1 chiều DN15",
     "xuat_xu": "Jilong/China",
     "dvt": "Cái",
     "don_gia": 178000.0,
-    "nguon": "sửa: van bi"
+    "nguon": "mẫu khách 3"
   },
   {
     "boq": "Van bi DN25",
-    "ma": "QF11-16T",
-    "ten": "Van bi DN25",
+    "ma": "H14W-16T",
+    "ten": "Van 1 chiều DN25",
     "xuat_xu": "Jilong/China",
     "dvt": "Cái",
-    "don_gia": 351000.0,
-    "nguon": "sửa: van bi"
+    "don_gia": 313000.0,
+    "nguon": "mẫu khách 3"
   },
   {
     "boq": "Van bi DN32",
-    "ma": "QF11-16T",
-    "ten": "Van bi DN32",
+    "ma": "H14W-16T",
+    "ten": "Van 1 chiều DN32",
     "xuat_xu": "Jilong/China",
     "dvt": "Cái",
     "don_gia": 470000.0,
-    "nguon": "sửa: van bi"
+    "nguon": "mẫu khách 3"
   },
   {
     "boq": "Van bi DN40",
-    "ma": "QF11-16T",
-    "ten": "Van bi DN40",
+    "ma": "H14W-16T",
+    "ten": "Van 1 chiều DN40",
     "xuat_xu": "Jilong/China",
     "dvt": "Cái",
     "don_gia": 675000.0,
-    "nguon": "sửa: van bi"
+    "nguon": "mẫu khách 3"
   },
   {
     "boq": "Van bướm kèm công tắc giám sát DN100, PN16",
@@ -1288,12 +1288,12 @@
   },
   {
     "boq": "Van bảo vệ vỏ bơm điện (Relif valve)",
-    "ma": "55L-60",
-    "ten": "Van bảo vệ vỏ bơm",
-    "xuat_xu": "Claval/Canada",
+    "ma": "PRV",
+    "ten": "Van bảo vệ vỏ bơm DN25",
+    "xuat_xu": "",
     "dvt": "Cái",
-    "don_gia": 0.0,
-    "nguon": "sửa: theo lần chọn tay"
+    "don_gia": 0,
+    "nguon": "mẫu khách 3"
   },
   {
     "boq": "Công tắc áp suất kèm van bi",
@@ -1303,5 +1303,59 @@
     "dvt": "Cái",
     "don_gia": 0,
     "nguon": "mẫu khách 3"
+  },
+  {
+    "boq": "ESFR Pendent sprinkler head K=25.2, 74°C",
+    "ma": "ESFR-363/74°C P Y",
+    "ten": "Đầu phun chữa cháy hướng xuống phản ứng nhanh, K=25.2, DN25, 74°C",
+    "xuat_xu": "Jilong/China",
+    "dvt": "Cái",
+    "don_gia": 275000,
+    "nguon": "mẫu khách 5"
+  },
+  {
+    "boq": "Đầu phun chữa cháy tự động ESFR, loại hướng xuống K=25.2, 74°C",
+    "ma": "ESFR-363/74°C P Y",
+    "ten": "Đầu phun chữa cháy hướng xuống phản ứng nhanh, K=25.2, DN25, 74°C",
+    "xuat_xu": "Jilong/China",
+    "dvt": "Cái",
+    "don_gia": 275000,
+    "nguon": "mẫu khách 5"
+  },
+  {
+    "boq": "ESFR Pendent sprinkler head K=25.2, 74°C Đầu phun chữa cháy tự động ESFR, loại hướng xuống K=25.2, 74°C",
+    "ma": "ESFR-363/74°C P Y",
+    "ten": "Đầu phun chữa cháy hướng xuống phản ứng nhanh, K=25.2, DN25, 74°C",
+    "xuat_xu": "Jilong/China",
+    "dvt": "Cái",
+    "don_gia": 275000,
+    "nguon": "mẫu khách 5"
+  },
+  {
+    "boq": "Pendent sprinkler head K=5.6, 68°C c/w recessed escutcheon",
+    "ma": "T-ZSTX 80-68°C Q5",
+    "ten": "Đầu phun chữa cháy xuống lên phản ứng tiêu chuẩn, K=5.6, DN15, 68°C",
+    "xuat_xu": "Jilong/China",
+    "dvt": "Cái",
+    "don_gia": 62000,
+    "nguon": "mẫu khách 5"
+  },
+  {
+    "boq": "Lắp đặt đầu phun sprinkler, loại hướng xuống K=5.6, 68°C bao gồm nắp chụp",
+    "ma": "T-ZSTX 80-68°C Q5",
+    "ten": "Đầu phun chữa cháy xuống lên phản ứng tiêu chuẩn, K=5.6, DN15, 68°C",
+    "xuat_xu": "Jilong/China",
+    "dvt": "Cái",
+    "don_gia": 62000,
+    "nguon": "mẫu khách 5"
+  },
+  {
+    "boq": "Pendent sprinkler head K=5.6, 68°C c/w recessed escutcheon Lắp đặt đầu phun sprinkler, loại hướng xuống K=5.6, 68°C bao gồm nắp chụp",
+    "ma": "T-ZSTX 80-68°C Q5",
+    "ten": "Đầu phun chữa cháy xuống lên phản ứng tiêu chuẩn, K=5.6, DN15, 68°C",
+    "xuat_xu": "Jilong/China",
+    "dvt": "Cái",
+    "don_gia": 62000,
+    "nguon": "mẫu khách 5"
   }
 ]
