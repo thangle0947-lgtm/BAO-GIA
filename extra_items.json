@@ -54,5 +54,21 @@
     "dvt": "Cái",
     "don_gia": 62000,
     "sheet": "GIÁ HÃNG"
+  },
+  {
+    "ma": "T-ZSTGX 80-68°C Q5",
+    "ten": "Đầu phun chữa cháy khô hướng xuống phản ứng tiêu chuẩn, K=5.6, DN25, 68°C",
+    "xuat_xu": "Jilong/China",
+    "dvt": "Cái",
+    "don_gia": 0,
+    "sheet": "BỔ SUNG"
+  },
+  {
+    "ma": "ZSTDY 80-68°C G Q5",
+    "ten": "Đầu phun chữa cháy âm trần phản ứng tiêu chuẩn, K=5.6, DN15, 68°C",
+    "xuat_xu": "Jilong/China",
+    "dvt": "Bộ",
+    "don_gia": 0,
+    "sheet": "BỔ SUNG"
   }
 ]
