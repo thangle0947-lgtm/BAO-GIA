@@ -2332,21 +2332,21 @@
   },
   {
     "boq": "Đầu phun hướng xuống 1/2\", K=5.6, 68 độ C",
-    "ma": "T-ZSTX 80-68°C Q5",
-    "ten": "Đầu phun chữa cháy xuống lên phản ứng tiêu chuẩn, K=5.6, DN15, 68°C",
-    "xuat_xu": "Jilong/China",
-    "dvt": "Cái",
-    "don_gia": 0.0,
-    "nguon": "BOQ khách - đầu phun (bổ sung thủ công)"
-  },
-  {
-    "boq": "Đầu phun hướng lên 1/2\", K=5.6, 68 độ C",
     "ma": "T-ZSTZ 80-68°C Q5",
     "ten": "Đầu phun chữa cháy hướng lên phản ứng tiêu chuẩn, K=5.6, DN15, 68°C",
     "xuat_xu": "Jilong/China",
     "dvt": "Cái",
     "don_gia": 0.0,
-    "nguon": "BOQ khách - đầu phun (bổ sung thủ công)"
+    "nguon": "BOQ khách - mã người dùng điền (cập nhật)"
+  },
+  {
+    "boq": "Đầu phun hướng lên 1/2\", K=5.6, 68 độ C",
+    "ma": "T-ZSTX 80-68°C Q5",
+    "ten": "Đầu phun chữa cháy hướng xuống phản ứng tiêu chuẩn, K=5.6, DN15, 68°C",
+    "xuat_xu": "Jilong/China",
+    "dvt": "Cái",
+    "don_gia": 0.0,
+    "nguon": "BOQ khách - mã người dùng điền (cập nhật)"
   },
   {
     "boq": "Đầu phun khô hướng xuống 1/2\", K=5.6, 68 độ C",
@@ -2355,7 +2355,7 @@
     "xuat_xu": "Jilong/China",
     "dvt": "Cái",
     "don_gia": 0.0,
-    "nguon": "BOQ khách - đầu phun (bổ sung thủ công)"
+    "nguon": "BOQ khách - mã người dùng điền (cập nhật)"
   },
   {
     "boq": "Đầu phun âm trần hướng xuống 1/2\", K=5.6, 68 độ C dùng cho phòng sạch",
@@ -2364,16 +2364,16 @@
     "xuat_xu": "Jilong/China",
     "dvt": "Bộ",
     "don_gia": 0.0,
-    "nguon": "BOQ khách - đầu phun (bổ sung thủ công)"
+    "nguon": "BOQ khách - mã người dùng điền (cập nhật)"
   },
   {
     "boq": "Đầu phun hướng xuống 1/2\", K=5.6, 68 độ C, đầu phun dự phòng",
     "ma": "T-ZSTX 80-68°C Q5",
-    "ten": "Đầu phun chữa cháy xuống lên phản ứng tiêu chuẩn, K=5.6, DN15, 68°C",
+    "ten": "Đầu phun chữa cháy hướng xuống phản ứng tiêu chuẩn, K=5.6, DN15, 68°C",
     "xuat_xu": "Jilong/China",
     "dvt": "Cái",
     "don_gia": 0.0,
-    "nguon": "BOQ khách - đầu phun (bổ sung thủ công)"
+    "nguon": "BOQ khách - mã người dùng điền (cập nhật)"
   },
   {
     "boq": "Đầu phun hướng lên 1/2\", K=5.6, 68 độ C, đầu phun dự phòng",
@@ -2382,6 +2382,6 @@
     "xuat_xu": "Jilong/China",
     "dvt": "Cái",
     "don_gia": 0.0,
-    "nguon": "BOQ khách - đầu phun (bổ sung thủ công)"
+    "nguon": "BOQ khách - mã người dùng điền (cập nhật)"
   }
 ]
