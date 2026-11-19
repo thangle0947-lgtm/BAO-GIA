@@ -75,10 +75,13 @@ def extract_specs(text) -> dict:
         direction = {"lên"}
     else:
         direction = set()
-    if "nhanh" in t or "quick" in t:
+    # Phản ứng nhanh: có "nhanh"/"quick", cụm RTI < 50 (m/s)^0.5 (VN/CN), hoặc ESFR
+    if re.search(r"nhanh|quick|esfr|nhỏ hơn 50|热响应", t):
         response = {"nhanh"}
     elif "tiêu chuẩn" in t or "standard" in t:
         response = {"tiêu chuẩn"}
+    elif re.search(r"đầu phun|sprinkler|喷淋", t):
+        response = {"tiêu chuẩn"}  # đầu phun không ghi gì thì mặc định tiêu chuẩn
     else:
         response = set()
     return {

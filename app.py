@@ -152,25 +152,38 @@ def is_admin():
     return (not admin_password()) or bool(st.session_state.get("is_admin"))
 
 
-def admin_box():
-    """Khung đăng nhập quản trị: chỉ quản trị mới tải được bảng giá và mở mục Danh mục."""
+def _admin_form(prefix):
     import hmac
     pw = admin_password()
-    if not pw:
+    typed = st.text_input("Mật khẩu bảng giá", type="password", key=f"{prefix}_pw")
+    if st.button("Đăng nhập", key=f"{prefix}_in"):
+        if hmac.compare_digest(typed.encode(), pw.encode()):
+            st.session_state["is_admin"] = True
+            st.rerun()
+        else:
+            st.error("Sai mật khẩu.")
+
+
+def admin_box():
+    """Khung đăng nhập quản trị (đầu trang): mở khóa bảng giá, ghép mã và xuất báo giá."""
+    if not admin_password():
         return
     if st.session_state.get("is_admin"):
-        if st.button("🔓 Thoát chế độ quản trị", key="adm_out"):
+        if st.button("🔓 Khóa lại (thoát quản trị)", key="adm_out"):
             st.session_state["is_admin"] = False
             st.rerun()
         return
-    with st.expander("🔐 Quản trị (bảng giá)"):
-        typed = st.text_input("Mật khẩu quản trị", type="password", key="adm_pw")
-        if st.button("Đăng nhập", key="adm_in"):
-            if hmac.compare_digest(typed.encode(), pw.encode()):
-                st.session_state["is_admin"] = True
-                st.rerun()
-            else:
-                st.error("Sai mật khẩu.")
+    with st.expander("🔐 Nhập mật khẩu bảng giá"):
+        _admin_form("adm")
+
+
+def require_admin():
+    """True nếu đã nhập mật khẩu bảng giá. Chưa thì hiện ô nhập ngay tại bước đó và chặn bước này."""
+    if is_admin():
+        return True
+    st.warning("🔒 Cần nhập mật khẩu bảng giá để ghép mã và xuất báo giá.")
+    _admin_form("req")
+    return False
 
 
 def price_path():
@@ -376,6 +389,8 @@ def page_quote():
 
                 if not cols["name"] or not cols["qty"]:
                     st.error("Chưa chọn đủ cột tên hàng và số lượng.")
+                elif not require_admin():
+                    pass
                 elif st.button("Tiếp: ghép mã  ➜", type="primary", key="btn_build"):
                     store.save_layout(raw, header_row, list(df_raw.columns), cols)
                     with st.spinner("Đang gợi ý mã hàng..."):
@@ -392,6 +407,8 @@ def page_quote():
     if step == STEPS[1]:
         if st.session_state.df_quote is None:
             st.info("Chưa có dữ liệu. Làm bước 1 trước.")
+        elif not require_admin():
+            pass
         else:
             page_match()
             st.markdown("---")
@@ -405,6 +422,8 @@ def page_quote():
     if step == STEPS[2]:
         if st.session_state.df_quote is None:
             st.info("Chưa có dữ liệu. Làm bước 1 và 2 trước.")
+        elif not require_admin():
+            pass
         else:
             if st.button("⬅ Quay lại bước 2", key="back_2"):
                 go_step("2 · Ghép mã")
