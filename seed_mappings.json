@@ -2332,6 +2332,15 @@
   },
   {
     "boq": "Đầu phun hướng xuống 1/2\", K=5.6, 68 độ C",
+    "ma": "T-ZSTX 80-68°C Q5",
+    "ten": "Đầu phun chữa cháy xuống lên phản ứng tiêu chuẩn, K=5.6, DN15, 68°C",
+    "xuat_xu": "Jilong/China",
+    "dvt": "Cái",
+    "don_gia": 0.0,
+    "nguon": "BOQ khách - mã người dùng điền (cập nhật)"
+  },
+  {
+    "boq": "Đầu phun hướng lên 1/2\", K=5.6, 68 độ C",
     "ma": "T-ZSTZ 80-68°C Q5",
     "ten": "Đầu phun chữa cháy hướng lên phản ứng tiêu chuẩn, K=5.6, DN15, 68°C",
     "xuat_xu": "Jilong/China",
@@ -2340,18 +2349,9 @@
     "nguon": "BOQ khách - mã người dùng điền (cập nhật)"
   },
   {
-    "boq": "Đầu phun hướng lên 1/2\", K=5.6, 68 độ C",
-    "ma": "T-ZSTX 80-68°C Q5",
-    "ten": "Đầu phun chữa cháy hướng xuống phản ứng tiêu chuẩn, K=5.6, DN15, 68°C",
-    "xuat_xu": "Jilong/China",
-    "dvt": "Cái",
-    "don_gia": 0.0,
-    "nguon": "BOQ khách - mã người dùng điền (cập nhật)"
-  },
-  {
     "boq": "Đầu phun khô hướng xuống 1/2\", K=5.6, 68 độ C",
-    "ma": "T-ZSTGX 80-68°C Q5",
-    "ten": "Đầu phun chữa cháy khô hướng xuống phản ứng tiêu chuẩn, K=5.6, DN25, 68°C",
+    "ma": "T-ZSTX 80-68°C Q5",
+    "ten": "Đầu phun chữa cháy xuống lên phản ứng tiêu chuẩn, K=5.6, DN15, 68°C",
     "xuat_xu": "Jilong/China",
     "dvt": "Cái",
     "don_gia": 0.0,
@@ -2359,8 +2359,8 @@
   },
   {
     "boq": "Đầu phun âm trần hướng xuống 1/2\", K=5.6, 68 độ C dùng cho phòng sạch",
-    "ma": "ZSTDY 80-68°C G Q5",
-    "ten": "Đầu phun chữa cháy âm trần phản ứng tiêu chuẩn, K=5.6, DN15, 68°C",
+    "ma": "T-ZSTX 80-68°C Q5",
+    "ten": "Đầu phun chữa cháy xuống lên phản ứng tiêu chuẩn, K=5.6, DN15, 68°C",
     "xuat_xu": "Jilong/China",
     "dvt": "Bộ",
     "don_gia": 0.0,
@@ -2383,5 +2383,158 @@
     "dvt": "Cái",
     "don_gia": 0.0,
     "nguon": "BOQ khách - mã người dùng điền (cập nhật)"
+  },
+  {
+    "boq": "Đầu phun chữa cháy hướng lên phản ứng tiêu chuẩn, K=5.6, DN15, 68°C",
+    "ma": "GS251",
+    "ten": "Đầu phun chữa cháy hướng lên phản ứng tiêu chuẩn, K=5.6, DN15, 68°C",
+    "xuat_xu": "GS Korea/VN",
+    "dvt": "Cái",
+    "don_gia": 0.0,
+    "nguon": "BOQ GS - mẫu người dùng"
+  },
+  {
+    "boq": "Đầu phun chữa cháy hướng xuống phản ứng tiêu chuẩn, K=5.6, DN15, 68°C",
+    "ma": "GS252",
+    "ten": "Đầu phun chữa cháy xuống lên phản ứng tiêu chuẩn, K=5.6, DN15, 68°C",
+    "xuat_xu": "GS Korea/VN",
+    "dvt": "Cái",
+    "don_gia": 0.0,
+    "nguon": "BOQ GS - mẫu người dùng"
+  },
+  {
+    "boq": "Đầu phun chữa cháy xuống lên phản ứng nhanh, K=5.6, DN15, 68°C",
+    "ma": "GS254",
+    "ten": "Đầu phun chữa cháy xuống lên phản ứng nhanh, K=5.6, DN15, 68°C",
+    "xuat_xu": "GS Korea/VN",
+    "dvt": "Cái",
+    "don_gia": 0.0,
+    "nguon": "BOQ GS - mẫu người dùng"
+  },
+  {
+    "boq": "Đầu phun chữa cháy hướng lên phản ứng tiêu chuẩn, K=8.0, DN20, 68°C",
+    "ma": "GS281",
+    "ten": "Đầu phun chữa cháy hướng lên phản ứng tiêu chuẩn, K=8.0, DN20, 68°C",
+    "xuat_xu": "GS Korea/VN",
+    "dvt": "Cái",
+    "don_gia": 0.0,
+    "nguon": "BOQ GS - mẫu người dùng"
+  },
+  {
+    "boq": "Đầu phun chữa cháy hướng xuống phản ứng tiêu chuẩn, K=8.0, DN20, 68°C",
+    "ma": "GS282",
+    "ten": "Đầu phun chữa cháy xuống lên phản ứng tiêu chuẩn, K=8.0, DN20, 68°C",
+    "xuat_xu": "GS Korea/VN",
+    "dvt": "Cái",
+    "don_gia": 0.0,
+    "nguon": "BOQ GS - mẫu người dùng"
+  },
+  {
+    "boq": "Đầu phun chữa cháy hướng xuống phản ứng tiêu chuẩn, K=11.2, DN20, 68°C",
+    "ma": "GS212",
+    "ten": "Đầu phun chữa cháy xuống lên phản ứng tiêu chuẩn, K=11.2, DN20, 68°C",
+    "xuat_xu": "GS Korea/VN",
+    "dvt": "Cái",
+    "don_gia": 0.0,
+    "nguon": "BOQ GS - mẫu người dùng"
+  },
+  {
+    "boq": "Đầu phun hướng lên K=5.6, 68°C",
+    "ma": "GS251",
+    "ten": "Đầu phun chữa cháy hướng lên phản ứng tiêu chuẩn, K=5.6, DN15, 68°C",
+    "xuat_xu": "GS Korea/VN",
+    "dvt": "Cái",
+    "don_gia": 0.0,
+    "nguon": "BOQ GS - mẫu người dùng"
+  },
+  {
+    "boq": "Đầu phun hướng lên K=8, 68°C",
+    "ma": "GS281",
+    "ten": "Đầu phun chữa cháy hướng lên phản ứng tiêu chuẩn, K=8.0, DN20, 68°C",
+    "xuat_xu": "GS Korea/VN",
+    "dvt": "Cái",
+    "don_gia": 0.0,
+    "nguon": "BOQ GS - mẫu người dùng"
+  },
+  {
+    "boq": "Đầu phun hướng xuống K=5.6, 68°C",
+    "ma": "GS252",
+    "ten": "Đầu phun chữa cháy xuống lên phản ứng tiêu chuẩn, K=5.6, DN15, 68°C",
+    "xuat_xu": "GS Korea/VN",
+    "dvt": "Cái",
+    "don_gia": 0.0,
+    "nguon": "BOQ GS - mẫu người dùng"
+  },
+  {
+    "boq": "Đầu phun hướng xuống phản ứng nhanh K=5.6, 68°C",
+    "ma": "GS254",
+    "ten": "Đầu phun chữa cháy xuống lên phản ứng nhanh, K=5.6, DN15, 68°C",
+    "xuat_xu": "GS Korea/VN",
+    "dvt": "Cái",
+    "don_gia": 0.0,
+    "nguon": "BOQ GS - mẫu người dùng"
+  },
+  {
+    "boq": "Đầu phun hướng xuống K=11.2, 68°C",
+    "ma": "GS212",
+    "ten": "Đầu phun chữa cháy xuống lên phản ứng tiêu chuẩn, K=11.2, DN20, 68°C",
+    "xuat_xu": "GS Korea/VN",
+    "dvt": "Cái",
+    "don_gia": 0.0,
+    "nguon": "BOQ GS - mẫu người dùng"
+  },
+  {
+    "boq": "Đầu phun hướng xuống K=8, 68°C (Có rọ bảo vệ)",
+    "ma": "GS282",
+    "ten": "Đầu phun chữa cháy xuống lên phản ứng tiêu chuẩn, K=8.0, DN20, 68°C",
+    "xuat_xu": "GS Korea/VN",
+    "dvt": "Cái",
+    "don_gia": 0.0,
+    "nguon": "BOQ GS - mẫu người dùng"
+  },
+  {
+    "boq": "Đầu phun hướng xuống K=11.2, 68°C (Có rọ bảo vệ)",
+    "ma": "GS212",
+    "ten": "Đầu phun chữa cháy xuống lên phản ứng tiêu chuẩn, K=11.2, DN20, 68°C",
+    "xuat_xu": "GS Korea/VN",
+    "dvt": "Cái",
+    "don_gia": 0.0,
+    "nguon": "BOQ GS - mẫu người dùng"
+  },
+  {
+    "boq": "Nắp chụp 2 mảnh DN15",
+    "ma": "",
+    "ten": "Nắp chụp 2 mảnh DN15",
+    "xuat_xu": "VN/China",
+    "dvt": "Cái",
+    "don_gia": 0.0,
+    "nguon": "BOQ GS - mẫu người dùng (chưa có mã, cần nhập)"
+  },
+  {
+    "boq": "Nắp chụp 2 mảnh DN20",
+    "ma": "",
+    "ten": "Nắp chụp 2 mảnh DN20",
+    "xuat_xu": "VN/China",
+    "dvt": "Cái",
+    "don_gia": 0.0,
+    "nguon": "BOQ GS - mẫu người dùng (chưa có mã, cần nhập)"
+  },
+  {
+    "boq": "Rọ bảo vệ đầu phun DN20",
+    "ma": "",
+    "ten": "Rọ bảo vệ đầu phun DN20",
+    "xuat_xu": "VN/China",
+    "dvt": "Cái",
+    "don_gia": 0.0,
+    "nguon": "BOQ GS - mẫu người dùng (chưa có mã, cần nhập)"
+  },
+  {
+    "boq": "Rọ bảo vệ dầu phun DN20",
+    "ma": "",
+    "ten": "Rọ bảo vệ đầu phun DN20",
+    "xuat_xu": "VN/China",
+    "dvt": "Cái",
+    "don_gia": 0.0,
+    "nguon": "BOQ GS - mẫu người dùng (chưa có mã, cần nhập)"
   }
 ]

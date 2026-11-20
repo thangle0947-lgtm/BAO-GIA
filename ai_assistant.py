@@ -553,6 +553,25 @@ def ask_llm_for_match(boq_text, candidates):
 
 
 # ------------------------------------------------- Tạo dòng báo giá từ BOQ
+def parse_qty(v):
+    """Đọc số lượng từ ô Excel: hiểu '1,081.00', '1.081', '417', '-' (không có SL -> NaN)."""
+    if v is None:
+        return float("nan")
+    if isinstance(v, (int, float)):
+        return float(v)
+    s = str(v).strip().replace("\u00a0", "").replace(" ", "")
+    if s in ("", "-", "–", "—", "None", "nan", "NaN"):
+        return float("nan")
+    if "," in s and "." in s:
+        if s.rfind(",") > s.rfind("."):   # 1.081,00 (kiểu VN)
+            s = s.replace(".", "").replace(",", ".")
+        else:                             # 1,081.00 (kiểu US)
+            s = s.replace(",", "")
+    elif "," in s:
+        s = s.replace(",", "") if re.fullmatch(r"\d{1,3}(,\d{3})+", s) else s.replace(",", ".")
+    return pd.to_numeric(s, errors="coerce")
+
+
 def build_quote_rows(df_raw, cols, price_items, store, use_llm=False):
     """Tạo dòng báo giá. AI chỉ ĐỀ XUẤT mã (cột Mã đề xuất). Mã chỉ được điền
     vào Mã hàng khi người dùng duyệt, trừ các ghép đã học và đã duyệt trước đó."""
@@ -562,7 +581,7 @@ def build_quote_rows(df_raw, cols, price_items, store, use_llm=False):
         name = clean(src.get(cols["name"]))
         if not name:
             continue
-        qty_raw = pd.to_numeric(src.get(cols["qty"]), errors="coerce")
+        qty_raw = parse_qty(src.get(cols["qty"]))
         boq_unit = clean_unit(src.get(cols["unit"])) if cols.get("unit") else ""
         if pd.isna(qty_raw) and not boq_unit:
             continue  # dòng tiêu đề mục như "I. Đầu phun chữa cháy"
