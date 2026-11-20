@@ -572,6 +572,22 @@ def parse_qty(v):
     return pd.to_numeric(s, errors="coerce")
 
 
+def merge_duplicate_rows(rows):
+    """Gộp các dòng có cùng BOQ gốc (không phân biệt hoa thường, khoảng trắng), cộng SL.
+    Giữ thứ tự xuất hiện đầu tiên; các trường khác lấy từ dòng đầu."""
+    merged, index = [], {}
+    for r in rows:
+        key = norm(r.get("BOQ gốc"))
+        if key in index:
+            m = merged[index[key]]
+            m["SL"] = float(m.get("SL") or 0) + float(r.get("SL") or 0)
+            m["Duyệt"] = bool(m.get("Duyệt")) and bool(r.get("Duyệt"))
+        else:
+            index[key] = len(merged)
+            merged.append(dict(r))
+    return merged
+
+
 def build_quote_rows(df_raw, cols, price_items, store, use_llm=False):
     """Tạo dòng báo giá. AI chỉ ĐỀ XUẤT mã (cột Mã đề xuất). Mã chỉ được điền
     vào Mã hàng khi người dùng duyệt, trừ các ghép đã học và đã duyệt trước đó."""
@@ -628,6 +644,9 @@ def build_quote_rows(df_raw, cols, price_items, store, use_llm=False):
                "Gợi ý": (f"Phương án khác: {alternatives}" if alternatives else
                          ("" if proposal else "⚠ Không có ứng viên, hãy ghép tay"))}
         rows.append(row)
+    before = len(rows)
+    rows = merge_duplicate_rows(rows)
+    stats["merged"] = before - len(rows)
     return rows, stats
 
 
