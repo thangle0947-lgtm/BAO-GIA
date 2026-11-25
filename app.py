@@ -652,17 +652,23 @@ def page_match():
         if n_rows:
             r_idx = st.selectbox("Dòng", list(df.index), key="qm_row",
                                  format_func=lambda x: f"Dòng {x + 1}: {clean(df.at[x, 'Diễn giải'])[:60]}")
-            m1, m2, m3, m4 = st.columns([1, 2, 1, 1])
+            origins = sorted({clean(i.get("xuat_xu")) for i in price_items if clean(i.get("xuat_xu"))})
+            m1, m2, m3 = st.columns([1, 2, 1.3])
             m_ma = m1.text_input("Mã", key="qm_ma")
             m_ten = m2.text_input("Tên hàng", key="qm_ten")
-            m_dvt = m3.text_input("ĐVT", value="Cái", key="qm_dvt")
-            m_gia = m4.number_input("Đơn giá", min_value=0.0, step=1000.0, key="qm_gia")
+            m_hang = m3.selectbox("Hãng / xuất xứ", origins + ["Khác (gõ tay)"], key="qm_hang")
+            m_xx = m_hang
+            if m_hang == "Khác (gõ tay)":
+                m_xx = st.text_input("Nhập hãng / xuất xứ", key="qm_xx_txt")
+            m4, m5 = st.columns([1, 1])
+            m_dvt = m4.text_input("ĐVT", value="Cái", key="qm_dvt")
+            m_gia = m5.number_input("Đơn giá", min_value=0.0, step=1000.0, key="qm_gia")
             if st.button("Lưu mã và gán vào dòng", key="qm_apply"):
                 if not (m_ma.strip() and m_ten.strip()):
                     st.warning("Cần nhập cả Mã và Tên hàng.")
                 else:
                     from quote_core import apply_item
-                    it = {"sheet": "NHẬP TAY", "ma": m_ma.strip(), "ten": m_ten.strip(), "xuat_xu": "",
+                    it = {"sheet": "NHẬP TAY", "ma": m_ma.strip(), "ten": m_ten.strip(), "xuat_xu": (m_xx or "").strip(),
                           "dvt": m_dvt.strip() or "Cái", "don_gia": float(m_gia)}
                     store.add_code(it)
                     apply_item(df, r_idx, it)
