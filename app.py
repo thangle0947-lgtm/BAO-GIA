@@ -11,6 +11,7 @@ import streamlit as st
 
 import lich_su
 from ai_assistant import (
+    choice_items,
     COLUMNS, KnowledgeStore, apply_approved, apply_cell_edits, audit_quote, build_quote_rows,
     clean, code_of, detect_boq_columns, find_header_row, find_layout, has_llm, item_key,
     layout_columns, load_price_items, promote_header, remove_and_add_rows, save_override, suggest_matches,
@@ -604,8 +605,8 @@ def mobile_cards(df, price_items, store):
 
 
 def page_match():
-    price_items = get_price_items()
     store = get_store()
+    price_items = choice_items(get_price_items(), store)
     df = recalc(st.session_state.df_quote)
     st.session_state.df_quote = df
 
@@ -646,6 +647,31 @@ def page_match():
                 st.session_state.df_quote = recalc(df)
                 st.session_state.editor_ver += 1
                 st.rerun()
+
+    with st.expander("➕ Mã không có trong danh sách (nhập tay)"):
+        if n_rows:
+            r_idx = st.selectbox("Dòng", list(df.index), key="qm_row",
+                                 format_func=lambda x: f"Dòng {x + 1}: {clean(df.at[x, 'Diễn giải'])[:60]}")
+            m1, m2, m3, m4 = st.columns([1, 2, 1, 1])
+            m_ma = m1.text_input("Mã", key="qm_ma")
+            m_ten = m2.text_input("Tên hàng", key="qm_ten")
+            m_dvt = m3.text_input("ĐVT", value="Cái", key="qm_dvt")
+            m_gia = m4.number_input("Đơn giá", min_value=0.0, step=1000.0, key="qm_gia")
+            if st.button("Lưu mã và gán vào dòng", key="qm_apply"):
+                if not (m_ma.strip() and m_ten.strip()):
+                    st.warning("Cần nhập cả Mã và Tên hàng.")
+                else:
+                    from quote_core import apply_item
+                    it = {"sheet": "NHẬP TAY", "ma": m_ma.strip(), "ten": m_ten.strip(), "xuat_xu": "",
+                          "dvt": m_dvt.strip() or "Cái", "don_gia": float(m_gia)}
+                    store.add_code(it)
+                    apply_item(df, r_idx, it)
+                    q = clean(df.at[r_idx, "BOQ gốc"]) or clean(df.at[r_idx, "Diễn giải"])
+                    if q:
+                        store.learn_mapping(q, it)
+                    st.session_state.df_quote = recalc(df)
+                    st.session_state.editor_ver += 1
+                    st.rerun()
 
     c_a, c_b, _ = st.columns([1, 1, 3])
     if c_a.button("✅ Duyệt tất cả đề xuất", key="btn_approve_all"):

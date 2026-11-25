@@ -14,6 +14,7 @@ import streamlit as st
 
 from group_export import GROUPS, effective_group, render as render_group_export
 from ai_assistant import (
+    choice_items,
     COLUMNS, apply_approved, audit_quote, build_quote_rows, clean, code_of, detect_boq_columns,
     fill_item, find_header_row, find_layout, has_llm, item_key, layout_columns, promote_header,
 )
@@ -336,6 +337,7 @@ def _step_items(c, price_items):
         st.button("⬅️ Về bước 1", on_click=_goto, args=(0,), use_container_width=True)
         return
 
+    price_items = choice_items(price_items, c.store)
     # Điền mã cho các dòng đã duyệt, rồi gộp dòng trùng mã + mô tả (giống giao diện máy tính)
     df = c.recalc(df)
     if apply_approved(df, price_items, c.store, st.session_state.learned_keys):

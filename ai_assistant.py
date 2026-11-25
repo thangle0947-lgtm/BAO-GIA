@@ -167,6 +167,24 @@ def has_llm() -> bool:
 
 
 # ----------------------------------------------------------- Đọc bảng giá
+def choice_items(price_items, store) -> list:
+    """Danh sách mã cho ô chọn: mục bảng giá đang chọn + mã đã học/seed + mã nhập tay.
+    Không ghi đè mục bảng giá; mã trùng (mã | tên) chỉ xuất hiện một lần."""
+    out = list(price_items)
+    seen = {item_key(p) for p in out if p.get("ma")}
+    cands = list(store.data.get("codes", [])) + list(store.data.get("mappings", {}).values())
+    for e in cands:
+        if not e.get("ma") or not e.get("ten"):
+            continue
+        it = {"sheet": "ĐÃ HỌC", "ma": str(e["ma"]), "ten": str(e["ten"]), "xuat_xu": e.get("xuat_xu", "") or "",
+              "dvt": e.get("dvt") or "Cái", "don_gia": float(e.get("don_gia") or 0)}
+        k = item_key(it)
+        if k not in seen:
+            seen.add(k)
+            out.append(it)
+    return out
+
+
 def load_price_items(path, sheets=None) -> list:
     return apply_overrides(_load_price_items_base(path, sheets))
 
@@ -406,6 +424,7 @@ class KnowledgeStore:
             except (json.JSONDecodeError, OSError):
                 pass  # file hỏng: bắt đầu lại, không làm sập app
         self.data.setdefault("layouts", [])
+        self.data.setdefault("codes", [])  # mã tự nhập, luôn hiện trong danh sách chọn
         # Nạp mẫu ban đầu (seed_mappings.json cạnh module), không ghi đè cái đã học
         seed_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "seed_mappings.json")
         if os.path.exists(seed_path):
@@ -425,6 +444,14 @@ class KnowledgeStore:
                if v.get("ten") and items_conflict(k, v["ten"])]
         for k in bad:
             del self.data["mappings"][k]
+
+    def add_code(self, item: dict):
+        """Lưu một mã nhập tay (không gắn với BOQ nào) để lần sau có trong danh sách chọn."""
+        key = item_key(item)
+        keep = [c for c in self.data.get("codes", []) if item_key(c) != key]
+        keep.append({k: item.get(k, "") for k in ("ma", "ten", "xuat_xu", "dvt", "don_gia")})
+        self.data["codes"] = keep
+        self.save()
 
     def save_layout(self, raw, header_row, df_columns, cols):
         """Ghi nhớ cách chọn cột cho cấu trúc tiêu đề này (lưu theo vị trí cột)."""
