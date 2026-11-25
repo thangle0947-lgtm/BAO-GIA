@@ -1851,15 +1851,6 @@
       "count": 2,
       "updated": "2026-11-13T10:29:10"
     },
-    "đầu phun hướng lên k= 11.2 68*c": {
-      "ma": "K-ZSTZ 161-68°C Q3",
-      "ten": "Đầu phun chữa cháy hướng lên phản ứng nhanh, K=11.2, DN20, 68°C",
-      "xuat_xu": "Jilong/China",
-      "dvt": "Cái",
-      "don_gia": 0.0,
-      "count": 4,
-      "updated": "2026-11-13T10:29:10"
-    },
     "rọ hút, pn16 dn100, fl": {
       "ma": "H42X-16Q",
       "ten": "Rọ hút  DN100",
@@ -2279,15 +2270,6 @@
       "don_gia": 0.0,
       "count": 1,
       "updated": "2026-11-16T14:03:09"
-    },
-    "đầu phun hướng lên k= 11.2 68*c đầu phun hướng lên k= 11.2 68*c": {
-      "ma": "K-ZSTZ 161-68°C Q3",
-      "ten": "Đầu phun chữa cháy hướng lên phản ứng nhanh, K=11.2, DN20, 68°C",
-      "xuat_xu": "Jilong/China",
-      "dvt": "Cái",
-      "don_gia": 0.0,
-      "count": 5,
-      "updated": "2026-11-16T14:03:22"
     },
     "rọ hút, pn16 dn100, fl rọ hút, pn16 dn100, fl": {
       "ma": "H42X-16Q",
@@ -2945,6 +2927,1086 @@
       "count": 5,
       "updated": "BOQ APC bổ sung",
       "nguon": "BOQ khách - mã VAN APC (đối chiếu bảng giá)"
+    },
+    "闸阀dn25 van cổng dn25": {
+      "ma": "Z15W-16T",
+      "ten": "Van cổng DN25",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "van cổng dn25": {
+      "ma": "Z15W-16T",
+      "ten": "Van cổng DN25",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "闸阀dn25": {
+      "ma": "Z15W-16T",
+      "ten": "Van cổng DN25",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "闸阀dn50 van cổng dn50": {
+      "ma": "Z15W-16T",
+      "ten": "Van cổng DN50",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "van cổng dn50": {
+      "ma": "Z15W-16T",
+      "ten": "Van cổng DN50",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "闸阀dn50": {
+      "ma": "Z15W-16T",
+      "ten": "Van cổng DN50",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "閘閥dn65 van cổng dn65": {
+      "ma": "ZSZF4-Q-65-16-M",
+      "ten": "Van Cổng OS&Y DN65",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "van cổng dn65": {
+      "ma": "ZSZF4-Q-65-16-M",
+      "ten": "Van Cổng OS&Y DN65",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "閘閥dn65": {
+      "ma": "ZSZF4-Q-65-16-M",
+      "ten": "Van Cổng OS&Y DN65",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "闸阀dn100 van cổng dn100": {
+      "ma": "ZSZF4-Q-100-16-M",
+      "ten": "Van Cổng OS&Y DN100",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "闸阀dn100": {
+      "ma": "ZSZF4-Q-100-16-M",
+      "ten": "Van Cổng OS&Y DN100",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "闸阀dn200 van cổng dn200": {
+      "ma": "ZSZF4-Q-200-16-M",
+      "ten": "Van Cổng OS&Y DN200",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "van cổng dn200": {
+      "ma": "ZSZF4-Q-200-16-M",
+      "ten": "Van Cổng OS&Y DN200",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "闸阀dn200": {
+      "ma": "ZSZF4-Q-200-16-M",
+      "ten": "Van Cổng OS&Y DN200",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "闸阀dn250 van cổng dn250": {
+      "ma": "ZSZF4-Q-250-16-M",
+      "ten": "Van Cổng OS&Y DN250",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "闸阀dn250": {
+      "ma": "ZSZF4-Q-250-16-M",
+      "ten": "Van Cổng OS&Y DN250",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "明杆闸阀（带监控开关）dn50 van cổng ty nổi kèm công tắc giám sát dn50": {
+      "ma": "ZSZF4-Q-50-16-M + OYSS - 1",
+      "ten": "Van Cổng OS&Y Kèm Giám Sát DN50",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "van cổng ty nổi kèm công tắc giám sát dn50": {
+      "ma": "ZSZF4-Q-50-16-M + OYSS - 1",
+      "ten": "Van Cổng OS&Y Kèm Giám Sát DN50",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "明杆闸阀（带监控开关）dn50": {
+      "ma": "ZSZF4-Q-50-16-M + OYSS - 1",
+      "ten": "Van Cổng OS&Y Kèm Giám Sát DN50",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "明杆闸阀（带监控开关）dn100 van cổng ty nổi kèm công tắc giám sát dn100": {
+      "ma": "ZSZF4-Q-100-16-M + OYSS - 1",
+      "ten": "Van Cổng OS&Y Kèm Giám Sát DN100",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "van cổng ty nổi kèm công tắc giám sát dn100": {
+      "ma": "ZSZF4-Q-100-16-M + OYSS - 1",
+      "ten": "Van Cổng OS&Y Kèm Giám Sát DN100",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "明杆闸阀（带监控开关）dn100": {
+      "ma": "ZSZF4-Q-100-16-M + OYSS - 1",
+      "ten": "Van Cổng OS&Y Kèm Giám Sát DN100",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "明杆闸阀（带监控开关）dn150 van cổng ty nổi kèm công tắc giám sát dn150": {
+      "ma": "ZSZF4-Q-150-16-M + OYSS - 1",
+      "ten": "Van Cổng OS&Y Kèm Giám Sát DN150",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "van cổng ty nổi kèm công tắc giám sát dn150": {
+      "ma": "ZSZF4-Q-150-16-M + OYSS - 1",
+      "ten": "Van Cổng OS&Y Kèm Giám Sát DN150",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "明杆闸阀（带监控开关）dn150": {
+      "ma": "ZSZF4-Q-150-16-M + OYSS - 1",
+      "ten": "Van Cổng OS&Y Kèm Giám Sát DN150",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "明杆闸阀（带监控开关）dn200 van cổng ty nổi kèm công tắc giám sát dn200": {
+      "ma": "ZSZF4-Q-200-16-M + OYSS - 1",
+      "ten": "Van Cổng OS&Y Kèm Giám Sát DN200",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "van cổng ty nổi kèm công tắc giám sát dn200": {
+      "ma": "ZSZF4-Q-200-16-M + OYSS - 1",
+      "ten": "Van Cổng OS&Y Kèm Giám Sát DN200",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "明杆闸阀（带监控开关）dn200": {
+      "ma": "ZSZF4-Q-200-16-M + OYSS - 1",
+      "ten": "Van Cổng OS&Y Kèm Giám Sát DN200",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "明杆闸阀（带监控开关）dn250 van cổng ty nổi kèm công tắc giám sát dn250": {
+      "ma": "ZSZF4-Q-250-16-M + OYSS - 1",
+      "ten": "Van Cổng OS&Y Kèm Giám Sát DN250",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "van cổng ty nổi kèm công tắc giám sát dn250": {
+      "ma": "ZSZF4-Q-250-16-M + OYSS - 1",
+      "ten": "Van Cổng OS&Y Kèm Giám Sát DN250",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "明杆闸阀（带监控开关）dn250": {
+      "ma": "ZSZF4-Q-250-16-M + OYSS - 1",
+      "ten": "Van Cổng OS&Y Kèm Giám Sát DN250",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "止回阀 dn15 van một chiều dn15": {
+      "ma": "H14W-16T",
+      "ten": "Van 1 chiều DN15",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "止回阀 dn15": {
+      "ma": "H14W-16T",
+      "ten": "Van 1 chiều DN15",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "止回阀 dn25 van một chiều dn25": {
+      "ma": "H14W-16T",
+      "ten": "Van 1 chiều DN25",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "van một chiều dn25": {
+      "ma": "H14W-16T",
+      "ten": "Van 1 chiều DN25",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "止回阀 dn25": {
+      "ma": "H14W-16T",
+      "ten": "Van 1 chiều DN25",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "止回阀 dn50 van một chiều dn50": {
+      "ma": "H14W-16T",
+      "ten": "Van 1 chiều DN50",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "van một chiều dn50": {
+      "ma": "H14W-16T",
+      "ten": "Van 1 chiều DN50",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "止回阀 dn50": {
+      "ma": "H14W-16T",
+      "ten": "Van 1 chiều DN50",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "止回阀 dn65 van một chiều dn65": {
+      "ma": "H44X-16Q",
+      "ten": "Van 1 chiều DN65",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "van một chiều dn65": {
+      "ma": "H44X-16Q",
+      "ten": "Van 1 chiều DN65",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "止回阀 dn65": {
+      "ma": "H44X-16Q",
+      "ten": "Van 1 chiều DN65",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "止回阀 dn100 van một chiều dn100": {
+      "ma": "H44X-16Q",
+      "ten": "Van 1 chiều DN100",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "van một chiều dn100": {
+      "ma": "H44X-16Q",
+      "ten": "Van 1 chiều DN100",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "止回阀 dn100": {
+      "ma": "H44X-16Q",
+      "ten": "Van 1 chiều DN100",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "止回阀 dn250 van một chiều dn250": {
+      "ma": "H44X-16Q",
+      "ten": "Van 1 chiều DN250",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "止回阀 dn250": {
+      "ma": "H44X-16Q",
+      "ten": "Van 1 chiều DN250",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "报警止回阀 dn100 cụm van báo động một chiều dn100": {
+      "ma": "ZSFZ 100-1.6",
+      "ten": "Van báo động DN100",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "cụm van báo động một chiều dn100": {
+      "ma": "ZSFZ 100-1.6",
+      "ten": "Van báo động DN100",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "报警止回阀 dn100": {
+      "ma": "ZSFZ 100-1.6",
+      "ten": "Van báo động DN100",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "报警止回阀 dn150 cụm van báo động một chiều dn150": {
+      "ma": "ZSFZ 150-1.6",
+      "ten": "Van báo động DN150",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "cụm van báo động một chiều dn150": {
+      "ma": "ZSFZ 150-1.6",
+      "ten": "Van báo động DN150",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "报警止回阀 dn150": {
+      "ma": "ZSFZ 150-1.6",
+      "ten": "Van báo động DN150",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "减压阀 dn65 van giảm áp dn65": {
+      "ma": "200X-16Q",
+      "ten": "Van Giảm Áp DN65",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "van giảm áp dn65": {
+      "ma": "200X-16Q",
+      "ten": "Van Giảm Áp DN65",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "减压阀 dn65": {
+      "ma": "200X-16Q",
+      "ten": "Van Giảm Áp DN65",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "自动排气阀 dn25 cụm van xả khí tự động dn25": {
+      "ma": "P11X-16T",
+      "ten": "Van xả khí tự động DN25",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "cụm van xả khí tự động dn25": {
+      "ma": "P11X-16T",
+      "ten": "Van xả khí tự động DN25",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "自动排气阀 dn25": {
+      "ma": "P11X-16T",
+      "ten": "Van xả khí tự động DN25",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "软接头 dn50 khớp nối mềm dn50": {
+      "ma": "KXT",
+      "ten": "Khớp nối mềm DN50",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "软接头 dn50": {
+      "ma": "KXT",
+      "ten": "Khớp nối mềm DN50",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "软接头 dn250 khớp nối mềm dn250": {
+      "ma": "KXT",
+      "ten": "Khớp nối mềm DN250",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "软接头 dn250": {
+      "ma": "KXT",
+      "ten": "Khớp nối mềm DN250",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "雨淋阀 dn100 van tràn ngập dn100": {
+      "ma": "ZSFM 100-1.6",
+      "ten": "Van tràn ngập DN100",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "van tràn ngập dn100": {
+      "ma": "ZSFM 100-1.6",
+      "ten": "Van tràn ngập DN100",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "雨淋阀 dn100": {
+      "ma": "ZSFM 100-1.6",
+      "ten": "Van tràn ngập DN100",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "安全阀 dn200 van an toàn dn200": {
+      "ma": "500X-16Q",
+      "ten": "Van an toàn DN200",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "安全阀 dn200": {
+      "ma": "500X-16Q",
+      "ten": "Van an toàn DN200",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "流量開關dn100 công tắc dòng chảy dn100": {
+      "ma": "ZSJZ",
+      "ten": "Công tắc dòng chảy DN100",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "流量開關dn100": {
+      "ma": "ZSJZ",
+      "ten": "Công tắc dòng chảy DN100",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "流量開關dn150 công tắc dòng chảy dn150": {
+      "ma": "ZSJZ",
+      "ten": "Công tắc dòng chảy DN150",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "流量開關dn150": {
+      "ma": "ZSJZ",
+      "ten": "Công tắc dòng chảy DN150",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "压力表 dn15 đồng hồ đo áp suất dn15": {
+      "ma": "Y60",
+      "ten": "Đồng hồ áp suất DN15",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "đồng hồ đo áp suất dn15": {
+      "ma": "Y60",
+      "ten": "Đồng hồ áp suất DN15",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "压力表 dn15": {
+      "ma": "Y60",
+      "ten": "Đồng hồ áp suất DN15",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "压力开关 công tắc áp lực": {
+      "ma": "YLKG",
+      "ten": "Công tắc áp suất",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "công tắc áp lực": {
+      "ma": "YLKG",
+      "ten": "Công tắc áp suất",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "压力开关": {
+      "ma": "YLKG",
+      "ten": "Công tắc áp suất",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "泵壳保护阀（dn19-dn25） van bảo vệ vỏ bơm (dn19-dn25)": {
+      "ma": "PRV",
+      "ten": "Van bảo vệ vỏ bơm",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "van bảo vệ vỏ bơm (dn19-dn25)": {
+      "ma": "PRV",
+      "ten": "Van bảo vệ vỏ bơm",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "泵壳保护阀（dn19-dn25）": {
+      "ma": "PRV",
+      "ten": "Van bảo vệ vỏ bơm",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "đầu phun sprinkler phản ứng nhanh hướng lên k16.8, 68oc": {
+      "ma": "ESFR-242/68°C U Y",
+      "ten": "Đầu phun chữa cháy hướng lên phản ứng nhanh, K=16.8, DN20, 68°C",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "đầu phun sprinkler phản ứng nhanh hướng lên k16.8, 68°c": {
+      "ma": "ESFR-242/68°C U Y",
+      "ten": "Đầu phun chữa cháy hướng lên phản ứng nhanh, K=16.8, DN20, 68°C",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "đầu phun sprinkler phản ứng nhanh hướng lên k16.8, 68oc (dự phòng, thử nghiệm)": {
+      "ma": "ESFR-242/68°C U Y",
+      "ten": "Đầu phun chữa cháy hướng lên phản ứng nhanh, K=16.8, DN20, 68°C",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "đầu phun sprinkler phản ứng nhanh hướng lên k16.8, 68°c (dự phòng, thử nghiệm)": {
+      "ma": "ESFR-242/68°C U Y",
+      "ten": "Đầu phun chữa cháy hướng lên phản ứng nhanh, K=16.8, DN20, 68°C",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "đầu phun chữa cháy hướng lên phản ứng nhanh, k=16.8, dn20, 68°c": {
+      "ma": "ESFR-242/68°C U Y",
+      "ten": "Đầu phun chữa cháy hướng lên phản ứng nhanh, K=16.8, DN20, 68°C",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "đầu phun sprinkler phản ứng nhanh hướng lên k14, 68oc": {
+      "ma": "ESFR-202/68°C U Y",
+      "ten": "Đầu phun chữa cháy hướng lên phản ứng nhanh, K=14.0, DN20, 68°C",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "đầu phun sprinkler phản ứng nhanh hướng lên k14, 68°c": {
+      "ma": "ESFR-202/68°C U Y",
+      "ten": "Đầu phun chữa cháy hướng lên phản ứng nhanh, K=14.0, DN20, 68°C",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "đầu phun sprinkler phản ứng nhanh hướng lên k14, 68oc (dự phòng, thử nghiệm)": {
+      "ma": "ESFR-202/68°C U Y",
+      "ten": "Đầu phun chữa cháy hướng lên phản ứng nhanh, K=14.0, DN20, 68°C",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "đầu phun sprinkler phản ứng nhanh hướng lên k14, 68°c (dự phòng, thử nghiệm)": {
+      "ma": "ESFR-202/68°C U Y",
+      "ten": "Đầu phun chữa cháy hướng lên phản ứng nhanh, K=14.0, DN20, 68°C",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "đầu phun chữa cháy hướng lên phản ứng nhanh, k=14.0, dn20, 68°c": {
+      "ma": "ESFR-202/68°C U Y",
+      "ten": "Đầu phun chữa cháy hướng lên phản ứng nhanh, K=14.0, DN20, 68°C",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "向上喷淋头k=5.6, 68°c đầu phun tự động hướng xuống k=5.6, 68°c": {
+      "ma": "T-ZSTX 80-68°C Q5",
+      "ten": "Đầu phun chữa cháy hướng xuống phản ứng tiêu chuẩn, K=5.6, DN15, 68°C",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "đầu phun tự động hướng xuống k=5.6, 68°c": {
+      "ma": "T-ZSTX 80-68°C Q5",
+      "ten": "Đầu phun chữa cháy hướng xuống phản ứng tiêu chuẩn, K=5.6, DN15, 68°C",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "向上喷淋头k=8, 68°c đầu phun tự động hướng lên k=8, 68°c": {
+      "ma": "T-ZSTZ 115-68°C Q5",
+      "ten": "Đầu phun chữa cháy hướng lên phản ứng tiêu chuẩn, K=8.0, DN20, 68°C",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "đầu phun tự động hướng lên k=8, 68°c": {
+      "ma": "T-ZSTZ 115-68°C Q5",
+      "ten": "Đầu phun chữa cháy hướng lên phản ứng tiêu chuẩn, K=8.0, DN20, 68°C",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "向上喷淋头k=8, 68°c": {
+      "ma": "T-ZSTZ 115-68°C Q5",
+      "ten": "Đầu phun chữa cháy hướng lên phản ứng tiêu chuẩn, K=8.0, DN20, 68°C",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "向下喷淋头 k=8, 68°c （热响应指数小于 50 (m/s)⁰·⁵）, 带保护头 đầu phun tự động hướng xuống k=8, 68°c (chỉ số phản ứng nhiệt nhỏ hơn 50 (m/s)⁰·⁵), có gắn đầu bảo vệ": {
+      "ma": "K-ZSTX 115-68°C Q3",
+      "ten": "Đầu phun chữa cháy hướng xuống phản ứng nhanh, K=8.0, DN20, 68°C",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "đầu phun tự động hướng xuống k=8, 68°c (chỉ số phản ứng nhiệt nhỏ hơn 50 (m/s)⁰·⁵), có gắn đầu bảo vệ": {
+      "ma": "K-ZSTX 115-68°C Q3",
+      "ten": "Đầu phun chữa cháy hướng xuống phản ứng nhanh, K=8.0, DN20, 68°C",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "向下喷淋头 k=8, 68°c （热响应指数小于 50 (m/s)⁰·⁵）, 带保护头": {
+      "ma": "K-ZSTX 115-68°C Q3",
+      "ten": "Đầu phun chữa cháy hướng xuống phản ứng nhanh, K=8.0, DN20, 68°C",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "向上喷淋头k=11.2, 68°c（热响应指数小于 50 (m/s)⁰·⁵） đầu phun tự động hướng lên k=11.2, 68°c (chỉ số phản ứng nhiệt nhỏ hơn 50 (m/s)⁰·⁵)": {
+      "ma": "K-ZSTZ 161-68°C Q3",
+      "ten": "Đầu phun chữa cháy hướng lên phản ứng nhanh, K=11.2, DN20, 68°C",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "đầu phun tự động hướng lên k=11.2, 68°c (chỉ số phản ứng nhiệt nhỏ hơn 50 (m/s)⁰·⁵)": {
+      "ma": "K-ZSTZ 161-68°C Q3",
+      "ten": "Đầu phun chữa cháy hướng lên phản ứng nhanh, K=11.2, DN20, 68°C",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "向上喷淋头k=11.2, 68°c（热响应指数小于 50 (m/s)⁰·⁵）": {
+      "ma": "K-ZSTZ 161-68°C Q3",
+      "ten": "Đầu phun chữa cháy hướng lên phản ứng nhanh, K=11.2, DN20, 68°C",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "đầu phun tự động hướng xuống k=8, 68°c (chỉ số phản ứng nhiệt nhỏ hơn 50 (m/s)⁰·⁵)": {
+      "ma": "K-ZSTX 115-68°C Q3",
+      "ten": "Đầu phun chữa cháy hướng xuống phản ứng nhanh, K=8.0, DN20, 68°C",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "đầu phun tự động hướng xuống k=8, 68°c, phản ứng nhanh": {
+      "ma": "K-ZSTX 115-68°C Q3",
+      "ten": "Đầu phun chữa cháy hướng xuống phản ứng nhanh, K=8.0, DN20, 68°C",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "向下喷淋头 k=8, 68°c （热响应指数小于 50 (m/s)⁰·⁵）": {
+      "ma": "K-ZSTX 115-68°C Q3",
+      "ten": "Đầu phun chữa cháy hướng xuống phản ứng nhanh, K=8.0, DN20, 68°C",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "đầu phun tự động hướng xuống k=8, 68°c, có gắn đầu bảo vệ, phản ứng nhanh": {
+      "ma": "K-ZSTX 115-68°C Q3",
+      "ten": "Đầu phun chữa cháy hướng xuống phản ứng nhanh, K=8.0, DN20, 68°C",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "đầu phun tự động hướng lên k=11.2, 68°c, phản ứng nhanh": {
+      "ma": "K-ZSTZ 161-68°C Q3",
+      "ten": "Đầu phun chữa cháy hướng lên phản ứng nhanh, K=11.2, DN20, 68°C",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
+    },
+    "向上喷淋头k=11.2, 68°c （热响应指数小于 50 (m/s)⁰·⁵）": {
+      "ma": "K-ZSTZ 161-68°C Q3",
+      "ten": "Đầu phun chữa cháy hướng lên phản ứng nhanh, K=11.2, DN20, 68°C",
+      "xuat_xu": "Jilong/China",
+      "dvt": "Cái",
+      "don_gia": 0,
+      "count": 1,
+      "updated": "seed",
+      "nguon": "Jilong bổ sung"
     }
   },
   "price_history": {
@@ -6072,6 +7134,25 @@
         "price": null
       },
       "updated": "2026-11-16T15:02:41"
+    },
+    {
+      "headers": [
+        "ghi chú",
+        "khối lượng",
+        "mô tả",
+        "stt",
+        "đơn vị tính"
+      ],
+      "header_row": 0,
+      "positions": {
+        "name": 1,
+        "qty": 3,
+        "unit": 2,
+        "spec": null,
+        "price": null
+      },
+      "updated": "2026-11-25T14:55:42"
     }
-  ]
+  ],
+  "codes": []
 }
